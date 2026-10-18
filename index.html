@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>1RT885 System Identification — Uppsala Study Hub</title>
+  <link rel="manifest" href="manifest.json" />
+  <!-- KaTeX for crisp LaTeX equation rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Auth / Lock Screen Modal (Private by default) -->
+  <div id="auth-gate" class="auth-gate hidden" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <div class="auth-card">
+      <div class="auth-badge">1RT885 • Uppsala University</div>
+      <h1 id="auth-title">System Identification Study Hub</h1>
+      <p class="auth-subtitle">Private study &amp; spaced-repetition workspace for Robin. Sign in to unlock your question bank and sync progress across your phone and PC.</p>
+      
+      <form id="auth-form" autocomplete="on">
+        <div class="form-group">
+          <label for="auth-profile">Account / Profile Name</label>
+          <input type="text" id="auth-profile" value="robin" required placeholder="e.g. robin" autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label for="auth-pin">Study Passcode / PIN</label>
+          <input type="password" id="auth-pin" required placeholder="Enter passcode (default: 1885)" autocomplete="current-password" />
+          <span class="field-hint">Protects local session privacy on this device (default: <code>1885</code>).</span>
+        </div>
+        <div class="form-group">
+          <label for="auth-gh-token">Cloud Sync Key (GitHub Token — Optional on initial unlock)</label>
+          <input type="password" id="auth-gh-token" placeholder="ghp_... (for cross-device cloud sync)" />
+          <span class="field-hint">Authorizes server-side reads/writes to your private <code>RSeyda/sysid-1rt885-study-data</code> repository. Leave blank for device-only storage.</span>
+        </div>
+        <div id="auth-error" class="auth-error hidden"></div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg">Unlock &amp; Load Progress</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Top Header Bar -->
+  <header class="top-bar">
+    <div class="top-bar-left" id="nav-home-trigger" role="button" tabindex="0" aria-label="Go to Dashboard">
+      <div class="brand-logo">SI</div>
+      <div class="brand-text">
+        <span class="brand-title">SysID 1RT885</span>
+        <span class="brand-meta" id="exam-countdown-badge">Exam: 29 Oct</span>
+      </div>
+    </div>
+    <div class="top-bar-right">
+      <button id="sync-status-btn" class="sync-pill sync-local" type="button" title="View Cloud Sync &amp; Storage Status">
+        <span class="sync-dot" id="sync-dot"></span>
+        <span id="sync-label">Device Only</span>
+      </button>
+      <button id="theme-toggle-btn" class="icon-btn" type="button" aria-label="Toggle Light/Dark Theme" title="Toggle Theme">
+        <span id="theme-icon">☀️</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="main-container" id="main-container">
+    
+    <!-- VIEW 1: DASHBOARD / HOME -->
+    <section id="view-dashboard" class="view-section active">
+      
+      <!-- Resumable Session Banner (Shown if an active session is saved) -->
+      <div id="resume-session-card" class="hero-card resume-banner hidden">
+        <div class="resume-banner-content">
+          <div class="badge badge-accent">Session in Progress</div>
+          <h2 id="resume-session-title">Continue Studying</h2>
+          <p id="resume-session-meta">Question 4 of 10 • Block 1: Mathematical Tools &amp; LS</p>
+        </div>
+        <div class="resume-banner-actions">
+          <button id="btn-continue-session" class="btn btn-primary btn-lg">Continue Studying →</button>
+          <button id="btn-discard-session" class="btn btn-ghost btn-sm">Discard</button>
+        </div>
+      </div>
+
+      <!-- Primary Entry Points Grid -->
+      <div class="quick-entry-grid">
+        <div class="entry-card entry-due" id="card-review-due" role="button" tabindex="0">
+          <div class="entry-card-top">
+            <span class="entry-icon">🔄</span>
+            <span class="entry-count" id="stat-due-count">0</span>
+          </div>
+          <h3>Review Due</h3>
+          <p id="stat-due-desc">Spaced-repetition cards ready for review today</p>
+        </div>
+
+        <div class="entry-card entry-diagnostic" id="card-start-d1" role="button" tabindex="0">
+          <div class="entry-card-top">
+            <span class="entry-icon">🎯</span>
+            <span class="entry-tag" id="stat-d1-badge">Start Here</span>
+          </div>
+          <h3>Diagnostic &amp; Next Step</h3>
+          <p id="stat-next-task-desc">D1: Regressors $\varphi(t)$, dimensions &amp; $\theta$ setup</p>
+        </div>
+      </div>
+
+      <!-- Overall Mastery & Progress Bar -->
+      <div class="panel-card stats-overview-card">
+        <div class="stats-header">
+          <div>
+            <h2 class="section-title">Course Mastery Overview</h2>
+            <p class="section-subtitle" id="bank-summary-line">Loading verified question bank...</p>
+          </div>
+          <span class="profile-pill" id="active-profile-pill">👤 robin</span>
+        </div>
+
+        <div class="mastery-bar-wrapper" aria-label="Mastery breakdown bar">
+          <div class="mastery-seg seg-mastered" id="bar-mastered" style="width: 0%" title="Mastered"></div>
+          <div class="mastery-seg seg-reviewing" id="bar-reviewing" style="width: 0%" title="Reviewing / Learning"></div>
+          <div class="mastery-seg seg-learning" id="bar-learning" style="width: 0%" title="Needs Work / Missed"></div>
+        </div>
+
+        <div class="stats-legend-grid">
+          <div class="legend-item">
+            <span class="legend-dot dot-mastered"></span>
+            <div>
+              <strong id="count-mastered">0</strong>
+              <span>Mastered</span>
+            </div>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot dot-reviewing"></span>
+            <div>
+              <strong id="count-reviewing">0</strong>
+              <span>In Progress</span>
+            </div>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot dot-learning"></span>
+            <div>
+              <strong id="count-missed">0</strong>
+              <span>Missed / Weak</span>
+            </div>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot dot-unseen"></span>
+            <div>
+              <strong id="count-unseen">0</strong>
+              <span>Unseen</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Study Modes -->
+      <div class="panel-card">
+        <h2 class="section-title">Study Modes</h2>
+        <div class="mode-buttons-grid">
+          <button class="mode-btn" data-mode="mixed" type="button">
+            <span class="mode-btn-icon">🎲</span>
+            <div class="mode-btn-text">
+              <strong>Mixed Practice</strong>
+              <span>Adaptive mix across all 8 core blocks</span>
+            </div>
+          </button>
+          <button class="mode-btn" data-mode="missed" type="button">
+            <span class="mode-btn-icon">⚠️</span>
+            <div class="mode-btn-text">
+              <strong>Missed &amp; Weak Questions</strong>
+              <span id="mode-missed-sub">Target questions you got wrong or needed hints on</span>
+            </div>
+          </button>
+          <button class="mode-btn" data-mode="flashcards" type="button">
+            <span class="mode-btn-icon">🗂️</span>
+            <div class="mode-btn-text">
+              <strong>Flashcard Recall</strong>
+              <span>Active recall with Again / Hard / Good / Easy ratings</span>
+            </div>
+          </button>
+          <button class="mode-btn" data-mode="bookmarked" type="button">
+            <span class="mode-btn-icon">🔖</span>
+            <div class="mode-btn-text">
+              <strong>Bookmarked &amp; Flagged</strong>
+              <span id="mode-bookmarked-sub">Review saved or flagged questions</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Topic-Level Progress Dashboard -->
+      <div class="panel-card">
+        <div class="section-header-row">
+          <div>
+            <h2 class="section-title">Topic-Level Progress (Blocks 1–8 &amp; Labs)</h2>
+            <p class="section-subtitle">Tap any block to practice that specific topic</p>
+          </div>
+        </div>
+        <div id="topic-progress-list" class="topic-list">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Reserved Untouched Mock Exam Card -->
+      <div class="panel-card mock-exam-card">
+        <div class="mock-exam-header">
+          <span class="badge badge-warning">Protected Exam Rehearsal</span>
+          <h2 class="section-title">Reserved Mock Exams (SI 2025 &amp; HT 2024)</h2>
+          <p class="section-subtitle">Excluded from all default practice modes to preserve unseen exam conditions for late-stage rehearsal (26–28 Oct).</p>
+        </div>
+        <div class="mock-exam-actions">
+          <button id="btn-start-mock-2025" class="btn btn-secondary" type="button">Launch SI 2025 Mock Exam</button>
+          <button id="btn-start-mock-2024" class="btn btn-secondary" type="button">Launch HT 2024 (SI Tasks)</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- VIEW 2: CUSTOM PRACTICE & FILTER BUILDER -->
+    <section id="view-practice-setup" class="view-section">
+      <div class="panel-card">
+        <h2 class="section-title">Configure Practice Session</h2>
+        <p class="section-subtitle">Customize your filters, format, and session length</p>
+
+        <!-- Mode Selector -->
+        <div class="filter-group">
+          <label class="filter-label">Study Mode</label>
+          <div class="pill-group" id="setup-mode-pills">
+            <button type="button" class="pill-btn active" data-val="mixed">Mixed Practice</button>
+            <button type="button" class="pill-btn" data-val="due">Review Due</button>
+            <button type="button" class="pill-btn" data-val="missed">Missed / Hints Used</button>
+            <button type="button" class="pill-btn" data-val="flashcards">Flashcards Only</button>
+            <button type="button" class="pill-btn" data-val="bookmarked">Bookmarked</button>
+          </div>
+        </div>
+
+        <!-- Session Length Selector -->
+        <div class="filter-group">
+          <label class="filter-label">Session Length</label>
+          <div class="pill-group" id="setup-length-pills">
+            <button type="button" class="pill-btn" data-val="5">5 Questions</button>
+            <button type="button" class="pill-btn active" data-val="10">10 Questions</button>
+            <button type="button" class="pill-btn" data-val="20">20 Questions</button>
+            <button type="button" class="pill-btn" data-val="0">Untimed / All Matching</button>
+          </div>
+        </div>
+
+        <!-- Topic Filter -->
+        <div class="filter-group">
+          <div class="filter-label-row">
+            <label class="filter-label">Course Blocks / Topics</label>
+            <button type="button" id="btn-toggle-all-topics" class="text-link">Select All</button>
+          </div>
+          <div class="checkbox-grid" id="setup-topics-grid">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+
+        <!-- Question Format Filter -->
+        <div class="filter-group">
+          <label class="filter-label">Question Formats</label>
+          <div class="pill-group multi-pill" id="setup-format-pills">
+            <button type="button" class="pill-btn active" data-val="tf">True / False</button>
+            <button type="button" class="pill-btn active" data-val="mcq">Multiple Choice</button>
+            <button type="button" class="pill-btn active" data-val="numeric">Numeric Calculation</button>
+            <button type="button" class="pill-btn active" data-val="flashcard">Flashcards</button>
+          </div>
+        </div>
+
+        <!-- Difficulty Filter -->
+        <div class="filter-group">
+          <label class="filter-label">Difficulty</label>
+          <div class="pill-group multi-pill" id="setup-difficulty-pills">
+            <button type="button" class="pill-btn active" data-val="easy">Easy (Foundation)</button>
+            <button type="button" class="pill-btn active" data-val="medium">Medium (Exam Core)</button>
+            <button type="button" class="pill-btn active" data-val="hard">Hard (Derivations / ESI)</button>
+          </div>
+        </div>
+
+        <!-- Question Origin Filter -->
+        <div class="filter-group">
+          <label class="filter-label">Source Type</label>
+          <div class="pill-group multi-pill" id="setup-origin-pills">
+            <button type="button" class="pill-btn active" data-val="adapted">Adapted Source Task</button>
+            <button type="button" class="pill-btn active" data-val="variant">New Practice Variant</button>
+          </div>
+        </div>
+
+        <div class="setup-match-bar">
+          <span id="setup-match-count">Matching questions: 0</span>
+          <button id="btn-launch-configured" class="btn btn-primary btn-lg" type="button">Start Session →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: ACTIVE STUDY SESSION (One Question at a Time) -->
+    <section id="view-session" class="view-section">
+      <!-- Session Top Progress Bar -->
+      <div class="session-header">
+        <button id="btn-exit-session" class="btn btn-ghost btn-sm" type="button">← Save &amp; Exit</button>
+        <div class="session-progress-info">
+          <span id="session-step-counter">1 / 10</span>
+          <div class="session-mini-bar">
+            <div id="session-mini-fill" class="session-mini-fill" style="width: 10%"></div>
+          </div>
+        </div>
+        <div class="session-card-tools">
+          <button id="btn-bookmark-card" class="icon-btn" type="button" aria-label="Bookmark Question" title="Bookmark">🔖</button>
+          <button id="btn-flag-card" class="icon-btn" type="button" aria-label="Flag Question for Review" title="Flag Questionable Card">🚩</button>
+        </div>
+      </div>
+
+      <!-- Question Card -->
+      <article class="question-card" id="question-card">
+        <!-- Metadata Badges -->
+        <div class="q-meta-row">
+          <span class="q-badge q-badge-topic" id="q-topic-badge">Block 1</span>
+          <span class="q-badge q-badge-format" id="q-format-badge">Numeric</span>
+          <span class="q-badge q-badge-diff" id="q-diff-badge">Easy</span>
+          <span class="q-badge q-badge-origin" id="q-origin-badge">Adapted Source</span>
+          <span class="q-badge q-badge-id" id="q-id-badge">b1-001</span>
+        </div>
+
+        <div class="q-subtopic-line" id="q-subtopic-line">Regressors &amp; Dimensions</div>
+
+        <!-- Question Prompt -->
+        <div class="q-prompt-box" id="q-prompt-box">
+          <!-- Rendered with KaTeX -->
+        </div>
+
+        <!-- Numeric Requirements Box (units / rounding) -->
+        <div id="q-numeric-meta" class="q-numeric-meta hidden">
+          <span id="q-unit-display"></span>
+          <span id="q-rounding-display"></span>
+        </div>
+
+        <!-- Optional Hint Section (Recorded separately from independent correct answers) -->
+        <div class="q-hint-container">
+          <button id="btn-show-hint" class="btn btn-ghost btn-sm" type="button">💡 Show Hint (Recorded as assisted attempt)</button>
+          <div id="q-hint-box" class="q-hint-box hidden"></div>
+        </div>
+
+        <!-- INTERACTION AREA 1: True / False -->
+        <div id="input-area-tf" class="q-input-area hidden">
+          <div class="tf-grid">
+            <button type="button" class="tf-btn" data-tf="true">True</button>
+            <button type="button" class="tf-btn" data-tf="false">False</button>
+          </div>
+          <button type="button" id="btn-submit-tf" class="btn btn-primary btn-block btn-lg" disabled>Check Answer</button>
+        </div>
+
+        <!-- INTERACTION AREA 2: Multiple Choice -->
+        <div id="input-area-mcq" class="q-input-area hidden">
+          <div id="mcq-options-list" class="mcq-options-list"></div>
+          <button type="button" id="btn-submit-mcq" class="btn btn-primary btn-block btn-lg" disabled>Check Answer</button>
+        </div>
+
+        <!-- INTERACTION AREA 3: Numeric Input -->
+        <div id="input-area-numeric" class="q-input-area hidden">
+          <div class="numeric-input-row">
+            <input type="text" inputmode="decimal" id="numeric-answer-input" class="numeric-input" placeholder="Enter value (e.g. -2, 0.5, -0,5, 1.5e-2)" autocomplete="off" />
+            <span id="numeric-unit-addon" class="numeric-unit-addon"></span>
+          </div>
+          <div id="numeric-validation-msg" class="validation-warning hidden"></div>
+          <button type="button" id="btn-submit-numeric" class="btn btn-primary btn-block btn-lg">Submit Answer</button>
+        </div>
+
+        <!-- INTERACTION AREA 4: Flashcard Recall -->
+        <div id="input-area-flashcard" class="q-input-area hidden">
+          <div class="flashcard-scratch-wrap">
+            <textarea id="flashcard-scratch" class="flashcard-scratch" rows="2" placeholder="Optional: jot down your recall or equations before revealing..."></textarea>
+          </div>
+          <button type="button" id="btn-reveal-flashcard" class="btn btn-primary btn-block btn-lg">Reveal Answer</button>
+        </div>
+
+        <!-- FEEDBACK & EXPLANATION PANEL (Hidden until submitted/revealed; never auto-advances) -->
+        <div id="q-feedback-panel" class="q-feedback-panel hidden">
+          <div id="q-feedback-banner" class="feedback-banner">
+            <span id="q-feedback-icon" class="feedback-icon"></span>
+            <div class="feedback-banner-text">
+              <strong id="q-feedback-title">Correct!</strong>
+              <span id="q-feedback-subtitle"></span>
+            </div>
+          </div>
+
+          <!-- Corrected Statement (For False T/F statements) -->
+          <div id="q-corrected-box" class="explanation-subbox corrected-box hidden">
+            <h4>✅ Corrected True Statement</h4>
+            <div id="q-corrected-content"></div>
+          </div>
+
+          <!-- Flashcard Target Answer Box -->
+          <div id="q-flashcard-answer-box" class="explanation-subbox flashcard-answer-box hidden">
+            <h4>📌 Target Answer</h4>
+            <div id="q-flashcard-answer-content"></div>
+          </div>
+
+          <!-- Main Step-by-Step Explanation -->
+          <div class="explanation-subbox">
+            <h4>📖 Explanation &amp; Derivation</h4>
+            <div id="q-explanation-content"></div>
+          </div>
+
+          <!-- Distractor Breakdown (For Multiple Choice) -->
+          <div id="q-distractors-box" class="explanation-subbox hidden">
+            <h4>🔍 Option-by-Option Breakdown</h4>
+            <ul id="q-distractors-list" class="distractors-list"></ul>
+          </div>
+
+          <!-- Source Citation & Spaced-Review Status Footer -->
+          <div class="q-source-footer">
+            <span id="q-source-citation">📄 Source: LinReg2021.pdf, p. 5</span>
+            <span id="q-mastery-status-pill">Status: Learning</span>
+          </div>
+
+          <!-- NEXT / SELF-RATING CONTROLS -->
+          <!-- For Objective Questions (TF, MCQ, Numeric) -->
+          <div id="next-controls-objective" class="next-controls">
+            <button type="button" id="btn-next-question" class="btn btn-primary btn-block btn-lg">Next Question →</button>
+          </div>
+
+          <!-- For Flashcards (Explicit Self-Rating: Again, Hard, Good, Easy) -->
+          <div id="next-controls-flashcard" class="next-controls hidden">
+            <p class="rating-prompt">Rate your recall (tracked separately from objective grading):</p>
+            <div class="rating-buttons-grid">
+              <button type="button" class="rate-btn rate-again" data-rating="again">
+                <strong>Again</strong>
+                <span>&lt; 10m</span>
+              </button>
+              <button type="button" class="rate-btn rate-hard" data-rating="hard">
+                <strong>Hard</strong>
+                <span>1 day</span>
+              </button>
+              <button type="button" class="rate-btn rate-good" data-rating="good">
+                <strong>Good</strong>
+                <span>3 days</span>
+              </button>
+              <button type="button" class="rate-btn rate-easy" data-rating="easy">
+                <strong>Easy</strong>
+                <span>5+ days</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flag Note Drawer -->
+        <div id="q-flag-drawer" class="flag-drawer hidden">
+          <label for="flag-reason-input">Flag this question for review or note an ambiguity:</label>
+          <div class="flag-input-row">
+            <input type="text" id="flag-reason-input" placeholder="e.g. Check assumption on noise variance..." />
+            <button type="button" id="btn-save-flag" class="btn btn-secondary btn-sm">Save Flag</button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- VIEW 4: SESSION SUMMARY -->
+    <section id="view-summary" class="view-section">
+      <div class="panel-card summary-card">
+        <div class="summary-badge">Session Complete</div>
+        <h2 id="summary-title">Great Study Block!</h2>
+        <p id="summary-subtitle" class="section-subtitle"></p>
+
+        <div class="summary-metrics-grid">
+          <div class="summary-metric">
+            <strong id="sum-independent-correct">0</strong>
+            <span>Independent Correct</span>
+          </div>
+          <div class="summary-metric">
+            <strong id="sum-assisted-correct">0</strong>
+            <span>Hint-Assisted</span>
+          </div>
+          <div class="summary-metric">
+            <strong id="sum-incorrect">0</strong>
+            <span>Missed</span>
+          </div>
+          <div class="summary-metric">
+            <strong id="sum-flashcards">0</strong>
+            <span>Self-Rated Cards</span>
+          </div>
+        </div>
+
+        <div class="summary-review-list-wrap">
+          <h3>Questions in This Session</h3>
+          <div id="summary-questions-list" class="summary-questions-list"></div>
+        </div>
+
+        <div class="summary-actions">
+          <button type="button" id="btn-retry-missed" class="btn btn-primary btn-lg hidden">Retry Missed Questions</button>
+          <button type="button" id="btn-summary-another" class="btn btn-secondary btn-lg">Start Another Session</button>
+          <button type="button" id="btn-summary-home" class="btn btn-ghost btn-lg">Back to Dashboard</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 5: ROADMAP & FORMULA CHEAT SHEET -->
+    <section id="view-roadmap" class="view-section">
+      <div class="panel-card">
+        <h2 class="section-title">1RT885 Course Roadmap &amp; Evidence Tracker</h2>
+        <p class="section-subtitle">Grounded in your 15–28 October preparation plan (28–39 active hours). Red = not yet usable, Yellow = assisted/unreliable, Green = independently verified on representative tasks.</p>
+        <div id="roadmap-blocks-container" class="roadmap-blocks-container"></div>
+      </div>
+
+      <div class="panel-card">
+        <h2 class="section-title">Reference Index &amp; Key Formula Patterns</h2>
+        <p class="section-subtitle">Essential equations, dimensions, and course cautions with PDF citations</p>
+        <div id="formula-reference-container" class="formula-reference-container"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 6: SYNC, SETTINGS & DATA MANAGEMENT -->
+    <section id="view-settings" class="view-section">
+      <div class="panel-card">
+        <h2 class="section-title">Cloud Sync &amp; Account Authentication</h2>
+        <p class="section-subtitle">Private server-side persistence via your authenticated GitHub identity (<code>RSeyda/sysid-1rt885-study-data</code>)</p>
+        
+        <div class="sync-status-box" id="settings-sync-box">
+          <div class="sync-status-line">
+            <strong>Current Storage State:</strong>
+            <span id="settings-sync-badge" class="badge">Checking...</span>
+          </div>
+          <p id="settings-sync-detail" class="sync-detail-text"></p>
+        </div>
+
+        <form id="settings-auth-form" class="settings-form">
+          <div class="form-group">
+            <label for="set-profile-input">Active Profile / Account ID</label>
+            <input type="text" id="set-profile-input" required />
+            <span class="field-hint">Local browser fallback and cloud file are isolated per profile (`progress_&lt;profile&gt;.json`).</span>
+          </div>
+          <div class="form-group">
+            <label for="set-gh-token-input">GitHub Personal Access Token (`repo` scope)</label>
+            <input type="password" id="set-gh-token-input" placeholder="ghp_..." />
+            <span class="field-hint">Used as a Bearer token on every server read/write to `api.github.com`. GitHub's server verifies your token identity directly—never trusting an unauthenticated browser user ID.</span>
+          </div>
+          <div class="form-group">
+            <label for="set-pin-input">Device Lock Passcode / PIN</label>
+            <input type="password" id="set-pin-input" placeholder="1885" />
+          </div>
+          <div class="settings-btn-row">
+            <button type="submit" class="btn btn-primary">Save &amp; Sync Now</button>
+            <button type="button" id="btn-force-pull" class="btn btn-secondary">Pull Latest from Cloud</button>
+            <button type="button" id="btn-lock-app" class="btn btn-ghost">Lock App</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- How Mastery & Spaced Repetition Work -->
+      <div class="panel-card">
+        <h2 class="section-title">How Spaced Repetition &amp; Mastery Work</h2>
+        <ul class="info-list">
+          <li><strong>No 1-Shot Mastery:</strong> Answering a question correctly once <em>never</em> marks it as "Mastered". It enters the <strong>Reviewing</strong> stage with an initial 1-day interval.</li>
+          <li><strong>Mastery Rule:</strong> A question reaches <strong>Mastered</strong> only after <strong>$\ge 3$ consecutive unassisted objective successes</strong> across at least 2 separate review intervals (or $\ge 80\%$ lifetime independent accuracy with $\ge 3$ independent correct answers).</li>
+          <li><strong>Hints Tracked Separately:</strong> Viewing a hint before answering is recorded as an <em>assisted attempt</em> (`hintsUsed`). Even if you submit the right answer afterward, it does not advance independent mastery and schedules a short 12-hour follow-up review.</li>
+          <li><strong>Misses Return Sooner:</strong> An incorrect answer resets the card's consecutive streak to 0, marks its status as <strong>Needs Work</strong>, and schedules immediate review (within 10 minutes).</li>
+          <li><strong>Flashcards vs. Objective Grading:</strong> Flashcard self-ratings (<em>Again, Hard, Good, Easy</em>) schedule spaced review intervals (`10m`, `1d`, `3d`, `6d+`) but are tracked in a separate `selfRated` counter so self-reported recall is never conflated with objectively graded accuracy.</li>
+        </ul>
+      </div>
+
+      <!-- Backup Export / Import / Reset -->
+      <div class="panel-card">
+        <h2 class="section-title">Progress Backup, Export &amp; Reset</h2>
+        <p class="section-subtitle">Export your full progress history as JSON or restore from a file</p>
+        <div class="settings-btn-row">
+          <button type="button" id="btn-export-json" class="btn btn-secondary">⬇️ Export Progress JSON</button>
+          <label class="btn btn-secondary file-upload-btn">
+            ⬆️ Import Progress JSON
+            <input type="file" id="input-import-json" accept=".json,application/json" class="hidden" />
+          </label>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="danger-zone">
+          <h3>Reset Account Progress</h3>
+          <p>Permanently clears attempts, streaks, bookmarks, and session state for the current profile (requires confirmation).</p>
+          <button type="button" id="btn-reset-progress" class="btn btn-danger">🗑️ Reset Progress for Current Profile</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="bottom-nav" aria-label="Primary Mobile Navigation">
+    <button type="button" class="nav-tab active" data-target="view-dashboard">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </button>
+    <button type="button" class="nav-tab" data-target="view-practice-setup">
+      <span class="nav-icon">⚡</span>
+      <span class="nav-label">Practice</span>
+    </button>
+    <button type="button" class="nav-tab" data-target="view-roadmap">
+      <span class="nav-icon">🗺️</span>
+      <span class="nav-label">Roadmap</span>
+    </button>
+    <button type="button" class="nav-tab" data-target="view-settings">
+      <span class="nav-icon">☁️</span>
+      <span class="nav-label">Sync &amp; Data</span>
+    </button>
+  </nav>
+
+  <!-- Question Bank & App Scripts -->
+  <script src="questions-bundle.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
