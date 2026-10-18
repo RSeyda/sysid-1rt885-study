@@ -1,0 +1,10 @@
+{
+  "name": "1RT885 System Identification Study Hub",
+  "short_name": "SysID 1RT885",
+  "description": "Mobile-first study, spaced-repetition, and exam preparation app for System Identification (1RT885) at Uppsala University.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1120",
+  "theme_color": "#0f172a",
+  "orientation": "portrait-primary"
+}
