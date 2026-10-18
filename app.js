@@ -1101,10 +1101,13 @@
       const numInput = document.getElementById('numeric-answer-input');
       numInput.value = '';
       numInput.disabled = false;
-      document.getElementById('numeric-unit-addon').textContent =
-        currentQuestion.unit && currentQuestion.unit !== 'dimensionless'
-          ? currentQuestion.unit
-          : '';
+      const unitAddon = document.getElementById('numeric-unit-addon');
+      const hasUnit =
+        currentQuestion.unit &&
+        currentQuestion.unit.trim() !== '' &&
+        currentQuestion.unit.trim().toLowerCase() !== 'dimensionless';
+      unitAddon.textContent = hasUnit ? currentQuestion.unit : '';
+      unitAddon.classList.toggle('hidden', !hasUnit);
       document.getElementById('numeric-validation-msg').classList.add('hidden');
       document.getElementById('btn-submit-numeric').disabled = false;
       document.getElementById('btn-submit-numeric').classList.remove('hidden');
@@ -1354,6 +1357,60 @@
       setHtmlAndMath(div.querySelector('.formula-math'), fm.math);
       fmContainer.appendChild(div);
     });
+
+    // Populate copyable Resume Note
+    const resumeNoteEl = document.getElementById('resume-note-textarea');
+    if (resumeNoteEl && userProgress) {
+      const today = new Date().toISOString().slice(0, 10);
+      const blockLines = COURSE_BLOCKS.map((blk) => {
+        const ryg = computeBlockRYG(blk.id);
+        return `- ${blk.code} (${blk.title}): ${ryg.label} [Attempted: ${ryg.attempted}/${ryg.total}, Mastered: ${ryg.mastered}]`;
+      }).join('\n');
+
+      const weakQs = getMissedOrWeakQuestions()
+        .slice(0, 6)
+        .map((q) => `${q.id} (${q.subtopic || q.topic})`)
+        .join(', ');
+
+      const d1State = userProgress.cards['b1-001'];
+      const nextPriority =
+        !d1State || d1State.attempts === 0
+          ? 'Diagnostic D1 (b1-001: Regressors φ(t) & dimensions in Block 1)'
+          : weakQs
+          ? `Review weak/assisted tasks: ${weakQs}`
+          : 'Continue next unassessed block in Roadmap (Blocks 1 -> 8)';
+
+      resumeNoteEl.value = [
+        `## Session Close & Resume Note (${today})`,
+        `Profile: ${currentProfile} | Exam: 29 October 2026 (1RT885 System Identification)`,
+        ``,
+        `### Topic Progress (Red / Yellow / Green):`,
+        blockLines,
+        ``,
+        `### Unresolved / Needs Work:`,
+        weakQs || 'No active missed cards.',
+        ``,
+        `### Exact Next Task:`,
+        nextPriority
+      ].join('\n');
+    }
+
+    const copyBtn = document.getElementById('btn-copy-resume-note');
+    if (copyBtn && resumeNoteEl) {
+      copyBtn.onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(resumeNoteEl.value);
+          copyBtn.textContent = '✅ Copied Resume Note!';
+          setTimeout(() => {
+            copyBtn.textContent = '📋 Copy Resume Note to Clipboard';
+          }, 2000);
+        } catch (err) {
+          resumeNoteEl.select();
+          document.execCommand('copy');
+          copyBtn.textContent = '✅ Copied!';
+        }
+      };
+    }
   }
 
   // ==========================================================================
