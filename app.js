@@ -159,6 +159,7 @@
   let selectedMcqIndex = null;
   let hintUsedOnCurrent = false;
   let answerSubmittedOnCurrent = false;
+  let cardSnapshotBeforeAttempt = null;
 
   // ==========================================================================
   // 1. Progress Data Schema & Storage Isolation
@@ -989,6 +990,7 @@
     selectedMcqIndex = null;
     hintUsedOnCurrent = false;
     answerSubmittedOnCurrent = false;
+    cardSnapshotBeforeAttempt = JSON.parse(JSON.stringify(getCardState(qId)));
 
     // Progress bar & header
     const total = sess.questionIds.length;
@@ -1057,6 +1059,8 @@
     document.getElementById('input-area-numeric').classList.add('hidden');
     document.getElementById('input-area-flashcard').classList.add('hidden');
     document.getElementById('q-feedback-panel').classList.add('hidden');
+    const retryTypoBtn = document.getElementById('btn-retry-typo');
+    if (retryTypoBtn) retryTypoBtn.classList.add('hidden');
 
     // Configure specific input area
     if (currentQuestion.format === 'tf') {
@@ -1101,6 +1105,11 @@
       const numInput = document.getElementById('numeric-answer-input');
       numInput.value = '';
       numInput.disabled = false;
+      const signBtn = document.getElementById('btn-toggle-sign');
+      if (signBtn) signBtn.disabled = false;
+      document.querySelectorAll('.num-helper-btn').forEach((b) => {
+        b.disabled = false;
+      });
       const unitAddon = document.getElementById('numeric-unit-addon');
       const hasUnit =
         currentQuestion.unit &&
@@ -1128,6 +1137,15 @@
     const q = currentQuestion;
     const panel = document.getElementById('q-feedback-panel');
     panel.classList.remove('hidden');
+
+    const retryTypoBtn = document.getElementById('btn-retry-typo');
+    if (retryTypoBtn) {
+      if (q.format === 'numeric' && !isCorrect) {
+        retryTypoBtn.classList.remove('hidden');
+      } else {
+        retryTypoBtn.classList.add('hidden');
+      }
+    }
 
     const banner = document.getElementById('q-feedback-banner');
     const icon = document.getElementById('q-feedback-icon');
@@ -1685,6 +1703,97 @@
       displayFeedbackPanel(isCorrect);
     });
 
+    // Mobile Sign Toggle & Math Keypad Helper Buttons
+    const signToggleBtn = document.getElementById('btn-toggle-sign');
+    if (signToggleBtn) {
+      signToggleBtn.addEventListener('click', () => {
+        if (answerSubmittedOnCurrent) return;
+        const numInput = document.getElementById('numeric-answer-input');
+        const val = numInput.value.trim();
+        if (val.startsWith('-')) {
+          numInput.value = val.slice(1);
+        } else if (val.startsWith('+')) {
+          numInput.value = '-' + val.slice(1);
+        } else {
+          numInput.value = '-' + val;
+        }
+        numInput.focus();
+      });
+    }
+
+    document.querySelectorAll('.num-helper-btn[data-insert]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (answerSubmittedOnCurrent) return;
+        const ch = btn.dataset.insert;
+        const numInput = document.getElementById('numeric-answer-input');
+        if (ch === '-' && numInput.value.trim() === '') {
+          numInput.value = '-';
+        } else {
+          const start = numInput.selectionStart ?? numInput.value.length;
+          const end = numInput.selectionEnd ?? numInput.value.length;
+          numInput.value =
+            numInput.value.slice(0, start) + ch + numInput.value.slice(end);
+          const newPos = start + ch.length;
+          if (typeof numInput.setSelectionRange === 'function') {
+            numInput.setSelectionRange(newPos, newPos);
+          }
+        }
+        numInput.focus();
+      });
+    });
+
+    const kbToggleBtn = document.getElementById('btn-toggle-kb-mode');
+    if (kbToggleBtn) {
+      kbToggleBtn.addEventListener('click', () => {
+        const numInput = document.getElementById('numeric-answer-input');
+        const currMode = numInput.getAttribute('inputmode') || 'decimal';
+        const nextMode = currMode === 'decimal' ? 'text' : 'decimal';
+        numInput.setAttribute('inputmode', nextMode);
+        kbToggleBtn.textContent = nextMode === 'text' ? '🔢 Numpad' : '⌨️ Full KB';
+        numInput.blur();
+        setTimeout(() => numInput.focus(), 50);
+      });
+    }
+
+    // Input Typo / Re-enter Handler (Restores card state before the mistyped attempt)
+    const retryTypoBtn = document.getElementById('btn-retry-typo');
+    if (retryTypoBtn) {
+      retryTypoBtn.addEventListener('click', () => {
+        if (!currentQuestion || !cardSnapshotBeforeAttempt) return;
+        userProgress.cards[currentQuestion.id] = JSON.parse(
+          JSON.stringify(cardSnapshotBeforeAttempt)
+        );
+        if (
+          userProgress.activeSession &&
+          Array.isArray(userProgress.activeSession.results) &&
+          userProgress.activeSession.results.length > 0
+        ) {
+          const lastRes =
+            userProgress.activeSession.results[
+              userProgress.activeSession.results.length - 1
+            ];
+          if (lastRes && lastRes.id === currentQuestion.id) {
+            userProgress.activeSession.results.pop();
+          }
+        }
+        answerSubmittedOnCurrent = false;
+        saveLocalProgress();
+        syncWithCloud(false);
+
+        document.getElementById('q-feedback-panel').classList.add('hidden');
+        const numInput = document.getElementById('numeric-answer-input');
+        numInput.disabled = false;
+        if (signToggleBtn) signToggleBtn.disabled = false;
+        document.querySelectorAll('.num-helper-btn').forEach((b) => {
+          b.disabled = false;
+        });
+        document.getElementById('btn-submit-numeric').classList.remove('hidden');
+        document.getElementById('btn-submit-numeric').disabled = false;
+        numInput.focus();
+        numInput.select();
+      });
+    }
+
     // Numeric Submission
     document.getElementById('btn-submit-numeric').addEventListener('click', () => {
       if (answerSubmittedOnCurrent) return;
@@ -1708,6 +1817,10 @@
       const isCorrect = diff <= tol;
 
       document.getElementById('numeric-answer-input').disabled = true;
+      if (signToggleBtn) signToggleBtn.disabled = true;
+      document.querySelectorAll('.num-helper-btn').forEach((b) => {
+        b.disabled = true;
+      });
       document.getElementById('btn-submit-numeric').classList.add('hidden');
 
       recordObjectiveAttempt(currentQuestion, isCorrect, hintUsedOnCurrent);
