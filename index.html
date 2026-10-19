@@ -360,8 +360,16 @@
         <!-- INTERACTION AREA 3: Numeric Input -->
         <div id="input-area-numeric" class="q-input-area hidden">
           <div class="numeric-input-row">
-            <input type="text" inputmode="decimal" id="numeric-answer-input" class="numeric-input" placeholder="Enter value (e.g. -2, 0.5, -0,5, 1.5e-2)" autocomplete="off" />
-            <span id="numeric-unit-addon" class="numeric-unit-addon"></span>
+            <button type="button" id="btn-toggle-sign" class="btn btn-secondary sign-toggle-btn" title="Toggle Negative / Positive Sign (−/+)">±</button>
+            <input type="text" inputmode="decimal" id="numeric-answer-input" class="numeric-input" placeholder="Enter value (e.g. -2, 0.5, 1/3)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+            <span id="numeric-unit-addon" class="numeric-unit-addon hidden"></span>
+          </div>
+          <div class="numeric-keypad-bar" aria-label="Mobile Math Input Helpers">
+            <button type="button" class="num-helper-btn" data-insert="-">− Minus</button>
+            <button type="button" class="num-helper-btn" data-insert=".">. Decimal</button>
+            <button type="button" class="num-helper-btn" data-insert="/">/ Fraction</button>
+            <button type="button" class="num-helper-btn" data-insert="e">e (10ˣ)</button>
+            <button type="button" id="btn-toggle-kb-mode" class="num-helper-btn" title="Switch between Numpad and Full Keyboard">⌨️ Full KB</button>
           </div>
           <div id="numeric-validation-msg" class="validation-warning hidden"></div>
           <button type="button" id="btn-submit-numeric" class="btn btn-primary btn-block btn-lg">Submit Answer</button>
@@ -418,7 +426,10 @@
           <!-- NEXT / SELF-RATING CONTROLS -->
           <!-- For Objective Questions (TF, MCQ, Numeric) -->
           <div id="next-controls-objective" class="next-controls">
-            <button type="button" id="btn-next-question" class="btn btn-primary btn-block btn-lg">Next Question →</button>
+            <div class="objective-next-row">
+              <button type="button" id="btn-retry-typo" class="btn btn-secondary hidden" title="Undo accidental input typo and re-enter answer">↩️ Input Typo? Retry</button>
+              <button type="button" id="btn-next-question" class="btn btn-primary btn-block btn-lg">Next Question →</button>
+            </div>
           </div>
 
           <!-- For Flashcards (Explicit Self-Rating: Again, Hard, Good, Easy) -->
