@@ -160,6 +160,8 @@
   let hintUsedOnCurrent = false;
   let answerSubmittedOnCurrent = false;
   let cardSnapshotBeforeAttempt = null;
+  let busMode = localStorage.getItem('sysid_bus_mode') !== 'false'; // ON by default per Robin's preference
+  let activeQuestionRenderedAsBusMcq = false;
 
   // ==========================================================================
   // 1. Progress Data Schema & Storage Isolation
@@ -990,6 +992,7 @@
     selectedMcqIndex = null;
     hintUsedOnCurrent = false;
     answerSubmittedOnCurrent = false;
+    activeQuestionRenderedAsBusMcq = false;
     cardSnapshotBeforeAttempt = JSON.parse(JSON.stringify(getCardState(qId)));
 
     // Progress bar & header
@@ -1007,13 +1010,20 @@
     document.getElementById('flag-reason-input').value =
       (userProgress.flags && userProgress.flags[qId]) || '';
 
+    const useBusMcq =
+      currentQuestion.format === 'numeric' &&
+      busMode &&
+      currentQuestion.busMcq &&
+      Array.isArray(currentQuestion.busMcq.options);
+    activeQuestionRenderedAsBusMcq = Boolean(useBusMcq);
+
     // Metadata badges
     const blk = COURSE_BLOCKS.find((b) => b.id === currentQuestion.block);
     document.getElementById('q-topic-badge').textContent = blk ? blk.code : currentQuestion.block;
     const formatNames = {
       tf: 'True / False',
       mcq: 'Multiple Choice',
-      numeric: 'Numeric',
+      numeric: useBusMcq ? 'Multiple Choice (🚌 Bus Mode)' : 'Numeric',
       flashcard: 'Flashcard Recall'
     };
     document.getElementById('q-format-badge').textContent =
@@ -1035,7 +1045,7 @@
 
     // Numeric metadata (units / rounding)
     const numMeta = document.getElementById('q-numeric-meta');
-    if (currentQuestion.format === 'numeric') {
+    if (currentQuestion.format === 'numeric' && !useBusMcq) {
       numMeta.classList.remove('hidden');
       document.getElementById('q-unit-display').textContent =
         `Unit: ${currentQuestion.unit || 'dimensionless'}`;
@@ -1072,13 +1082,16 @@
       });
       document.getElementById('btn-submit-tf').disabled = true;
       document.getElementById('btn-submit-tf').classList.remove('hidden');
-    } else if (currentQuestion.format === 'mcq') {
+    } else if (currentQuestion.format === 'mcq' || useBusMcq) {
       const mcqArea = document.getElementById('input-area-mcq');
       mcqArea.classList.remove('hidden');
       const list = document.getElementById('mcq-options-list');
       list.innerHTML = '';
       const letters = ['A', 'B', 'C', 'D'];
-      (currentQuestion.options || []).forEach((optText, idx) => {
+      const opts = useBusMcq
+        ? currentQuestion.busMcq.options
+        : currentQuestion.options || [];
+      opts.forEach((optText, idx) => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'mcq-option-btn';
@@ -1120,6 +1133,13 @@
       document.getElementById('numeric-validation-msg').classList.add('hidden');
       document.getElementById('btn-submit-numeric').disabled = false;
       document.getElementById('btn-submit-numeric').classList.remove('hidden');
+      const switchMcqBtn = document.getElementById('btn-switch-to-mcq');
+      if (switchMcqBtn) {
+        switchMcqBtn.classList.toggle(
+          'hidden',
+          !(currentQuestion.busMcq && Array.isArray(currentQuestion.busMcq.options))
+        );
+      }
     } else if (currentQuestion.format === 'flashcard') {
       const fcArea = document.getElementById('input-area-flashcard');
       fcArea.classList.remove('hidden');
@@ -1140,7 +1160,7 @@
 
     const retryTypoBtn = document.getElementById('btn-retry-typo');
     if (retryTypoBtn) {
-      if (q.format === 'numeric' && !isCorrect) {
+      if (q.format === 'numeric' && !activeQuestionRenderedAsBusMcq && !isCorrect) {
         retryTypoBtn.classList.remove('hidden');
       } else {
         retryTypoBtn.classList.add('hidden');
@@ -1200,13 +1220,22 @@
     // MCQ Distractors breakdown
     const distBox = document.getElementById('q-distractors-box');
     const distList = document.getElementById('q-distractors-list');
-    if (q.format === 'mcq' && Array.isArray(q.distractorExplanations)) {
+    const distArray = activeQuestionRenderedAsBusMcq
+      ? q.busMcq && q.busMcq.distractorExplanations
+      : q.format === 'mcq'
+      ? q.distractorExplanations
+      : null;
+    const targetMcqIdx = activeQuestionRenderedAsBusMcq
+      ? q.busMcq && q.busMcq.correctAnswer
+      : q.correctAnswer;
+
+    if (Array.isArray(distArray)) {
       distBox.classList.remove('hidden');
       distList.innerHTML = '';
       const letters = ['A', 'B', 'C', 'D'];
-      q.distractorExplanations.forEach((exp, idx) => {
+      distArray.forEach((exp, idx) => {
         const li = document.createElement('li');
-        const prefix = idx === q.correctAnswer ? `<strong>Option ${letters[idx]} (Correct):</strong> ` : `<strong>Option ${letters[idx]}:</strong> `;
+        const prefix = idx === targetMcqIdx ? `<strong>Option ${letters[idx]} (Correct):</strong> ` : `<strong>Option ${letters[idx]}:</strong> `;
         setHtmlAndMath(li, prefix + exp);
         distList.appendChild(li);
       });
@@ -1683,13 +1712,54 @@
       displayFeedbackPanel(isCorrect);
     });
 
-    // Multiple Choice Submission
+    // Bus Mode Header Toggle Button
+    const busToggleBtn = document.getElementById('bus-mode-toggle-btn');
+    const busModeLabel = document.getElementById('bus-mode-label');
+    function updateBusModeUI() {
+      if (!busToggleBtn || !busModeLabel) return;
+      busModeLabel.textContent = busMode ? '🚌 Bus Mode: ON' : '✍️ Write-In: ON';
+      busToggleBtn.classList.toggle('sync-ok', busMode);
+    }
+    updateBusModeUI();
+
+    if (busToggleBtn) {
+      busToggleBtn.addEventListener('click', () => {
+        busMode = !busMode;
+        localStorage.setItem('sysid_bus_mode', busMode ? 'true' : 'false');
+        updateBusModeUI();
+        if (
+          document.getElementById('view-session').classList.contains('active') &&
+          currentQuestion &&
+          currentQuestion.format === 'numeric' &&
+          !answerSubmittedOnCurrent
+        ) {
+          renderActiveSessionQuestion();
+        }
+      });
+    }
+
+    const switchToMcqBtn = document.getElementById('btn-switch-to-mcq');
+    if (switchToMcqBtn) {
+      switchToMcqBtn.addEventListener('click', () => {
+        busMode = true;
+        localStorage.setItem('sysid_bus_mode', 'true');
+        updateBusModeUI();
+        if (currentQuestion && !answerSubmittedOnCurrent) {
+          renderActiveSessionQuestion();
+        }
+      });
+    }
+
+    // Multiple Choice Submission (including Bus-Mode MCQ for numeric questions)
     document.getElementById('btn-submit-mcq').addEventListener('click', () => {
       if (answerSubmittedOnCurrent || selectedMcqIndex === null) return;
-      const isCorrect = selectedMcqIndex === Number(currentQuestion.correctAnswer);
+      const targetIdx = activeQuestionRenderedAsBusMcq
+        ? Number(currentQuestion.busMcq.correctAnswer)
+        : Number(currentQuestion.correctAnswer);
+      const isCorrect = selectedMcqIndex === targetIdx;
       document.querySelectorAll('.mcq-option-btn').forEach((b, idx) => {
         b.disabled = true;
-        if (idx === Number(currentQuestion.correctAnswer)) b.classList.add('correct-choice');
+        if (idx === targetIdx) b.classList.add('correct-choice');
         else if (idx === selectedMcqIndex && !isCorrect) b.classList.add('wrong-choice');
       });
       document.getElementById('btn-submit-mcq').classList.add('hidden');
