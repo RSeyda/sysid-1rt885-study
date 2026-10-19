@@ -57,6 +57,9 @@
       </div>
     </div>
     <div class="top-bar-right">
+      <button id="bus-mode-toggle-btn" class="sync-pill" type="button" title="Toggle Bus / Commute Mode (All numeric tasks become Multiple Choice)">
+        <span id="bus-mode-label">🚌 Bus Mode: ON</span>
+      </button>
       <button id="sync-status-btn" class="sync-pill sync-local" type="button" title="View Cloud Sync &amp; Storage Status">
         <span class="sync-dot" id="sync-dot"></span>
         <span id="sync-label">Device Only</span>
@@ -372,7 +375,10 @@
             <button type="button" id="btn-toggle-kb-mode" class="num-helper-btn" title="Switch between Numpad and Full Keyboard">⌨️ Full KB</button>
           </div>
           <div id="numeric-validation-msg" class="validation-warning hidden"></div>
-          <button type="button" id="btn-submit-numeric" class="btn btn-primary btn-block btn-lg">Submit Answer</button>
+          <div class="numeric-submit-row">
+            <button type="button" id="btn-submit-numeric" class="btn btn-primary btn-block btn-lg">Submit Answer</button>
+            <button type="button" id="btn-switch-to-mcq" class="btn btn-secondary btn-block btn-sm" style="margin-top: 0.45rem;">🚌 On the Bus? Show Multiple-Choice Options Instead</button>
+          </div>
         </div>
 
         <!-- INTERACTION AREA 4: Flashcard Recall -->
