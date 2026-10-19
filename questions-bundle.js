@@ -24,7 +24,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "By definition of the linear regression model, $\\hat{y}(t) = \\varphi^\\top(t)\\theta = [\\varphi_1(t) \\;\\; \\varphi_2(t)] \\begin{bmatrix} a \\\\ b \\end{bmatrix} = \\varphi_1(t) a + \\varphi_2(t) b$. Comparing this with $\\hat{y}(t) = -a y(t-1) + b u(t-1)$, we must include the negative sign inside the regressor component: $\\varphi_1(t) = -y(t-1)$ and $\\varphi_2(t) = u(t-1)$. Substituting $y(t-1) = 2$ gives $\\varphi_1(t) = -2$."
+    "explanation": "By definition of the linear regression model, $\\hat{y}(t) = \\varphi^\\top(t)\\theta = [\\varphi_1(t) \\;\\; \\varphi_2(t)] \\begin{bmatrix} a \\\\ b \\end{bmatrix} = \\varphi_1(t) a + \\varphi_2(t) b$. Comparing this with $\\hat{y}(t) = -a y(t-1) + b u(t-1)$, we must include the negative sign inside the regressor component: $\\varphi_1(t) = -y(t-1)$ and $\\varphi_2(t) = u(t-1)$. Substituting $y(t-1) = 2$ gives $\\varphi_1(t) = -2$.",
+    "busMcq": {
+      "options": [
+        "$-2$",
+        "$2$",
+        "$-3$",
+        "$3$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Matching $\\hat{y}(t) = -a y(t-1) + b u(t-1) = \\varphi_1(t)a + \\varphi_2(t)b$ gives $\\varphi_1(t) = -y(t-1) = -2$.",
+        "Forgot the minus sign in front of $a y(t-1)$ when defining $\\varphi_1(t) = -y(t-1)$.",
+        "Used $-u(t-1) = -3$ instead of $-y(t-1) = -2$.",
+        "This is the second component $\\varphi_2(t) = u(t-1) = 3$, not the first component $\\varphi_1(t)$."
+      ]
+    }
   },
   {
     "id": "b1-002",
@@ -148,7 +163,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "At $t=1$, the regressor $\\varphi(1)$ requires $y(0), y(-1), u(0), u(-1)$, which are unknown. At $t=2$, $\\varphi(2)$ requires $y(1), y(0), u(1), u(0)$, where $y(0)$ and $u(0)$ are still unknown. Starting at $t = n_1 = 3$, $\\varphi(3) = [-y(2) \\; -y(1) \\; u(2) \\; u(1)]^\\top$ contains only measured data. Thus the summation and matrix rows run from $t = 3$ to $t = 100$, giving $100 - 3 + 1 = 98$ rows in $\\Phi$ (so $\\Phi \\in \\mathbb{R}^{98 \\times 4}$)."
+    "explanation": "At $t=1$, the regressor $\\varphi(1)$ requires $y(0), y(-1), u(0), u(-1)$, which are unknown. At $t=2$, $\\varphi(2)$ requires $y(1), y(0), u(1), u(0)$, where $y(0)$ and $u(0)$ are still unknown. Starting at $t = n_1 = 3$, $\\varphi(3) = [-y(2) \\; -y(1) \\; u(2) \\; u(1)]^\\top$ contains only measured data. Thus the summation and matrix rows run from $t = 3$ to $t = 100$, giving $100 - 3 + 1 = 98$ rows in $\\Phi$ (so $\\Phi \\in \\mathbb{R}^{98 \\times 4}$).",
+    "busMcq": {
+      "options": [
+        "$98$",
+        "$96$",
+        "$99$",
+        "$100$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Since the maximum lag is $2$ ($y(t-2)$ and $u(t-2)$), the first fully known regressor is at $t = 3$, giving $100 - 2 = 98$ rows ($t = 3, \\dots, 100$).",
+        "Subtracted the total number of parameters ($4$) instead of the maximum lag ($2$).",
+        "Subtracted $1$ (as in a first-order ARX model) instead of the maximum lag $2$.",
+        "Ignored that $y(0), y(-1), u(0), u(-1)$ are unmeasured for $t=1, 2$."
+      ]
+    }
   },
   {
     "id": "b1-006",
@@ -331,7 +361,7 @@ window.QUESTION_BANK = [
     "block": "block1",
     "topic": "Mathematical Tools & Least Squares",
     "subtopic": "Normal Equations Calculation",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "variant",
     "isMockExam": false,
@@ -343,13 +373,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider the first-order ARX model $\\hat{y}(t) = -a y(t-1) + b u(t-1)$ with $\\theta = [a \\;\\; b]^\\top$. From $N = 51$ samples ($t = 1, \\dots, 51$), the following sums over $t = 2, \\dots, 51$ were computed:\n$$\\sum_{t=2}^{51} y^2(t-1) = 100, \\quad \\sum_{t=2}^{51} u^2(t-1) = 50, \\quad \\sum_{t=2}^{51} y(t-1)u(t-1) = 20,$$\n$$\\sum_{t=2}^{51} y(t-1)y(t) = 60, \\quad \\sum_{t=2}^{51} u(t-1)y(t) = 35.$$\nCompute the least squares estimate $\\hat{a}$ of the parameter $a$.",
     "hint": "With $\\varphi(t) = [-y(t-1) \\;\\; u(t-1)]^\\top$, form the $2 \\times 2$ normal equation matrix $R_N = \\sum \\varphi(t)\\varphi^\\top(t) = \\begin{bmatrix} \\sum y^2(t-1) & -\\sum y(t-1)u(t-1) \\\\ -\\sum y(t-1)u(t-1) & \\sum u^2(t-1) \\end{bmatrix}$ and right-hand side $\\sum \\varphi(t)y(t) = \\begin{bmatrix} -\\sum y(t-1)y(t) \\\\ \\sum u(t-1)y(t) \\end{bmatrix}$. Don't forget the minus signs!",
-    "options": null,
-    "correctAnswer": -0.5,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give your answer to at least 2 decimal places.",
+    "options": [
+      "$\\hat{a} = -0.50$",
+      "$\\hat{a} = +0.50$",
+      "$\\hat{a} = -0.60$",
+      "$\\hat{a} = +0.70$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! With $\\varphi(t) = [-y(t-1),\\; u(t-1)]^\\top$, the normal equations are $\\begin{bmatrix} 100 & -20 \\\\ -20 & 50 \\end{bmatrix}\\begin{bmatrix} \\hat{a} \\\\ \\hat{b} \\end{bmatrix} = \\begin{bmatrix} -60 \\\\ 35 \\end{bmatrix}$, which yields $\\hat{a} = \\frac{(50)(-60) - (-20)(35)}{5000 - 400} = \\frac{-2300}{4600} = -0.50$.",
+      "Sign error from forgetting that $\\varphi_1(t) = -y(t-1)$, which makes the first right-hand side entry $-\\sum y(t-1)y(t) = -60$ and the off-diagonal $-\\sum y(t-1)u(t-1) = -20$.",
+      "Computed $-\\sum y(t-1)y(t) / \\sum y^2(t-1) = -60/100 = -0.60$, ignoring the cross-correlation $\\sum y(t-1)u(t-1) = 20$ between the two regressors.",
+      "This is the value of $\\sum u(t-1)y(t) / \\sum u^2(t-1) = 35/50 = 0.70$ (or $\\hat{b} = 0.50$), not $\\hat{a}$."
+    ],
     "explanation": "Following `E1.pdf` Problem 2b (p. 4), we set $\\varphi(t) = \\begin{bmatrix} -y(t-1) \\\\ u(t-1) \\end{bmatrix}$ and $\\theta = \\begin{bmatrix} a \\\\ b \\end{bmatrix}$. Then:\n$$\\sum_{t=2}^{51} \\varphi(t)\\varphi^\\top(t) = \\begin{bmatrix} \\sum y^2(t-1) & -\\sum y(t-1)u(t-1) \\\\ -\\sum y(t-1)u(t-1) & \\sum u^2(t-1) \\end{bmatrix} = \\begin{bmatrix} 100 & -20 \\\\ -20 & 50 \\end{bmatrix},$$\nand\n$$\\sum_{t=2}^{51} \\varphi(t)y(t) = \\begin{bmatrix} -\\sum y(t-1)y(t) \\\\ \\sum u(t-1)y(t) \\end{bmatrix} = \\begin{bmatrix} -60 \\\\ 35 \\end{bmatrix}.$$\nThe determinant of $R_N$ is $100 \\times 50 - (-20)^2 = 5000 - 400 = 4600$. Using the $2 \\times 2$ inverse formula:\n$$\\begin{bmatrix} \\hat{a} \\\\ \\hat{b} \\end{bmatrix} = \\frac{1}{4600} \\begin{bmatrix} 50 & 20 \\\\ 20 & 100 \\end{bmatrix} \\begin{bmatrix} -60 \\\\ 35 \\end{bmatrix} = \\frac{1}{4600} \\begin{bmatrix} -3000 + 700 \\\\ -1200 + 3500 \\end{bmatrix} = \\frac{1}{4600} \\begin{bmatrix} -2300 \\\\ 2300 \\end{bmatrix} = \\begin{bmatrix} -0.5 \\\\ 0.5 \\end{bmatrix}.$$\nThus $\\hat{a} = -0.5$ (and $\\hat{b} = 0.5$)."
   },
   {
@@ -357,7 +397,7 @@ window.QUESTION_BANK = [
     "block": "block1",
     "topic": "Mathematical Tools & Least Squares",
     "subtopic": "Delay & Impulse Input Estimation",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "variant",
     "isMockExam": false,
@@ -369,13 +409,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Data has been generated by the FIR system $y(t) = b_1^o u(t - n_k) + b_2^o u(t - n_k - 1) + e(t)$, where $e(t)$ is zero-mean white noise with small variance. During the experiment, a unit impulse input $u(1) = 1$ and $u(t) = 0$ for all $t \\ne 1$ was applied. The measured outputs for $t = 1, \\dots, 6$ are:\n$$y(1) = 0.04, \\quad y(2) = -0.05, \\quad y(3) = 3.20, \\quad y(4) = -1.45, \\quad y(5) = 0.02, \\quad y(6) = -0.03.$$\nFirst determine the most reasonable integer delay $n_k$, and then compute the least squares estimate $\\hat{b}_1$ using the predictor $\\hat{y}(t) = b_1 u(t - n_k) + b_2 u(t - n_k - 1)$.",
     "hint": "Without noise, an impulse $u(1)=1$ produces non-zero outputs only at $t = 1 + n_k$ (where $y(1+n_k) = b_1^o$) and $t = 2 + n_k$ (where $y(2+n_k) = b_2^o$). Look at which two consecutive outputs are large!",
-    "options": null,
-    "correctAnswer": 3.2,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give your answer to 2 decimal places.",
+    "options": [
+      "$n_k = 2$ and $\\hat{b}_1 = 3.20$",
+      "$n_k = 3$ and $\\hat{b}_1 = 3.20$",
+      "$n_k = 2$ and $\\hat{b}_1 = -1.45$",
+      "$n_k = 1$ and $\\hat{b}_1 = 0.04$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Since the unit impulse is applied at $t = 1$ ($u(1)=1$) and the first significant response appears at $t = 3$ ($y(3) = 3.20$), we have $1 + n_k = 3 \\implies n_k = 2$, and $\\hat{b}_1 = y(1+n_k) = y(3) = 3.20$.",
+      "Confused the sample index $t = 3$ where the response appears with the delay $n_k = t - 1 = 2$.",
+      "Correct delay $n_k = 2$, but picked $\\hat{b}_2 = y(4) = -1.45$ instead of $\\hat{b}_1 = y(3) = 3.20$.",
+      "Treated pure measurement noise $y(1) = 0.04$ before the impulse arrives as the system response."
+    ],
     "explanation": "Following `exam2023.pdf` Problem 3a-b (p. 2 & pp. 5-6): Since $u(t) = 1$ only at $t = 1$ and $0$ otherwise, the noise-free output is zero for all $t$ except $t = 1 + n_k$ and $t = 2 + n_k$. Inspecting the measurements, $y(t)$ is close to zero except at $t = 3$ ($y(3) = 3.20$) and $t = 4$ ($y(4) = -1.45$). Thus $1 + n_k = 3 \\implies n_k = 2$. With $n_k = 2$, the regressor is $\\varphi(t) = [u(t-2) \\;\\; u(t-3)]^\\top$. Because $u(t-2) = 1$ only at $t = 3$ and $u(t-3) = 1$ only at $t = 4$, we get $\\sum_{t=1}^6 \\varphi(t)\\varphi^\\top(t) = \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix} = I_2$, and $\\hat{\\theta} = \\begin{bmatrix} \\hat{b}_1 \\\\ \\hat{b}_2 \\end{bmatrix} = \\sum_{t=1}^6 \\varphi(t)y(t) = \\begin{bmatrix} y(3) \\\\ y(4) \\end{bmatrix} = \\begin{bmatrix} 3.20 \\\\ -1.45 \\end{bmatrix}$. Hence $\\hat{b}_1 = 3.20$."
   },
   {
@@ -419,7 +469,7 @@ window.QUESTION_BANK = [
     "block": "block1",
     "topic": "Mathematical Tools & Least Squares",
     "subtopic": "Step Input & Parameter Separation",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "variant",
     "isMockExam": false,
@@ -431,13 +481,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider the FIR model $\\hat{y}(t) = b_1 u(t) + b_2 u(t-1)$ where the input is a unit step: $u(t) = 0$ for $t \\le 0$ and $u(t) = 1$ for $t \\ge 1$. Consequently, the regressor is $\\varphi(1) = [1 \\;\\; 0]^\\top$ at $t=1$, and $\\varphi(t) = [1 \\;\\; 1]^\\top$ for $t = 2, \\dots, N$. Suppose we collect $N = 10$ samples with $y(1) = 2.50$ and $\\sum_{t=2}^{10} y(t) = 36.00$. Compute the least squares estimate $\\hat{b}_2$.",
     "hint": "Follow `SI_rexam2020.pdf` Problem 4a (p. 6): $\\Phi^\\top\\Phi = \\begin{bmatrix} N & N-1 \\\\ N-1 & N-1 \\end{bmatrix}$, whose inverse is $\\begin{bmatrix} 1 & -1 \\\\ -1 & \\frac{N}{N-1} \\end{bmatrix}$. This yields $\\hat{b}_1 = y(1)$ and $\\hat{b}_2 = -y(1) + \\frac{1}{N-1}\\sum_{t=2}^N y(t)$.",
-    "options": null,
-    "correctAnswer": 1.5,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give your answer to 2 decimal places.",
+    "options": [
+      "$\\hat{b}_2 = 1.50$",
+      "$\\hat{b}_2 = 2.50$",
+      "$\\hat{b}_2 = 4.00$",
+      "$\\hat{b}_2 = 1.10$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! At $t=1$, $\\hat{y}(1) = b_1 u(1) = b_1 \\implies \\hat{b}_1 = y(1) = 2.50$. For $t=2,\\dots,10$ ($9$ samples), $\\hat{y}(t) = b_1 + b_2$, so $\\hat{b}_1 + \\hat{b}_2 = \\frac{1}{9}\\sum_{t=2}^{10} y(t) = \\frac{36}{9} = 4.00 \\implies \\hat{b}_2 = 4.00 - 2.50 = 1.50$.",
+      "This is $\\hat{b}_1 = y(1) = 2.50$, not $\\hat{b}_2$.",
+      "This is the estimated steady-state static gain $\\hat{b}_1 + \\hat{b}_2 = 36/9 = 4.00$ rather than $\\hat{b}_2$ alone.",
+      "Divided $\\sum_{t=2}^{10} y(t) = 36$ by $N = 10$ instead of $N - 1 = 9$ ($3.6 - 2.5 = 1.1$)."
+    ],
     "explanation": "Following `SI_rexam2020.pdf` Problem 4a (p. 3 & p. 6): Summing $\\varphi(t)\\varphi^\\top(t)$ gives:\n$$\\Phi^\\top\\Phi = \\begin{bmatrix} 1 \\\\ 0 \\end{bmatrix}[1 \\;\\; 0] + (N-1)\\begin{bmatrix} 1 \\\\ 1 \\end{bmatrix}[1 \\;\\; 1] = \\begin{bmatrix} N & N-1 \\\\ N-1 & N-1 \\end{bmatrix}, \\quad (\\Phi^\\top\\Phi)^{-1} = \\begin{bmatrix} 1 & -1 \\\\ -1 & \\frac{N}{N-1} \\end{bmatrix}.$$\nAlso, $\\Phi^\\top Y = \\begin{bmatrix} y(1) + \\sum_{t=2}^N y(t) \\\\ \\sum_{t=2}^N y(t) \\end{bmatrix}$. Multiplying $(\\Phi^\\top\\Phi)^{-1} \\Phi^\\top Y$ gives:\n$$\\hat{b}_1 = y(1) = 2.50,$$\n$$\\hat{b}_2 = -y(1) + \\frac{1}{N-1}\\sum_{t=2}^N y(t) = -2.50 + \\frac{36.00}{9} = -2.50 + 4.00 = 1.50.$$"
   },
   {
@@ -517,7 +577,7 @@ window.QUESTION_BANK = [
     "block": "block1",
     "topic": "Mathematical Tools & Least Squares",
     "subtopic": "Model Quality & R-squared",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "easy",
     "origin": "adapted",
     "isMockExam": false,
@@ -529,13 +589,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "On a validation (hold-out) dataset of $N = 4$ samples, the measured outputs are $y(1) = 1$, $y(2) = 3$, $y(3) = 5$, $y(4) = 7$ (so the sample mean is $\\bar{y} = 4$). A fitted linear regression model produces predictions $\\hat{y}(1) = 1.5$, $\\hat{y}(2) = 2.5$, $\\hat{y}(3) = 5.5$, $\\hat{y}(4) = 6.5$. Calculate the coefficient of determination $R^2 = 1 - \\frac{SS_{\\text{res}}}{SS_{\\text{tot}}}$.",
     "hint": "Compute $SS_{\\text{res}} = \\sum_{t=1}^4 (y(t) - \\hat{y}(t))^2$ and $SS_{\\text{tot}} = \\sum_{t=1}^4 (y(t) - \\bar{y})^2$, then substitute into $R^2 = 1 - SS_{\\text{res}} / SS_{\\text{tot}}$.",
-    "options": null,
-    "correctAnswer": 0.95,
-    "tolerance": 0.005,
-    "unit": "dimensionless",
-    "roundingNote": "Give your answer to 2 decimal places.",
+    "options": [
+      "$R^2 = 0.95$",
+      "$R^2 = 0.90$",
+      "$R^2 = 0.85$",
+      "$R^2 = 0.05$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Each residual is $|y(t) - \\hat{y}(t)| = 0.5$, so $SS_{\\text{res}} = 4 \\times 0.5^2 = 1.0$. With $\\bar{y} = 4$, $SS_{\\text{tot}} = (-3)^2 + (-1)^2 + 1^2 + 3^2 = 20$. Thus $R^2 = 1 - \\frac{1}{20} = 0.95$.",
+      "Used unsquared absolute errors $\\sum |y(t)-\\hat{y}(t)| = 2.0$ in the numerator ($1 - 2/20 = 0.90$).",
+      "Arithmetic slip in computing $SS_{\\text{tot}} = 20$.",
+      "Computed the unexplained fraction $SS_{\\text{res}} / SS_{\\text{tot}} = 1/20 = 0.05$ without subtracting from $1$."
+    ],
     "explanation": "From `LinReg2021.pdf` (p. 18, Eqs. 15-17):\n1. Residual sum of squares: Each prediction error $y(t) - \\hat{y}(t)$ has magnitude $0.5$, so\n$$SS_{\\text{res}} = \\sum_{t=1}^4 (y(t) - \\hat{y}(t))^2 = (-0.5)^2 + (0.5)^2 + (-0.5)^2 + (0.5)^2 = 4 \\times 0.25 = 1.0.$$\n2. Total sum of squares around $\\bar{y} = 4$:\n$$SS_{\\text{tot}} = \\sum_{t=1}^4 (y(t) - 4)^2 = (-3)^2 + (-1)^2 + 1^2 + 3^2 = 9 + 1 + 1 + 9 = 20.0.$$\n3. Coefficient of determination:\n$$R^2 = 1 - \\frac{SS_{\\text{res}}}{SS_{\\text{tot}}} = 1 - \\frac{1.0}{20.0} = 1 - 0.05 = 0.95.$$"
   },
   {
@@ -543,7 +613,7 @@ window.QUESTION_BANK = [
     "block": "block1",
     "topic": "Mathematical Tools & Least Squares",
     "subtopic": "BLUE (Best Linear Unbiased Estimator)",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "variant",
     "isMockExam": false,
@@ -555,13 +625,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "We estimate a scalar constant $b_o$ from $N = 3$ measurements $y(t) = b_o + \\varepsilon(t)$ ($t = 1, 2, 3$), so $\\Phi = [1 \\;\\; 1 \\;\\; 1]^\\top$. The noise vector $\\varepsilon = [\\varepsilon(1) \\;\\; \\varepsilon(2) \\;\\; \\varepsilon(3)]^\\top$ is zero-mean colored noise with covariance matrix $R = \\mathbb{E}[\\varepsilon\\varepsilon^\\top]$ whose inverse is known to be:\n$$R^{-1} = \\begin{bmatrix} 1.0 & -0.5 & 0.2 \\\\ -0.5 & 1.2 & -0.5 \\\\ 0.2 & -0.5 & 1.0 \\end{bmatrix}.$$\nWhat is the variance $\\text{Var}(\\hat{b}_{\\text{BLUE}})$ of the Best Linear Unbiased Estimator $\\hat{b}_{\\text{BLUE}} = (\\Phi^\\top R^{-1}\\Phi)^{-1}\\Phi^\\top R^{-1}Y$?",
     "hint": "By Theorem 4 in `LinReg2021.pdf` (p. 13), $\\text{Cov}(\\hat{\\theta}_{\\text{BLUE}}) = (\\Phi^\\top R^{-1}\\Phi)^{-1}$. Since $\\Phi = [1 \\;\\; 1 \\;\\; 1]^\\top$, $\\Phi^\\top R^{-1}\\Phi$ is simply the sum of all 9 entries of the matrix $R^{-1}$!",
-    "options": null,
-    "correctAnswer": 0.625,
-    "tolerance": 0.005,
-    "unit": "dimensionless",
-    "roundingNote": "Give your answer to 3 decimal places.",
+    "options": [
+      "$0.625\\text{ (i.e. } 5/8\\text{)}$",
+      "$1.60\\text{ (i.e. } 8/5\\text{)}$",
+      "$0.3125\\text{ (i.e. } 5/16\\text{)}$",
+      "$0.333$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Since $\\Phi = [1,\\; 1,\\; 1]^\\top$, $\\Phi^\\top R^{-1} \\Phi$ is the sum of all $9$ entries of $R^{-1}$: $(1.0 + 1.2 + 1.0) + 2(-0.5 - 0.5 + 0.2) = 3.2 - 1.6 = 1.6$. Thus $\\text{Var}(\\hat{b}_{\\text{BLUE}}) = (\\Phi^\\top R^{-1}\\Phi)^{-1} = \\frac{1}{1.6} = 0.625$.",
+      "Computed the Fisher information $\\Phi^\\top R^{-1} \\Phi = 1.60$ but forgot to take its inverse $(\\Phi^\\top R^{-1} \\Phi)^{-1}$.",
+      "Summed only the diagonal entries of $R^{-1}$ ($3.2$) and inverted ($1/3.2 = 0.3125$), ignoring the off-diagonal terms.",
+      "Used the white-noise formula $1/N = 1/3 \\approx 0.333$, ignoring $R^{-1}$."
+    ],
     "explanation": "By Theorem 4 in `LinReg2021.pdf` (p. 13) and `SI_rexam2020.pdf` Problem 2c (p. 1 & p. 5), the covariance of the BLUE estimator $\\hat{b}_{\\text{BLUE}} = (\\Phi^\\top R^{-1}\\Phi)^{-1}\\Phi^\\top R^{-1}Y$ is given by:\n$$\\text{Var}(\\hat{b}_{\\text{BLUE}}) = (\\Phi^\\top R^{-1}\\Phi)^{-1}.$$\nWith $\\Phi = \\begin{bmatrix} 1 \\\\ 1 \\\\ 1 \\end{bmatrix}$, we first compute $\\Phi^\\top R^{-1}$ by summing each column of $R^{-1}$:\n$$\\Phi^\\top R^{-1} = \\begin{bmatrix} 1.0 - 0.5 + 0.2 & -0.5 + 1.2 - 0.5 & 0.2 - 0.5 + 1.0 \\end{bmatrix} = \\begin{bmatrix} 0.7 & 0.2 & 0.7 \\end{bmatrix}.$$\nNext, multiplying by $\\Phi$ sums these row elements:\n$$\\Phi^\\top R^{-1}\\Phi = 0.7 + 0.2 + 0.7 = 1.6.$$\nTherefore, $\\text{Var}(\\hat{b}_{\\text{BLUE}}) = (1.6)^{-1} = \\frac{1}{1.6} = 0.625$."
   },
   {
@@ -650,7 +730,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give your answer to 2 decimal places.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "Following `E2.pdf` Problem 5a (p. 4), for $y(t) = e(t) + c e(t-1)$ with $c = 0.5$ and $\\lambda = 2$:\n$$R_y(0) = \\mathbb{E}[y^2(t)] = \\mathbb{E}[(e(t) + c e(t-1))^2] = \\mathbb{E}[e^2(t)] + 2c\\mathbb{E}[e(t)e(t-1)] + c^2\\mathbb{E}[e^2(t-1)].$$\nBecause $e(t)$ is white noise, $\\mathbb{E}[e(t)e(t-1)] = R_e(1) = 0$ and $\\mathbb{E}[e^2(t)] = \\mathbb{E}[e^2(t-1)] = \\lambda = 2$. Thus:\n$$R_y(0) = (1 + c^2)\\lambda = (1 + 0.5^2) \\times 2 = 1.25 \\times 2 = 2.5.$$"
+    "explanation": "Following `E2.pdf` Problem 5a (p. 4), for $y(t) = e(t) + c e(t-1)$ with $c = 0.5$ and $\\lambda = 2$:\n$$R_y(0) = \\mathbb{E}[y^2(t)] = \\mathbb{E}[(e(t) + c e(t-1))^2] = \\mathbb{E}[e^2(t)] + 2c\\mathbb{E}[e(t)e(t-1)] + c^2\\mathbb{E}[e^2(t-1)].$$\nBecause $e(t)$ is white noise, $\\mathbb{E}[e(t)e(t-1)] = R_e(1) = 0$ and $\\mathbb{E}[e^2(t)] = \\mathbb{E}[e^2(t-1)] = \\lambda = 2$. Thus:\n$$R_y(0) = (1 + c^2)\\lambda = (1 + 0.5^2) \\times 2 = 1.25 \\times 2 = 2.5.$$",
+    "busMcq": {
+      "options": [
+        "$2.5$",
+        "$2.0$",
+        "$3.0$",
+        "$4.5$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Since $e(t)$ and $e(t-1)$ are uncorrelated with variance $\\lambda = 2$, $R_y(0) = (1 + 0.5^2)\\lambda = 1.25 \\times 2 = 2.5$.",
+        "Ignored the lagged noise term $0.5e(t-1)$.",
+        "Used $(1 + 0.5)\\lambda = 1.5 \\times 2 = 3.0$ without squaring the coefficient $0.5$.",
+        "Computed $(1 + 0.5)^2 \\lambda = 2.25 \\times 2 = 4.5$, forgetting that $\\mathbb{E}[e(t)e(t-1)] = 0$."
+      ]
+    }
   },
   {
     "id": "b2-003",
@@ -693,7 +788,7 @@ window.QUESTION_BANK = [
     "block": "block2",
     "topic": "Stochastic Foundations",
     "subtopic": "Filtered Noise (AR Process)",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "variant",
     "isMockExam": false,
@@ -705,13 +800,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider the stationary first-order autoregressive (AR(1)) process:\n$$u(t) = 0.6 u(t-1) + w(t),$$\nwhere $w(t)$ is zero-mean white noise with variance $\\lambda_w = 3.2$. Compute the autocovariance at lag 1, $R_u(1) = \\mathbb{E}[u(t)u(t-1)]$.",
     "hint": "First find $R_u(0) = \\mathbb{E}[u^2(t)]$ using $R_u(0) = 0.6^2 R_u(0) + \\lambda_w \\implies R_u(0) = \\frac{\\lambda_w}{1 - 0.6^2}$. Then use $R_u(1) = \\mathbb{E}[(0.6 u(t-1) + w(t))u(t-1)] = 0.6 R_u(0)$.",
-    "options": null,
-    "correctAnswer": 3.0,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give your answer to 1 decimal place.",
+    "options": [
+      "$R_u(1) = 3.0$",
+      "$R_u(1) = 5.0$",
+      "$R_u(1) = 1.92$",
+      "$R_u(1) = 0$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! First, $R_u(0) = \\frac{\\lambda_w}{1 - 0.6^2} = \\frac{3.2}{0.64} = 5.0$. Then multiplying $u(t) = 0.6u(t-1) + w(t)$ by $u(t-1)$ and taking expectations gives $R_u(1) = 0.6 R_u(0) = 0.6(5.0) = 3.0$.",
+      "This is the lag-zero variance $R_u(0) = 5.0$, before multiplying by $a = 0.6$ to get $R_u(1)$.",
+      "Multiplied $\\lambda_w = 3.2$ directly by $0.6$ ($0.6 \\times 3.2 = 1.92$) without dividing by $1 - a^2 = 0.64$.",
+      "Assumed the AR(1) process is uncorrelated across time like white noise."
+    ],
     "explanation": "Following `exam2023.pdf` Problem 5a (p. 6) and `E2.pdf` Problem 5b (pp. 4-5): Since $u(t-1)$ depends only on $w(s)$ for $s \\le t-1$, it is uncorrelated with the white noise innovation $w(t)$ at time $t$ ($\\mathbb{E}[u(t-1)w(t)] = 0$). Therefore:\n1. For $\\tau = 0$: $R_u(0) = \\mathbb{E}[(0.6 u(t-1) + w(t))^2] = 0.36 R_u(0) + \\lambda_w \\implies R_u(0) = \\frac{\\lambda_w}{1 - 0.36} = \\frac{3.2}{0.64} = 5.0$.\n2. For $\\tau = 1$: $R_u(1) = \\mathbb{E}[(0.6 u(t-1) + w(t))u(t-1)] = 0.6 R_u(0) + 0 = 0.6 \\times 5.0 = 3.0$."
   },
   {
@@ -807,7 +912,7 @@ window.QUESTION_BANK = [
     "block": "block2",
     "topic": "Stochastic Foundations",
     "subtopic": "Finite-Sample Variance & Input Design",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "easy",
     "origin": "adapted",
     "isMockExam": false,
@@ -819,13 +924,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Data is generated by the FIR system $y(t) = b_o u(t) + e(t)$ for $t = 1, \\dots, N$, where $e(t)$ is zero-mean white noise with variance $\\lambda = 1.8$ and $u(t)$ is a deterministic input subject to the amplitude constraint $-u_{\\max} \\le u(t) \\le u_{\\max}$ with $u_{\\max} = 0.5$. If we collect $N = 36$ samples and choose the input signal $u(t)$ to minimize the variance $\\text{Var}(\\hat{b})$ of the least squares estimator $\\hat{b}$, what is the minimum achievable variance $\\text{Var}(\\hat{b})$?",
     "hint": "From `E1.pdf` Problem 3b (p. 5), $\\text{Var}(\\hat{b}) = \\frac{\\lambda}{\\sum_{t=1}^N u^2(t)}$. To minimize this variance under $|u(t)| \\le u_{\\max}$, set $|u(t)| = u_{\\max}$ for all $t = 1, \\dots, N$.",
-    "options": null,
-    "correctAnswer": 0.2,
-    "tolerance": 0.005,
-    "unit": "dimensionless",
-    "roundingNote": "Give your answer to 1 decimal place.",
+    "options": [
+      "$\\text{Var}(\\hat{b}) = 0.20$",
+      "$\\text{Var}(\\hat{b}) = 0.10$",
+      "$\\text{Var}(\\hat{b}) = 0.05$",
+      "$\\text{Var}(\\hat{b}) = 0.40$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Variance $\\text{Var}(\\hat{b}) = \\frac{\\lambda}{\\sum_{t=1}^N u^2(t)}$ is minimized by choosing $u(t) = \\pm u_{\\max} = \\pm 0.5$ at every sample, giving $\\sum u^2(t) = 36(0.25) = 9$ and $\\text{Var}(\\hat{b}) = \\frac{1.8}{9} = 0.20$.",
+      "Used $u_{\\max} = 0.5$ instead of $u_{\\max}^2 = 0.25$ in the denominator ($1.8 / 18 = 0.10$).",
+      "Forgot to multiply by $\\lambda = 1.8$ or used $u_{\\max} = 1$.",
+      "Used uniform random variance instead of maximum binary amplitude $\\pm u_{\\max}$."
+    ],
     "explanation": "Following `E1.pdf` Problem 3b (p. 2 & p. 5), since $\\varphi(t) = u(t)$ is deterministic and $e(t)$ is zero-mean white noise with variance $\\lambda$, Theorem 3 in `LinReg2021.pdf` (p. 12) gives:\n$$\\text{Var}(\\hat{b}) = \\lambda (\\Phi^\\top\\Phi)^{-1} = \\frac{\\lambda}{\\sum_{t=1}^N u^2(t)}.$$\nTo minimize $\\text{Var}(\\hat{b})$ subject to $-u_{\\max} \\le u(t) \\le u_{\\max}$, we maximize the input energy $\\sum_{t=1}^N u^2(t)$ by choosing $u(t) = \\pm u_{\\max}$ at every sample $t = 1, \\dots, N$. This yields $\\sum_{t=1}^{36} u^2(t) = 36 \\times (0.5)^2 = 36 \\times 0.25 = 9.0$. Therefore:\n$$\\text{Var}(\\hat{b})_{\\min} = \\frac{1.8}{9.0} = 0.2.$$"
   },
   {
@@ -869,7 +984,7 @@ window.QUESTION_BANK = [
     "block": "block2",
     "topic": "Stochastic Foundations",
     "subtopic": "LS Variance under Colored Noise",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "variant",
     "isMockExam": false,
@@ -881,13 +996,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Data is collected from the system $y(t) = b_o u(t-1) + e(t) + c_o e(t-1)$ for $N = 3$ samples ($t = 1, 2, 3$) using a constant input $u(t) = 1$ for all $t$, where $e(t)$ is zero-mean white noise with variance $\\sigma^2 = 1$ and $c_o = 0.5$. We estimate $b_o$ using ordinary least squares, $\\hat{b} = \\frac{1}{3}\\sum_{t=1}^3 y(t)$. Using the colored-noise covariance formula $\\text{Var}(\\hat{b}) = (\\Phi^\\top\\Phi)^{-1}\\Phi^\\top R \\Phi (\\Phi^\\top\\Phi)^{-1}$, compute the exact variance $\\text{Var}(\\hat{b})$.",
     "hint": "From `SI_rexam2020.pdf` Problem 2b (p. 4), for $N=3$ and $\\Phi = [1 \\;\\; 1 \\;\\; 1]^\\top$, $\\Phi^\\top\\Phi = 3$ and $\\Phi^\\top R \\Phi = \\sigma^2(3 c_o^2 + 4 c_o + 3)$, so $\\text{Var}(\\hat{b}) = \\frac{\\sigma^2}{9}(3 c_o^2 + 4 c_o + 3)$.",
-    "options": null,
-    "correctAnswer": 0.638889,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give a fraction (23/36) or decimal rounded to 2–3 decimal places (0.64 or 0.639).",
+    "options": [
+      "$\\frac{23}{36} \\approx 0.639$",
+      "$\\frac{15}{36} = \\frac{5}{12} \\approx 0.417$",
+      "$\\frac{1}{3} \\approx 0.333$",
+      "$\\frac{23}{12} \\approx 1.917$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Here $\\Phi^\\top\\Phi = 3$ and $\\Phi^\\top R \\Phi = 3(1 + c_o^2) + 4c_o = 3(1.25) + 2.0 = 5.75 = \\frac{23}{4}$. Thus $\\text{Var}(\\hat{b}) = \\frac{1}{9}\\Phi^\\top R \\Phi = \\frac{23}{36} \\approx 0.639$.",
+      "Summed only the $3$ diagonal entries $3(1 + c_o^2) = 3.75$ of $R$ and ignored the $4$ off-diagonal lag-1 covariance terms $4c_o = 2.0$.",
+      "Used the white-noise formula $\\sigma^2 / N = 1/3$, ignoring that the noise is MA(1) colored noise.",
+      "Divided $\\Phi^\\top R \\Phi = 23/4$ by $\\Phi^\\top\\Phi = 3$ once instead of squaring $(\\Phi^\\top\\Phi)^{-1} = 1/9$."
+    ],
     "explanation": "Following `SI_rexam2020.pdf` Problem 2a-b (p. 1 & p. 4): Let $\\varepsilon(t) = e(t) + c_o e(t-1)$. With $\\Phi = [1 \\;\\; 1 \\;\\; 1]^\\top$, we have $\\Phi^\\top\\Phi = 3$ and\n$$R = \\mathbb{E}[\\varepsilon\\varepsilon^\\top] = \\sigma^2 \\begin{bmatrix} 1+c_o^2 & c_o & 0 \\\\ c_o & 1+c_o^2 & c_o \\\\ 0 & c_o & 1+c_o^2 \\end{bmatrix}.$$\nSumming all elements of $R$ gives $\\Phi^\\top R \\Phi = \\sigma^2 [3(1+c_o^2) + 4 c_o] = \\sigma^2(3 c_o^2 + 4 c_o + 3)$. Therefore:\n$$\\text{Var}(\\hat{b}) = (\\Phi^\\top\\Phi)^{-1}\\Phi^\\top R \\Phi (\\Phi^\\top\\Phi)^{-1} = \\frac{\\sigma^2}{9}(3 c_o^2 + 4 c_o + 3).$$\nSubstituting $\\sigma^2 = 1$ and $c_o = 0.5$:\n$$\\text{Var}(\\hat{b}) = \\frac{1}{9}\\left(3(0.25) + 4(0.5) + 3\\right) = \\frac{0.75 + 2 + 3}{9} = \\frac{5.75}{9} \\approx 0.6389.$$"
   },
   {
@@ -976,14 +1101,29 @@ window.QUESTION_BANK = [
     "roundingNote": "Give your answer to 1 decimal place.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "Following `SI_rexam2020.pdf` Problem 5 (p. 3 & p. 7), with $\\varphi(t) = u_m(t)$ and $\\theta = b$, the least squares estimate converges as $N \\to \\infty$ to:\n$$\\hat{b} \\to \\frac{\\mathbb{E}[u_m(t)y(t)]}{\\mathbb{E}[u_m^2(t)]}.$$\nSince $u(t)$, $v(t)$, and $e(t)$ are mutually uncorrelated zero-mean white noises:\n1. $\\mathbb{E}[u_m^2(t)] = \\mathbb{E}[(u(t) + v(t))^2] = \\mathbb{E}[u^2(t)] + \\mathbb{E}[v^2(t)] = \\sigma_u^2 + \\sigma_v^2 = 4 + 1 = 5$.\n2. $\\mathbb{E}[u_m(t)y(t)] = \\mathbb{E}[(u(t) + v(t))(b_o u(t) + e(t))] = b_o \\mathbb{E}[u^2(t)] = b_o \\sigma_u^2 = 5 \\times 4 = 20$.\nTherefore, $\\hat{b} \\to \\frac{\\sigma_u^2}{\\sigma_u^2 + \\sigma_v^2} b_o = \\frac{20}{5} = 4.0$ (which is biased downward toward zero because $\\sigma_v^2 > 0$, known as attenuation bias in errors-in-variables)."
+    "explanation": "Following `SI_rexam2020.pdf` Problem 5 (p. 3 & p. 7), with $\\varphi(t) = u_m(t)$ and $\\theta = b$, the least squares estimate converges as $N \\to \\infty$ to:\n$$\\hat{b} \\to \\frac{\\mathbb{E}[u_m(t)y(t)]}{\\mathbb{E}[u_m^2(t)]}.$$\nSince $u(t)$, $v(t)$, and $e(t)$ are mutually uncorrelated zero-mean white noises:\n1. $\\mathbb{E}[u_m^2(t)] = \\mathbb{E}[(u(t) + v(t))^2] = \\mathbb{E}[u^2(t)] + \\mathbb{E}[v^2(t)] = \\sigma_u^2 + \\sigma_v^2 = 4 + 1 = 5$.\n2. $\\mathbb{E}[u_m(t)y(t)] = \\mathbb{E}[(u(t) + v(t))(b_o u(t) + e(t))] = b_o \\mathbb{E}[u^2(t)] = b_o \\sigma_u^2 = 5 \\times 4 = 20$.\nTherefore, $\\hat{b} \\to \\frac{\\sigma_u^2}{\\sigma_u^2 + \\sigma_v^2} b_o = \\frac{20}{5} = 4.0$ (which is biased downward toward zero because $\\sigma_v^2 > 0$, known as attenuation bias in errors-in-variables).",
+    "busMcq": {
+      "options": [
+        "$4.0$",
+        "$5.0$",
+        "$3.75$",
+        "$2.5$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! By the errors-in-variables attenuation formula, $\\hat{b} \\to b_o \\frac{\\sigma_u^2}{\\sigma_u^2 + \\sigma_v^2} = 5 \\times \\frac{4}{4 + 1} = 4.0$.",
+        "Assumed no attenuation bias ($\\hat{b} \\to b_o = 5.0$).",
+        "Used $\\frac{\\sigma_u^2 - \\sigma_v^2}{\\sigma_u^2} = \\frac{3}{4}$ instead of $\\frac{\\sigma_u^2}{\\sigma_u^2 + \\sigma_v^2} = \\frac{4}{5}$.",
+        "Divided by $2$ assuming equal input and noise variances."
+      ]
+    }
   },
   {
     "id": "b2-014",
     "block": "block2",
     "topic": "Stochastic Foundations",
     "subtopic": "Errors-in-Variables with AR(1) Input",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "variant",
     "isMockExam": false,
@@ -995,13 +1135,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider the system $y(t) = b_o u(t-1) + e(t)$ with true parameter $b_o = 3.0$, where the true input is generated by the AR(1) process $u(t) = 0.5 u(t-1) + w(t)$ and the measured input is $\\hat{u}(t) = u(t) + v(t)$. Here $e(t)$, $w(t)$, and $v(t)$ are mutually uncorrelated zero-mean white noise processes with variances $\\lambda_e = 1$, $\\lambda_w = 3$, and $\\lambda_v = 1$. If we estimate $b_o$ by minimizing $\\sum_{t=1}^N (y(t) - b\\hat{u}(t-1))^2$, what value does the least squares estimate $\\hat{b}$ converge to as $N \\to \\infty$?",
     "hint": "Follow `exam2023.pdf` Problem 5a-b (p. 6-7): first find $R_u(0) = \\frac{\\lambda_w}{1 - 0.5^2} = \\frac{4}{3}\\lambda_w$ and $R_{\\hat{u}}(0) = R_u(0) + \\lambda_v$. Then use $\\hat{b} \\to b_o \\frac{R_u(0)}{R_{\\hat{u}}(0)}$.",
-    "options": null,
-    "correctAnswer": 2.4,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give your answer to 2 decimal places.",
+    "options": [
+      "$\\hat{b} \\to 2.40$",
+      "$\\hat{b} \\to 3.00$",
+      "$\\hat{b} \\to 2.25$",
+      "$\\hat{b} \\to 1.80$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! First, the AR(1) input variance is $R_u(0) = \\frac{\\lambda_w}{1 - 0.5^2} = \\frac{3}{0.75} = 4$. Then $\\mathbb{E}[\\hat{u}^2(t-1)] = R_u(0) + \\lambda_v = 4 + 1 = 5$, so $\\hat{b} \\to b_o \\frac{R_u(0)}{R_u(0) + \\lambda_v} = 3.0 \\times \\frac{4}{5} = 2.40$.",
+      "Ignored the input measurement noise $v(t)$ and assumed consistency ($\\hat{b} \\to b_o = 3.00$).",
+      "Used $\\lambda_w = 3$ instead of $R_u(0) = 4$ in the attenuation ratio: $3.0 \\times \\frac{3}{3+1} = 2.25$.",
+      "Used $1 - a = 0.5$ instead of $1 - a^2 = 0.75$ when computing $R_u(0)$."
+    ],
     "explanation": "Following `exam2023.pdf` Problem 5a-b (pp. 4, 6-7):\n1. Variance of the AR(1) input $u(t) = 0.5 u(t-1) + w(t)$:\n$$R_u(0) = \\mathbb{E}[u^2(t)] = 0.25 R_u(0) + \\lambda_w \\implies R_u(0) = \\frac{4}{3}\\lambda_w = \\frac{4}{3}(3) = 4.$$\n2. Variance of the noisy measured input $\\hat{u}(t) = u(t) + v(t)$:\n$$R_{\\hat{u}}(0) = \\mathbb{E}[\\hat{u}^2(t)] = R_u(0) + \\lambda_v = 4 + 1 = 5.$$\n3. Cross-moment $\\mathbb{E}[\\hat{u}(t-1)y(t)] = \\mathbb{E}[(u(t-1)+v(t-1))(b_o u(t-1)+e(t))] = b_o R_u(0) = 3.0 \\times 4 = 12$.\n4. Limit of LS estimator as $N \\to \\infty$:\n$$\\hat{b} \\to \\frac{\\mathbb{E}[\\hat{u}(t-1)y(t)]}{\\mathbb{E}[\\hat{u}^2(t-1)]} = b_o \\frac{R_u(0)}{R_{\\hat{u}}(0)} = 3.0 \\times \\frac{4}{5} = 2.4.$$"
   },
   {
@@ -1267,7 +1417,7 @@ window.QUESTION_BANK = [
     "block": "block3",
     "topic": "Model Structures & Prediction",
     "subtopic": "Exponential Smoothing & Optimal ARMA Prediction",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "easy",
     "origin": "adapted",
     "isMockExam": false,
@@ -1279,13 +1429,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider the exponential smoothing predictor\n$$\\hat{y}(t) = \\frac{(1 - \\alpha)q^{-1}}{1 - \\alpha q^{-1}}y(t)$$\nwith parameter $\\alpha = 0.4$. Suppose that at time $t = 1$ we predicted $\\hat{y}(1) = 2.0$, and then we observed the actual measurement $y(1) = 3.5$. What is the predicted value $\\hat{y}(2)$?",
     "hint": "Multiply both sides of the predictor transfer function by $1 - \\alpha q^{-1}$ to obtain the difference equation $\\hat{y}(t) = \\alpha \\hat{y}(t-1) + (1 - \\alpha)y(t-1)$, then plug in $t = 2$.",
-    "options": null,
-    "correctAnswer": 2.9,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal.",
+    "options": [
+      "$\\hat{y}(2) = 2.90$",
+      "$\\hat{y}(2) = 2.60$",
+      "$\\hat{y}(2) = 3.50$",
+      "$\\hat{y}(2) = 2.75$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! From $(1 - \\alpha q^{-1})\\hat{y}(t) = (1 - \\alpha)q^{-1}y(t)$, we have $\\hat{y}(2) = \\alpha\\hat{y}(1) + (1-\\alpha)y(1) = 0.4(2.0) + 0.6(3.5) = 0.8 + 2.1 = 2.90$.",
+      "Swapped the weights $\\alpha = 0.4$ and $1 - \\alpha = 0.6$: $0.6(2.0) + 0.4(3.5) = 1.2 + 1.4 = 2.60$.",
+      "Set $\\hat{y}(2) = y(1) = 3.50$ (corresponding to $\\alpha = 0$).",
+      "Took the unweighted average $(2.0 + 3.5)/2 = 2.75$."
+    ],
     "explanation": "Multiplying both sides of $\\hat{y}(t) = \\frac{(1 - \\alpha)q^{-1}}{1 - \\alpha q^{-1}}y(t)$ by $1 - \\alpha q^{-1}$ gives:\n$$(1 - \\alpha q^{-1})\\hat{y}(t) = (1 - \\alpha)q^{-1}y(t) \\iff \\hat{y}(t) = \\alpha \\hat{y}(t-1) + (1 - \\alpha)y(t-1)$$\nWith $\\alpha = 0.4$, $\\hat{y}(1) = 2.0$, and $y(1) = 3.5$, we evaluate at $t = 2$:\n$$\\hat{y}(2) = 0.4 \\hat{y}(1) + (1 - 0.4) y(1) = 0.4(2.0) + 0.6(3.5) = 0.8 + 2.1 = 2.9$$"
   },
   {
@@ -1374,7 +1534,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "Since $u(t) = 1$ only at $t = 1$ and $u(t) = 0$ for all $t \\neq 1$: \n- $u(t - n_k)$ is non-zero (equal to $1$) only when $t - n_k = 1 \\iff t = 1 + n_k$.\n- $u(t - n_k - 1)$ is non-zero (equal to $1$) only when $t - n_k - 1 = 1 \\iff t = 2 + n_k$.\n\nWithout noise, $y(t) = 0$ for all $t$ except at $t = 1 + n_k$ (where $y(1+n_k) \\approx b_1^o$) and $t = 2 + n_k$ (where $y(2+n_k) \\approx b_2^o$). Looking at the measured data, $y(1), y(2), y(3), y(6)$ are all close to zero (pure noise), while $y(4) = 2.14$ and $y(5) = 1.06$ are large. Setting $1 + n_k = 4$ gives $n_k = 3$."
+    "explanation": "Since $u(t) = 1$ only at $t = 1$ and $u(t) = 0$ for all $t \\neq 1$: \n- $u(t - n_k)$ is non-zero (equal to $1$) only when $t - n_k = 1 \\iff t = 1 + n_k$.\n- $u(t - n_k - 1)$ is non-zero (equal to $1$) only when $t - n_k - 1 = 1 \\iff t = 2 + n_k$.\n\nWithout noise, $y(t) = 0$ for all $t$ except at $t = 1 + n_k$ (where $y(1+n_k) \\approx b_1^o$) and $t = 2 + n_k$ (where $y(2+n_k) \\approx b_2^o$). Looking at the measured data, $y(1), y(2), y(3), y(6)$ are all close to zero (pure noise), while $y(4) = 2.14$ and $y(5) = 1.06$ are large. Setting $1 + n_k = 4$ gives $n_k = 3$.",
+    "busMcq": {
+      "options": [
+        "$n_k = 3$",
+        "$n_k = 4$",
+        "$n_k = 2$",
+        "$n_k = 1$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Since the unit impulse is at $t = 1$ and the first large response is at $t = 4$ ($y(4) = 2.14$), $1 + n_k = 4 \\implies n_k = 3$.",
+        "Confused the sample time $t = 4$ with the delay $n_k = t - 1 = 3$.",
+        "Counted only two noise samples before the response.",
+        "Assumed standard 1-sample delay."
+      ]
+    }
   },
   {
     "id": "b3-011",
@@ -1400,7 +1575,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact decimal.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "Here $a_1 = 0.5$, $b_1 = 2$, and $c_1 = 0.2$. From the lecture formula for a first-order ARMAX model:\n$$\\hat{y}(t) = -c_1 \\hat{y}(t-1) + (c_1 - a_1)y(t-1) + b_1 u(t-1)$$\nSubstituting $c_1 = 0.2$, $a_1 = 0.5$, and $b_1 = 2$ gives:\n$$\\hat{y}(t) = -0.2\\hat{y}(t-1) + (0.2 - 0.5)y(t-1) + 2u(t-1) = -0.2\\hat{y}(t-1) - 0.3y(t-1) + 2u(t-1)$$\n(Alternatively, since $e(4) = y(4) - \\hat{y}(4) = 2.0 - 1.5 = 0.5$, $\\hat{y}(5) = -0.5y(4) + 2u(4) + 0.2e(4)$).\nEvaluating at $t = 5$:\n$$\\hat{y}(5) = -0.2(1.5) - 0.3(2.0) + 2(1.0) = -0.3 - 0.6 + 2.0 = 1.1$$"
+    "explanation": "Here $a_1 = 0.5$, $b_1 = 2$, and $c_1 = 0.2$. From the lecture formula for a first-order ARMAX model:\n$$\\hat{y}(t) = -c_1 \\hat{y}(t-1) + (c_1 - a_1)y(t-1) + b_1 u(t-1)$$\nSubstituting $c_1 = 0.2$, $a_1 = 0.5$, and $b_1 = 2$ gives:\n$$\\hat{y}(t) = -0.2\\hat{y}(t-1) + (0.2 - 0.5)y(t-1) + 2u(t-1) = -0.2\\hat{y}(t-1) - 0.3y(t-1) + 2u(t-1)$$\n(Alternatively, since $e(4) = y(4) - \\hat{y}(4) = 2.0 - 1.5 = 0.5$, $\\hat{y}(5) = -0.5y(4) + 2u(4) + 0.2e(4)$).\nEvaluating at $t = 5$:\n$$\\hat{y}(5) = -0.2(1.5) - 0.3(2.0) + 2(1.0) = -0.3 - 0.6 + 2.0 = 1.1$$",
+    "busMcq": {
+      "options": [
+        "$\\hat{y}(5) = 1.10$",
+        "$\\hat{y}(5) = 1.00$",
+        "$\\hat{y}(5) = 1.30$",
+        "$\\hat{y}(5) = 0.70$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Using $\\hat{y}(t) = -c_1\\hat{y}(t-1) + (c_1 - a_1)y(t-1) + b_1 u(t-1) = -0.2(1.5) + (0.2 - 0.5)(2.0) + 2(1.0) = -0.3 - 0.6 + 2.0 = 1.10$.",
+        "Ignored the MA noise term $c_1 = 0.2$ and computed the ARX prediction $-0.5(2.0) + 2(1.0) = 1.00$.",
+        "Added $+0.2\\hat{y}(4)$ instead of subtracting $-0.2\\hat{y}(4)$.",
+        "Used $-(a_1 + c_1)y(4) = -0.7(2.0)$ instead of $(c_1 - a_1)y(4) = -0.3(2.0)$."
+      ]
+    }
   },
   {
     "id": "b3-012",
@@ -1541,7 +1731,7 @@ window.QUESTION_BANK = [
     "block": "block3",
     "topic": "Model Structures & Prediction",
     "subtopic": "Noise Variance Estimation in PEM",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "easy",
     "origin": "variant",
     "isMockExam": false,
@@ -1553,13 +1743,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "A system is modeled as $y(t) = G(q;\\theta)u(t) + H(q;\\theta)e(t)$ where $e(t)$ is zero-mean white noise with variance $\\lambda$. Using $N = 4$ data points and the estimated parameter vector $\\hat{\\theta}$, the 1-step prediction errors $\\varepsilon(t, \\hat{\\theta}) = y(t) - \\hat{y}(t|\\hat{\\theta})$ are found to be:\n$$\\varepsilon(1, \\hat{\\theta}) = 0.2, \\quad \\varepsilon(2, \\hat{\\theta}) = -0.4, \\quad \\varepsilon(3, \\hat{\\theta}) = 0.4, \\quad \\varepsilon(4, \\hat{\\theta}) = -0.2$$\nUsing the standard PEM estimator $\\hat{\\lambda} = \\frac{1}{N} \\sum_{t=1}^N \\varepsilon^2(t, \\hat{\\theta})$, compute the estimated noise variance $\\hat{\\lambda}$.",
     "hint": "Square each of the four prediction errors, sum them up, and divide by $N = 4$.",
-    "options": null,
-    "correctAnswer": 0.1,
-    "tolerance": 0.001,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal.",
+    "options": [
+      "$\\hat{\\lambda} = 0.10$",
+      "$\\hat{\\lambda} = 0.40$",
+      "$\\hat{\\lambda} = 0.00$",
+      "$\\hat{\\lambda} = 0.133$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! $\\hat{\\lambda} = \\frac{1}{4}(0.2^2 + (-0.4)^2 + 0.4^2 + (-0.2)^2) = \\frac{1}{4}(0.04 + 0.16 + 0.16 + 0.04) = \\frac{0.40}{4} = 0.10$.",
+      "Computed the sum of squared errors $\\sum \\varepsilon^2(t) = 0.40$ without dividing by $N = 4$.",
+      "Averaged the raw signed errors $\\frac{1}{4}\\sum \\varepsilon(t) = 0$ instead of the squared errors.",
+      "Divided by $N - 1 = 3$ instead of using the stated PEM estimator $\\frac{1}{N}\\sum_{t=1}^N \\varepsilon^2(t,\\hat{\\theta})$."
+    ],
     "explanation": "At the true parameters $\\theta_0$, the optimal 1-step prediction error satisfies $\\varepsilon(t, \\theta_0) = y(t) - \\hat{y}(t|\\theta_0) = e(t)$. Therefore, given an estimate $\\hat{\\theta}$, the natural PEM estimator of the white noise variance $\\lambda = \\mathbb{E}[e^2(t)]$ is the sample mean of the squared residuals:\n$$\\hat{\\lambda} = V_N(\\hat{\\theta}) = \\frac{1}{N} \\sum_{t=1}^N \\varepsilon^2(t, \\hat{\\theta})$$\nSubstituting the given values for $N = 4$:\n$$\\hat{\\lambda} = \\frac{1}{4}\\left((0.2)^2 + (-0.4)^2 + (0.4)^2 + (-0.2)^2\\right) = \\frac{0.04 + 0.16 + 0.16 + 0.04}{4} = \\frac{0.40}{4} = 0.1$$"
   },
   {
@@ -1681,7 +1881,7 @@ window.QUESTION_BANK = [
     "block": "block4",
     "topic": "Estimator Properties & Informative Data",
     "subtopic": "Asymptotic Bias in AR(1) Estimation with MA(1) Noise",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "adapted",
     "isMockExam": false,
@@ -1693,13 +1893,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Data is generated by the system\n$$y(t) = -a_o y(t-1) + v(t), \\quad v(t) = e(t) + c_o e(t-1)$$\nwhere $e(t)$ is zero-mean white noise with variance $\\lambda = 1$, $a_o = -0.5$, and $c_o = 0.5$. (Note that for this ARMA(1,1) process, $R_y(0) = \\mathbb{E}[y^2(t)] = \\lambda \\frac{1 - 2a_o c_o + c_o^2}{1 - a_o^2}$). If we fit the AR(1) predictor $\\hat{y}(t) = -a y(t-1)$ using linear least squares, what value does the estimate $\\hat{a}$ converge to as $N \\to \\infty$?",
     "hint": "Use the asymptotic LS formula $\\hat{a} \\to a_o - \\frac{\\mathbb{E}[y(t-1)v(t)]}{R_y(0)}$ (or $\\hat{a} \\to a_o - \\frac{c_o(1 - a_o^2)}{1 - 2a_o c_o + c_o^2}$) and plug in $a_o = -0.5, c_o = 0.5$.",
-    "options": null,
-    "correctAnswer": -0.714286,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact fraction (-5/7) or decimal rounded to 2–3 decimal places (-0.71 or -0.714).",
+    "options": [
+      "$\\hat{a} \\to -\\frac{5}{7} \\approx -0.714$",
+      "$\\hat{a} \\to -0.500$",
+      "$\\hat{a} \\to -\\frac{2}{7} \\approx -0.286$",
+      "$\\hat{a} \\to -0.875$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Here $R_y(0) = \\frac{1 - 2(-0.5)(0.5) + 0.25}{1 - 0.25} = \\frac{1.75}{0.75} = \\frac{7}{3}$ and $\\mathbb{E}[y(t-1)v(t)] = c_o \\lambda = 0.5$. Thus $\\hat{a} \\to a_o - \\frac{\\mathbb{E}[y(t-1)v(t)]}{R_y(0)} = -0.5 - \\frac{1/2}{7/3} = -0.5 - \\frac{3}{14} = -\\frac{5}{7} \\approx -0.714$.",
+      "Assumed the AR(1) LS estimate is unbiased ($\\hat{a} \\to a_o = -0.5$) despite the MA(1) colored noise correlating with $y(t-1)$.",
+      "Added $+\\frac{3}{14}$ instead of subtracting $-\\frac{3}{14}$ because $\\varphi(t) = -y(t-1)$ has a minus sign.",
+      "Used $R_y(0) = \\frac{1}{1 - a_o^2} = \\frac{4}{3}$ (ignoring the MA term's contribution to output variance), giving $-0.5 - \\frac{0.5}{4/3} = -0.875$."
+    ],
     "explanation": "With $\\varphi(t) = -y(t-1)$ and $\\theta = a$, the true equation is $y(t) = \\varphi^\\top(t)a_o + v(t)$. As $N \\to \\infty$, the LS estimate converges to:\n$$\\hat{a} \\to a_o + \\mathbb{E}[\\varphi(t)\\varphi^\\top(t)]^{-1}\\mathbb{E}[\\varphi(t)v(t)] = a_o - \\frac{\\mathbb{E}[y(t-1)v(t)]}{R_y(0)}$$\nFirst, compute $\\mathbb{E}[y(t-1)v(t)]$:\n$$\\mathbb{E}[y(t-1)(e(t) + c_o e(t-1))] = 0 + c_o \\mathbb{E}[(-a_o y(t-2) + e(t-1) + c_o e(t-2))e(t-1)] = c_o \\lambda$$\nNext, evaluate $R_y(0)$ with $a_o = -0.5$ and $c_o = 0.5$:\n$$R_y(0) = \\lambda \\frac{1 - 2(-0.5)(0.5) + (0.5)^2}{1 - (-0.5)^2} = \\lambda \\frac{1 + 0.5 + 0.25}{0.75} = \\lambda \\frac{1.75}{0.75} = \\frac{7}{3}\\lambda$$\nTherefore, the asymptotic limit is:\n$$\\hat{a} \\to a_o - \\frac{c_o \\lambda}{R_y(0)} = -0.5 - \\frac{0.5}{7/3} = -\\frac{1}{2} - \\frac{3}{14} = -\\frac{10}{14} = -\\frac{5}{7} \\approx -0.7143$$"
   },
   {
@@ -1788,14 +1998,29 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "From $y(t) = -a_o y(t-1) + b_o u(t-1) + e(t)$, $y(t)$ depends only on inputs and references up to time $t-1$. Since $r(t)$ is white noise uncorrelated with $e(t)$, $\\mathbb{E}[y(t)r(t)] = 0$.\n\nNow compute the entries of $\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)] = \\begin{bmatrix} R_y(0) & -R_{yu}(0) \\\\ -R_{yu}(0) & R_u(0) \\end{bmatrix}$:\n1. $R_y(0) = 5$.\n2. $-R_{yu}(0) = \\mathbb{E}[-y(t)u(t)] = \\mathbb{E}[y(t)K(y(t) - r(t))] = K R_y(0) - K\\mathbb{E}[y(t)r(t)] = K R_y(0) = 2(5) = 10$.\n3. $R_u(0) = \\mathbb{E}[K^2(y(t) - r(t))^2] = K^2(R_y(0) - 2\\mathbb{E}[y(t)r(t)] + \\mathbb{E}[r^2(t)]) = K^2(R_y(0) + \\lambda_r) = 4(5 + 3) = 32$.\n\nThus:\n$$\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)] = \\begin{bmatrix} 5 & 10 \\\\ 10 & 32 \\end{bmatrix}$$\nand its determinant is:\n$$\\det\\left(\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)]\\right) = K^2 R_y(0) \\lambda_r = 5(32) - 10^2 = 160 - 100 = 60 > 0$$\nBecause $\\det > 0$, adding the external reference $r(t)$ makes $\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)]$ invertible, so the parameters are uniquely identifiable in closed loop!"
+    "explanation": "From $y(t) = -a_o y(t-1) + b_o u(t-1) + e(t)$, $y(t)$ depends only on inputs and references up to time $t-1$. Since $r(t)$ is white noise uncorrelated with $e(t)$, $\\mathbb{E}[y(t)r(t)] = 0$.\n\nNow compute the entries of $\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)] = \\begin{bmatrix} R_y(0) & -R_{yu}(0) \\\\ -R_{yu}(0) & R_u(0) \\end{bmatrix}$:\n1. $R_y(0) = 5$.\n2. $-R_{yu}(0) = \\mathbb{E}[-y(t)u(t)] = \\mathbb{E}[y(t)K(y(t) - r(t))] = K R_y(0) - K\\mathbb{E}[y(t)r(t)] = K R_y(0) = 2(5) = 10$.\n3. $R_u(0) = \\mathbb{E}[K^2(y(t) - r(t))^2] = K^2(R_y(0) - 2\\mathbb{E}[y(t)r(t)] + \\mathbb{E}[r^2(t)]) = K^2(R_y(0) + \\lambda_r) = 4(5 + 3) = 32$.\n\nThus:\n$$\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)] = \\begin{bmatrix} 5 & 10 \\\\ 10 & 32 \\end{bmatrix}$$\nand its determinant is:\n$$\\det\\left(\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)]\\right) = K^2 R_y(0) \\lambda_r = 5(32) - 10^2 = 160 - 100 = 60 > 0$$\nBecause $\\det > 0$, adding the external reference $r(t)$ makes $\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)]$ invertible, so the parameters are uniquely identifiable in closed loop!",
+    "busMcq": {
+      "options": [
+        "$60$",
+        "$0$",
+        "$30$",
+        "$15$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Since $u(t) = -K y(t) + K r(t)$, $\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)] = \\begin{bmatrix} R_y(0) & K R_y(0) \\\\ K R_y(0) & K^2 R_y(0) + K^2 \\lambda_r \\end{bmatrix}$, whose determinant is $K^2 R_y(0)\\lambda_r = 2^2 \\times 5 \\times 3 = 60$.",
+        "Assumed closed-loop feedback always makes the determinant $0$, forgetting the external reference $r(t)$.",
+        "Used $K R_y(0) \\lambda_r = 2 \\times 5 \\times 3 = 30$ instead of $K^2 R_y(0) \\lambda_r = 60$.",
+        "Computed $R_y(0)\\lambda_r = 15$ without the controller gain factor $K^2 = 4$."
+      ]
+    }
   },
   {
     "id": "b4-007",
     "block": "block4",
     "topic": "Estimator Properties & Informative Data",
     "subtopic": "Errors-in-Variables (Noisy Input Measurement) Attenuation Bias",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "adapted",
     "isMockExam": false,
@@ -1807,13 +2032,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider the system $y(t) = b_o u(t-1) + e(t)$ with true parameter $b_o = 3.5$. The true input is generated by the AR(1) process $u(t) = 0.5u(t-1) + w(t)$, where $w(t)$ is zero-mean white noise with variance $\\lambda_w = 3$ (so $R_u(0) = \\frac{4}{3}\\lambda_w = 4$). Suppose we only have access to noisy input measurements $\\hat{u}(t) = u(t) + v(t)$, where $v(t)$ is zero-mean white measurement noise with variance $\\lambda_v = 3$, and $e(t), w(t), v(t)$ are mutually uncorrelated. If we estimate $b$ by minimizing $\\sum_{t=1}^N (y(t) - b\\hat{u}(t-1))^2$, what value does the least-squares estimate $\\hat{b}$ converge to as $N \\to \\infty$?",
     "hint": "As $N \\to \\infty$, $\\hat{b} \\to \\frac{\\mathbb{E}[\\hat{u}(t-1)y(t)]}{\\mathbb{E}[\\hat{u}^2(t-1)]} = b_o \\frac{R_u(0)}{R_u(0) + \\lambda_v}$.",
-    "options": null,
-    "correctAnswer": 2.0,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact integer or decimal.",
+    "options": [
+      "$\\hat{b} \\to 2.00$",
+      "$\\hat{b} \\to 3.50$",
+      "$\\hat{b} \\to 1.75$",
+      "$\\hat{b} \\to 2.625$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! With $R_u(0) = 4$ and $\\lambda_v = 3$, $\\mathbb{E}[\\hat{u}^2(t-1)] = R_u(0) + \\lambda_v = 7$ and $\\mathbb{E}[\\hat{u}(t-1)y(t)] = b_o R_u(0) = 3.5 \\times 4 = 14$. Thus $\\hat{b} \\to \\frac{14}{7} = 2.00$.",
+      "Assumed no attenuation bias from the input measurement noise $v(t)$ ($\\hat{b} \\to b_o = 3.50$).",
+      "Used $\\lambda_w = 3$ instead of $R_u(0) = 4$, giving $3.5 \\times \\frac{3}{3+3} = 1.75$.",
+      "Multiplied $b_o = 3.5$ by $1 - a^2 = 0.75$."
+    ],
     "explanation": "First, find $R_u(0) = \\mathbb{E}[u^2(t)]$ from $u(t) = 0.5u(t-1) + w(t)$:\n$$R_u(0) = 0.25 R_u(0) + \\lambda_w \\implies R_u(0) = \\frac{4}{3}\\lambda_w = \\frac{4}{3}(3) = 4$$\nSince $\\hat{u}(t) = u(t) + v(t)$ and $u, v$ are uncorrelated:\n$$R_{\\hat{u}}(0) = \\mathbb{E}[\\hat{u}^2(t-1)] = R_u(0) + \\lambda_v = 4 + 3 = 7$$\nNext, compute $\\mathbb{E}[\\hat{u}(t-1)y(t)]$:\n$$\\mathbb{E}[(u(t-1) + v(t-1))(b_o u(t-1) + e(t))] = b_o \\mathbb{E}[u^2(t-1)] = b_o R_u(0) = 3.5 \\times 4 = 14$$\nAs $N \\to \\infty$, the least-squares estimate converges to:\n$$\\hat{b} \\to \\frac{\\mathbb{E}[\\hat{u}(t-1)y(t)]}{\\mathbb{E}[\\hat{u}^2(t-1)]} = b_o \\frac{R_u(0)}{R_u(0) + \\lambda_v} = 3.5 \\times \\frac{4}{7} = 2.0$$\nNotice that input measurement noise ($\\lambda_v > 0$) biases the ordinary least-squares estimate toward zero!"
   },
   {
@@ -1919,7 +2154,7 @@ window.QUESTION_BANK = [
     "block": "block4",
     "topic": "Estimator Properties & Informative Data",
     "subtopic": "Asymptotic Variance & Reduced-Order Parametrization",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "adapted",
     "isMockExam": false,
@@ -1931,13 +2166,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider the FIR system $y(t) = b_1^o u(t-1) + b_2^o u(t-2) + e(t)$, where $e(t)$ is zero-mean white noise with variance $\\sigma^2 = 4$, and $u(t)$ is zero-mean white noise with variance $\\lambda_u = 2$ (uncorrelated with $e(t)$). Suppose we know beforehand that $b_1^o = b_2^o = b_o$, so instead of estimating two separate parameters $\\hat{b}_1, \\hat{b}_2$, we use the 1-parameter predictor $\\hat{y}(t) = b(u(t-1) + u(t-2))$ and estimate $\\hat{b}$ via least squares over $N = 100$ samples. Using the large-sample variance formula $\\text{Var}(\\hat{b}) \\approx \\frac{\\sigma^2}{N} \\left(\\mathbb{E}[\\varphi^2(t)]\\right)^{-1}$, compute $\\text{Var}(\\hat{b})$.",
     "hint": "Here the scalar regressor is $\\varphi(t) = u(t-1) + u(t-2)$. Since $u(t)$ is white noise with variance $\\lambda_u = 2$, compute $\\mathbb{E}[(u(t-1) + u(t-2))^2] = 2\\lambda_u$ and substitute into $\\frac{\\sigma^2}{N \\cdot 2\\lambda_u}$.",
-    "options": null,
-    "correctAnswer": 0.01,
-    "tolerance": 0.0005,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal.",
+    "options": [
+      "$\\text{Var}(\\hat{b}) \\approx 0.010$",
+      "$\\text{Var}(\\hat{b}) \\approx 0.020$",
+      "$\\text{Var}(\\hat{b}) \\approx 0.005$",
+      "$\\text{Var}(\\hat{b}) \\approx 0.100$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Using the reduced 1-parameter model $\\hat{y}(t) = b(u(t-1) + u(t-2))$ where $\\tilde{\\varphi}(t) = u(t-1) + u(t-2)$ has variance $\\mathbb{E}[\\tilde{\\varphi}^2(t)] = 2\\lambda_u = 2$, the asymptotic variance is $\\frac{\\lambda_e}{N \\cdot 2\\lambda_u} = \\frac{2}{100 \\times 2} = 0.010$.",
+      "This is the variance $\\frac{\\lambda_e}{N\\lambda_u} = \\frac{2}{100} = 0.020$ when estimating $b_1$ and $b_2$ separately without using the prior knowledge $b_1^o = b_2^o$.",
+      "Divided by $4$ instead of $2$ when computing $\\mathbb{E}[(u(t-1)+u(t-2))^2]$.",
+      "Forgot a factor of $10$ in $N = 100$."
+    ],
     "explanation": "For the 1-parameter predictor $\\hat{y}(t) = b(u(t-1) + u(t-2)) = \\varphi(t)b$, the scalar regressor is $\\varphi(t) = u(t-1) + u(t-2)$.\n\nSince $u(t)$ is zero-mean white noise with variance $\\lambda_u = 2$, $u(t-1)$ and $u(t-2)$ are uncorrelated:\n$$\\mathbb{E}[\\varphi^2(t)] = \\mathbb{E}[(u(t-1) + u(t-2))^2] = \\mathbb{E}[u^2(t-1)] + 2\\mathbb{E}[u(t-1)u(t-2)] + \\mathbb{E}[u^2(t-2)] = \\lambda_u + 0 + \\lambda_u = 2\\lambda_u = 4$$\nUsing the large-sample PEM covariance formula with $\\sigma^2 = 4$ and $N = 100$:\n$$\\text{Var}(\\hat{b}) \\approx \\frac{\\sigma^2}{N} \\left(\\mathbb{E}[\\varphi^2(t)]\\right)^{-1} = \\frac{\\sigma^2}{2 \\lambda_u N} = \\frac{4}{4 \\times 100} = 0.01$$\n(Note: If we had estimated $b_1$ and $b_2$ separately without using prior knowledge, each parameter would have had variance $\\frac{\\sigma^2}{\\lambda_u N} = \\frac{4}{2 \\times 100} = 0.02$, which is twice as large!)"
   },
   {
@@ -2238,7 +2483,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer or decimal.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "Setting $\\frac{\\partial}{\\partial \\lambda}\\left(-\\frac{N}{2}\\ln(2\\pi\\lambda) - \\frac{1}{2\\lambda}\\sum_{t=1}^N \\varepsilon^2(t, \\hat{\\theta})\\right) = -\\frac{N}{2\\lambda} + \\frac{1}{2\\lambda^2}\\sum_{t=1}^N \\varepsilon^2(t, \\hat{\\theta}) = 0$ yields the ML noise variance estimator $\\hat{\\lambda} = \\frac{1}{N}\\sum_{t=1}^N \\varepsilon^2(t, \\hat{\\theta})$. Substituting $N = 5$ and the given residuals gives $\\sum_{t=1}^5 \\varepsilon^2(t, \\hat{\\theta}) = 1^2 + (-2)^2 + 0^2 + 2^2 + (-1)^2 = 1 + 4 + 0 + 4 + 1 = 10$. Dividing by $N = 5$ yields $\\hat{\\lambda} = \\frac{10}{5} = 2.0$."
+    "explanation": "Setting $\\frac{\\partial}{\\partial \\lambda}\\left(-\\frac{N}{2}\\ln(2\\pi\\lambda) - \\frac{1}{2\\lambda}\\sum_{t=1}^N \\varepsilon^2(t, \\hat{\\theta})\\right) = -\\frac{N}{2\\lambda} + \\frac{1}{2\\lambda^2}\\sum_{t=1}^N \\varepsilon^2(t, \\hat{\\theta}) = 0$ yields the ML noise variance estimator $\\hat{\\lambda} = \\frac{1}{N}\\sum_{t=1}^N \\varepsilon^2(t, \\hat{\\theta})$. Substituting $N = 5$ and the given residuals gives $\\sum_{t=1}^5 \\varepsilon^2(t, \\hat{\\theta}) = 1^2 + (-2)^2 + 0^2 + 2^2 + (-1)^2 = 1 + 4 + 0 + 4 + 1 = 10$. Dividing by $N = 5$ yields $\\hat{\\lambda} = \\frac{10}{5} = 2.0$.",
+    "busMcq": {
+      "options": [
+        "$\\hat{\\lambda} = 2.0$",
+        "$\\hat{\\lambda} = 2.5$",
+        "$\\hat{\\lambda} = 10.0$",
+        "$\\hat{\\lambda} = 1.414$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! $\\hat{\\lambda}_{\\text{ML}} = \\frac{1}{N}\\sum_{t=1}^5 \\varepsilon^2(t,\\hat{\\theta}) = \\frac{1 + 4 + 0 + 4 + 1}{5} = \\frac{10}{5} = 2.0$.",
+        "Divided by $N - 1 = 4$ instead of the ML denominator $N = 5$.",
+        "Forgot to divide the sum of squared errors ($10.0$) by $N = 5$.",
+        "Took the square root $\\sqrt{2} \\approx 1.414$ (standard deviation instead of variance)."
+      ]
+    }
   },
   {
     "id": "b5-004",
@@ -2300,7 +2560,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer or decimal.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "For the transfer function $G(q; \\theta) = \\frac{b q^{-1}}{1 + a q^{-1}}$, the static gain (evaluated at $q = e^{i 0} = 1$) is $K_{\\text{DC}} = g(a, b) = \\frac{b}{1 + a}$. By the invariance property of Maximum Likelihood estimators, $\\hat{K}_{\\text{DC, ML}} = g(\\hat{a}_{\\text{ML}}, \\hat{b}_{\\text{ML}}) = \\frac{\\hat{b}}{1 + \\hat{a}} = \\frac{1.2}{1 + (-0.6)} = \\frac{1.2}{0.4} = 3.0$."
+    "explanation": "For the transfer function $G(q; \\theta) = \\frac{b q^{-1}}{1 + a q^{-1}}$, the static gain (evaluated at $q = e^{i 0} = 1$) is $K_{\\text{DC}} = g(a, b) = \\frac{b}{1 + a}$. By the invariance property of Maximum Likelihood estimators, $\\hat{K}_{\\text{DC, ML}} = g(\\hat{a}_{\\text{ML}}, \\hat{b}_{\\text{ML}}) = \\frac{\\hat{b}}{1 + \\hat{a}} = \\frac{1.2}{1 + (-0.6)} = \\frac{1.2}{0.4} = 3.0$.",
+    "busMcq": {
+      "options": [
+        "$3.0$",
+        "$2.0$",
+        "$0.75$",
+        "$-2.0$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! By ML invariance, $\\hat{K}_{\\text{DC}} = \\frac{\\hat{b}}{1 + \\hat{a}} = \\frac{1.2}{1 + (-0.6)} = \\frac{1.2}{0.4} = 3.0$.",
+        "Divided $\\hat{b} = 1.2$ by $|\\hat{a}| = 0.6$ instead of $1 + \\hat{a} = 0.4$.",
+        "Used $1 - \\hat{a} = 1.6$ in the denominator ($1.2 / 1.6 = 0.75$).",
+        "Computed $\\hat{b}/\\hat{a} = -2.0$."
+      ]
+    }
   },
   {
     "id": "b5-006",
@@ -2333,7 +2608,7 @@ window.QUESTION_BANK = [
     "block": "block5",
     "topic": "Maximum Likelihood Connections",
     "subtopic": "Asymptotic Covariance of ARX",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "adapted",
     "isMockExam": false,
@@ -2345,13 +2620,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider the ARX model $y(t) + a y(t-1) = b u(t-1) + e(t)$, where $e(t) \\sim \\mathcal{N}(0, \\lambda)$ is white Gaussian noise with variance $\\lambda = 0.4$ and $N = 100$. Suppose the input $u(t)$ and output $y(t)$ satisfy $R_y(0) = \\mathbb{E}[y^2(t-1)] = 2.0$, $R_u(0) = \\mathbb{E}[u^2(t-1)] = 1.0$, and $R_{yu}(0) = \\mathbb{E}[y(t-1)u(t-1)] = 0$. Using the asymptotic covariance formula $\\text{cov}(\\hat{\\theta}) \\approx \\frac{\\lambda}{N}\\left(\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)]\\right)^{-1}$, compute the asymptotic variance $\\text{var}(\\hat{a})$ of the parameter estimate $\\hat{a}$.",
     "hint": "From Slide 21 of Lecture 7, $\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)] = \\begin{bmatrix} R_y(0) & -R_{yu}(0) \\\\ -R_{yu}(0) & R_u(0) \\end{bmatrix}$. Substitute the values, invert the $2 \\times 2$ diagonal matrix, and multiply by $\\frac{\\lambda}{N}$.",
-    "options": null,
-    "correctAnswer": 0.002,
-    "tolerance": 0.0002,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal (e.g., 0.002).",
+    "options": [
+      "$\\text{var}(\\hat{a}) \\approx 0.002$",
+      "$\\text{var}(\\hat{a}) \\approx 0.004$",
+      "$\\text{var}(\\hat{a}) \\approx 0.008$",
+      "$\\text{var}(\\hat{a}) \\approx 0.200$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Since $R_{yu}(0) = 0$, $\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)] = \\begin{bmatrix} R_y(0) & 0 \\\\ 0 & R_u(0) \\end{bmatrix} = \\begin{bmatrix} 2.0 & 0 \\\\ 0 & 1.0 \\end{bmatrix}$. Thus $\\text{var}(\\hat{a}) = \\frac{\\lambda}{N R_y(0)} = \\frac{0.4}{100 \\times 2.0} = 0.002$.",
+      "Used $R_u(0) = 1.0$ instead of $R_y(0) = 2.0$ (which gives $\\text{var}(\\hat{b}) = 0.004$).",
+      "Multiplied by $R_y(0) = 2.0$ instead of dividing by it.",
+      "Forgot to divide by $N = 100$ ($0.4 / 2.0 = 0.200$)."
+    ],
     "explanation": "Here $\\varphi(t) = \\begin{bmatrix} -y(t-1) & u(t-1) \\end{bmatrix}^\\top \\in \\mathbb{R}^2$ and $\\theta = \\begin{bmatrix} a & b \\end{bmatrix}^\\top \\in \\mathbb{R}^2$. From Lecture 7 (Slide 21), $\\bar{R} = \\mathbb{E}[\\varphi(t)\\varphi^\\top(t)] = \\begin{bmatrix} R_y(0) & -R_{yu}(0) \\\\ -R_{yu}(0) & R_u(0) \\end{bmatrix} = \\begin{bmatrix} 2.0 & 0 \\\\ 0 & 1.0 \\end{bmatrix}$. Inverting gives $\\bar{R}^{-1} = \\begin{bmatrix} 0.5 & 0 \\\\ 0 & 1.0 \\end{bmatrix}$. Multiplying by $\\frac{\\lambda}{N} = \\frac{0.4}{100} = 0.004$ gives $\\text{cov}(\\hat{\\theta}) \\approx \\begin{bmatrix} 0.002 & 0 \\\\ 0 & 0.004 \\end{bmatrix}$. Thus, the $(1,1)$ entry is $\\text{var}(\\hat{a}) = 0.002$."
   },
   {
@@ -2519,7 +2804,7 @@ window.QUESTION_BANK = [
     "block": "block6",
     "topic": "PEM, Validation & Model Assessment",
     "subtopic": "Frequency Domain Variance & Input Spectrum",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "easy",
     "origin": "variant",
     "isMockExam": false,
@@ -2531,13 +2816,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Using the asymptotic frequency-domain variance approximation $\\text{var}\\left(G(e^{i\\omega}; \\hat{\\theta})\\right) \\approx \\frac{n}{N}\\frac{\\lambda}{\\Phi_u(\\omega)}$, calculate the approximate variance of the frequency response estimate at frequency $\\omega_0$ if the model order is $n = 4$, the number of data samples is $N = 200$, the innovation variance is $\\lambda = 0.5$, and the input power spectrum at $\\omega_0$ is $\\Phi_u(\\omega_0) = 2.0$.",
     "hint": "Substitute $n = 4$, $N = 200$, $\\lambda = 0.5$, and $\\Phi_u(\\omega_0) = 2.0$ directly into $\\frac{n}{N}\\frac{\\lambda}{\\Phi_u(\\omega_0)}$.",
-    "options": null,
-    "correctAnswer": 0.005,
-    "tolerance": 0.0005,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal (e.g., 0.005).",
+    "options": [
+      "$0.005$",
+      "$0.010$",
+      "$0.020$",
+      "$0.00125$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Plugging into $\\frac{n}{N}\\frac{\\lambda}{\\Phi_u(\\omega_0)} = \\frac{4}{200} \\times \\frac{0.5}{2.0} = 0.02 \\times 0.25 = 0.005$.",
+      "Forgot to divide by $\\Phi_u(\\omega_0) = 2.0$.",
+      "Inverted the ratio $\\lambda / \\Phi_u(\\omega_0)$.",
+      "Forgot to multiply by the model order $n = 4$."
+    ],
     "explanation": "From Lecture 7 (Slide 19) and Lecture 8 (Slide 8), the large-sample frequency-domain variance expression is $\\text{var}\\left(G(e^{i\\omega_0}; \\hat{\\theta})\\right) \\approx \\frac{n}{N}\\frac{\\lambda}{\\Phi_u(\\omega_0)}$. Substituting the given values yields $\\frac{4}{200} \\cdot \\frac{0.5}{2.0} = 0.02 \\cdot 0.25 = 0.005$."
   },
   {
@@ -2643,7 +2938,7 @@ window.QUESTION_BANK = [
     "block": "block6",
     "topic": "PEM, Validation & Model Assessment",
     "subtopic": "Quantitative Validation: FIT & MSE",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "variant",
     "isMockExam": false,
@@ -2655,13 +2950,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "On a validation dataset of $N = 4$ samples, the measured outputs are $y = [2, 4, 6, 8]^\\top$ (so the sample mean is $\\bar{y} = 5$). A simulated model produces the output sequence $\\hat{y} = [1.5, 4.5, 5.5, 8.5]^\\top$. Using the course formula $\\text{FIT} = 100\\left(1 - \\sqrt{\\frac{\\sum_{t=1}^N (y(t) - \\hat{y}(t))^2}{\\sum_{t=1}^N (y(t) - \\bar{y})^2}}\\right)$, compute the $\\text{FIT}$ percentage.",
     "hint": "First compute the numerator sum of squared errors $\\sum_{t=1}^4 (y(t) - \\hat{y}(t))^2$, then compute the denominator $\\sum_{t=1}^4 (y(t) - 5)^2$, take the square root of their ratio, and evaluate $100(1 - \\sqrt{\\cdot})$.",
-    "options": null,
-    "correctAnswer": 77.64,
-    "tolerance": 0.1,
-    "unit": "%",
-    "roundingNote": "Round to two decimal places.",
+    "options": [
+      "$\\text{FIT} \\approx 77.64\\%$",
+      "$\\text{FIT} = 95.00\\%$",
+      "$\\text{FIT} \\approx 55.28\\%$",
+      "$\\text{FIT} \\approx 22.36\\%$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Here $\\sum (y(t)-\\hat{y}(t))^2 = 4(0.5^2) = 1.0$ and $\\sum (y(t)-\\bar{y})^2 = (-3)^2 + (-1)^2 + 1^2 + 3^2 = 20$. Thus $\\text{FIT} = 100\\left(1 - \\sqrt{\\frac{1}{20}}\\right) = 100(1 - 0.2236) \\approx 77.64\\%$.",
+      "Forgot the square root in the FIT formula and computed $100(1 - 1/20) = 95\\%$ (which is $100 \\times R^2$, not FIT).",
+      "Used $\\sqrt{1/5}$ instead of $\\sqrt{1/20}$ by forgetting to sum over all $4$ samples.",
+      "Computed the relative root-mean-square error $100\\sqrt{1/20} \\approx 22.36\\%$ without subtracting from $100\\%$."
+    ],
     "explanation": "1. Compute the prediction/simulation errors $y(t) - \\hat{y}(t)$: at $t=1,2,3,4$, the errors are $2 - 1.5 = 0.5$, $4 - 4.5 = -0.5$, $6 - 5.5 = 0.5$, and $8 - 8.5 = -0.5$. Thus $\\sum_{t=1}^4 (y(t) - \\hat{y}(t))^2 = 4 \\times (0.5)^2 = 1.0$ (and $\\text{MSE} = \\frac{1.0}{4} = 0.25$).\n2. Compute the denominator using $\\bar{y} = \\frac{2+4+6+8}{4} = 5$: $\\sum_{t=1}^4 (y(t) - \\bar{y})^2 = (2-5)^2 + (4-5)^2 + (6-5)^2 + (8-5)^2 = 9 + 1 + 1 + 9 = 20$.\n3. Substitute into the FIT formula: $\\text{FIT} = 100\\left(1 - \\sqrt{\\frac{1}{20}}\\right) = 100(1 - \\sqrt{0.05}) \\approx 100(1 - 0.223607) = 77.639\\% \\approx 77.64\\%$."
   },
   {
@@ -2714,7 +3019,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer or decimal.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "Using the AIC definition from Slide 30 of Lecture 8:\n- For Model 1 ($d_1 = 2$): $\\text{AIC}_1 = 2(2) + 100 \\ln(e^{2.0}) = 4 + 100(2.0) = 204$.\n- For Model 2 ($d_2 = 5$): $\\text{AIC}_2 = 2(5) + 100 \\ln(e^{1.9}) = 10 + 100(1.9) = 200$.\nTherefore, $\\text{AIC}_1 - \\text{AIC}_2 = 204 - 200 = 4.0$ (so Model 2 has the lower AIC and is preferred by AIC)."
+    "explanation": "Using the AIC definition from Slide 30 of Lecture 8:\n- For Model 1 ($d_1 = 2$): $\\text{AIC}_1 = 2(2) + 100 \\ln(e^{2.0}) = 4 + 100(2.0) = 204$.\n- For Model 2 ($d_2 = 5$): $\\text{AIC}_2 = 2(5) + 100 \\ln(e^{1.9}) = 10 + 100(1.9) = 200$.\nTherefore, $\\text{AIC}_1 - \\text{AIC}_2 = 204 - 200 = 4.0$ (so Model 2 has the lower AIC and is preferred by AIC).",
+    "busMcq": {
+      "options": [
+        "$+4.0$",
+        "$-6.0$",
+        "$+16.0$",
+        "$-4.0$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! $\\text{AIC}_1 = 2(2) + 100(2.0) = 204$ and $\\text{AIC}_2 = 2(5) + 100(1.9) = 200$, so $\\text{AIC}_1 - \\text{AIC}_2 = 204 - 200 = +4.0$.",
+        "Computed only the parameter penalty difference $2(d_1 - d_2) = -6.0$.",
+        "Added the parameter penalty difference instead of subtracting.",
+        "Reversed the subtraction ($\text{AIC}_2 - \text{AIC}_1 = -4.0$)."
+      ]
+    }
   },
   {
     "id": "b6-010",
@@ -2917,7 +3237,7 @@ window.QUESTION_BANK = [
     "block": "labs",
     "topic": "Practical Labs & MIMO Project Concepts",
     "subtopic": "Step Response & Sampling Time Rule of Thumb",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "easy",
     "origin": "adapted",
     "isMockExam": false,
@@ -2929,13 +3249,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "In Task 1.2 of the process lab (`processlab.pdf`), you perform a step response experiment inside the linear operating range and observe that the 10% to 90% rise time of the plate angle is $T_r = 0.4\\text{ seconds}$. Following the lab's rule of thumb that the rise time should correspond to $10$ samples, what sampling interval $T_s$ (in seconds) should you select?",
     "hint": "Divide the rise time $T_r = 0.4\\text{ s}$ by the target number of samples ($10$) over the rise time.",
-    "options": null,
-    "correctAnswer": 0.04,
-    "tolerance": 0.001,
-    "unit": "s",
-    "roundingNote": "Give an exact decimal in seconds.",
+    "options": [
+      "$T_s = 0.04\\text{ s}$",
+      "$T_s = 0.40\\text{ s}$",
+      "$T_s = 4.0\\text{ s}$",
+      "$T_s = 0.004\\text{ s}$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Dividing the rise time $T_r = 0.4\\text{ s}$ into $10$ samples gives $T_s = \\frac{T_r}{10} = \\frac{0.4}{10} = 0.04\\text{ s}$ ($25\\text{ Hz}$).",
+      "Set $T_s = T_r = 0.40\\text{ s}$ (only 1 sample over the entire rise time).",
+      "Multiplied $T_r$ by $10$ instead of dividing by $10$.",
+      "Divided by $100$ instead of $10$."
+    ],
     "explanation": "Section 4.2 of `processlab.pdf` states: 'As a rule of thumb, the rise-time of the step response (the time it takes the output to go from 10% to 90% of its final value) should correspond to about ten samples' (Lecture 8 Slide 9 similarly gives 4–8 samples over the rise time, or sampling frequency $\\approx 10$ times the bandwidth). With $T_r = 0.4\\text{ s}$ and $10$ samples during $T_r$, the sampling interval is $T_s = \\frac{T_r}{10} = \\frac{0.4}{10} = 0.04\\text{ s}$."
   },
   {
@@ -3005,7 +3335,7 @@ window.QUESTION_BANK = [
     "block": "labs",
     "topic": "Practical Labs & MIMO Project Concepts",
     "subtopic": "Realization Theory & Observability/Controllability",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "adapted",
     "isMockExam": false,
@@ -3017,13 +3347,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "In the Subspace Identification computer lab (`CL_SI.pdf`), consider the discrete-time state-space system $x(t+1) = Ax(t) + Bu(t)$, $y(t) = Cx(t) + Du(t)$ with $A = \\begin{bmatrix} 1 & -0.99 \\\\ 0.1 & 0.7 \\end{bmatrix}$, $B = \\begin{bmatrix} 1 \\\\ 2 \\end{bmatrix}$, $C = \\begin{bmatrix} 1 & 0 \\end{bmatrix}$, and $D = 2$. Compute the impulse response value $g(2)$ at time $t = 2$.",
     "hint": "From Equation (2) in `CL_SI.pdf`, the impulse response for $t \\ge 1$ is $g(t) = CA^{t-1}B$, so $g(2) = CAB$.",
-    "options": null,
-    "correctAnswer": -0.98,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal.",
+    "options": [
+      "$g(2) = -0.98$",
+      "$g(2) = 1.00$",
+      "$g(2) = 2.00$",
+      "$g(2) = -1.98$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! For $t \\ge 1$, the impulse response is $g(t) = CA^{t-1}B$. At $t=2$, $g(2) = CAB = \\begin{bmatrix} 1 & 0 \\end{bmatrix}\\begin{bmatrix} 1 & -0.99 \\\\ 0.1 & 0.7 \\end{bmatrix}\\begin{bmatrix} 1 \\\\ 2 \\end{bmatrix} = \\begin{bmatrix} 1 & -0.99 \\end{bmatrix}\\begin{bmatrix} 1 \\\\ 2 \\end{bmatrix} = 1 - 1.98 = -0.98$.",
+      "Computed $g(1) = CB = \\begin{bmatrix} 1 & 0 \\end{bmatrix}\\begin{bmatrix} 1 \\\\ 2 \\end{bmatrix} = 1.00$ instead of $g(2) = CAB$.",
+      "Returned the direct feedthrough term $g(0) = D = 2.00$.",
+      "Forgot to add the $(1,1)$ contribution $1 \\times 1 = 1$ in $1 - 1.98 = -0.98$."
+    ],
     "explanation": "From Section 1 of `CL_SI.pdf`, the impulse response (with $x(0) = 0$ and $u(0) = 1, u(t) = 0$ for $t \\ge 1$) is given by $g(0) = D = 2$ and $g(t) = CA^{t-1}B$ for $t \\ge 1$. For $t = 2$, we have $g(2) = CAB$. First compute $CA = \\begin{bmatrix} 1 & 0 \\end{bmatrix} \\begin{bmatrix} 1 & -0.99 \\\\ 0.1 & 0.7 \\end{bmatrix} = \\begin{bmatrix} 1 & -0.99 \\end{bmatrix}$. Next, multiply by $B = \\begin{bmatrix} 1 \\\\ 2 \\end{bmatrix}$: $g(2) = CAB = \\begin{bmatrix} 1 & -0.99 \\end{bmatrix}\\begin{bmatrix} 1 \\\\ 2 \\end{bmatrix} = 1(1) + (-0.99)(2) = 1 - 1.98 = -0.98$."
   },
   {
@@ -3122,7 +3462,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "For a MIMO system with $n_u = 3$ inputs and $n_y = 2$ outputs, the transfer function matrix $G(q) = C(qI - A)^{-1}B + D$ has dimension $n_y \\times n_u = 2 \\times 3$. Each entry $G_{ij}(e^{i\\omega})$ describes the frequency response from input $j \\in \\{1, 2, 3\\}$ to output $i \\in \\{1, 2\\}$, giving $n_y \\times n_u = 2 \\times 3 = 6$ Bode diagrams (as stated on Page 5 of `CL_SI.pdf`)."
+    "explanation": "For a MIMO system with $n_u = 3$ inputs and $n_y = 2$ outputs, the transfer function matrix $G(q) = C(qI - A)^{-1}B + D$ has dimension $n_y \\times n_u = 2 \\times 3$. Each entry $G_{ij}(e^{i\\omega})$ describes the frequency response from input $j \\in \\{1, 2, 3\\}$ to output $i \\in \\{1, 2\\}$, giving $n_y \\times n_u = 2 \\times 3 = 6$ Bode diagrams (as stated on Page 5 of `CL_SI.pdf`).",
+    "busMcq": {
+      "options": [
+        "$6$",
+        "$5$",
+        "$12$",
+        "$4$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! A MIMO system with $n_y = 2$ outputs and $n_u = 3$ inputs has a $2 \\times 3$ transfer matrix $G(q)$, yielding $n_y \\times n_u = 2 \\times 3 = 6$ input-to-output Bode channels.",
+        "Added $n_y + n_u = 2 + 3 = 5$ instead of multiplying $n_y \\times n_u = 6$.",
+        "Multiplied by the state order $n = 2$ ($2 \\times 3 \\times 2 = 12$).",
+        "Used $n^2 = 4$ (the size of state matrix $A$)."
+      ]
+    }
   },
   {
     "id": "lab-009",
@@ -3360,7 +3715,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact decimal.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "Here $A = 0.8$, $B = 2$, $K = 0.5$, $C = 0.6$, and $D = 1.0$.\nSubstituting $e(t) = y(t) - 0.6x(t) - 1.0u(t)$ into the state equation gives\n$$x(t+1) = (0.8 - 0.5 \\cdot 0.6)x(t) + (2 - 0.5 \\cdot 1.0)u(t) + 0.5y(t) = 0.5x(t) + 1.5u(t) + 0.5y(t).$$\nThus $L = B - KD = 2 - 0.5(1.0) = 1.5$."
+    "explanation": "Here $A = 0.8$, $B = 2$, $K = 0.5$, $C = 0.6$, and $D = 1.0$.\nSubstituting $e(t) = y(t) - 0.6x(t) - 1.0u(t)$ into the state equation gives\n$$x(t+1) = (0.8 - 0.5 \\cdot 0.6)x(t) + (2 - 0.5 \\cdot 1.0)u(t) + 0.5y(t) = 0.5x(t) + 1.5u(t) + 0.5y(t).$$\nThus $L = B - KD = 2 - 0.5(1.0) = 1.5$.",
+    "busMcq": {
+      "options": [
+        "$L = 1.5$",
+        "$L = 2.0$",
+        "$L = 2.5$",
+        "$L = 0.5$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! From `ESI.pdf` Exercise 1(a), $L = B - KD = 2 - (0.5)(1.0) = 1.5$.",
+        "Used $B = 2.0$ without subtracting $KD = 0.5$.",
+        "Added $B + KD = 2 + 0.5 = 2.5$ instead of subtracting.",
+        "Confused $L = B - KD$ with $F = A - KC = 0.8 - 0.5(0.6) = 0.5$."
+      ]
+    }
   },
   {
     "id": "b7-005",
@@ -3422,7 +3792,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact decimal.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "Here $A = 1.2$, $B = 1$, $C = 1$, $D = 0$, and $K = 0.8$.\nThe predictor state-transition coefficient is\n$$A - KC = 1.2 - 0.8(1) = 0.4.$$\nThus $H^{-1}(q) = 1 - 0.8(q - 0.4)^{-1} = \\frac{q - 1.2}{q - 0.4}$, whose pole is at $q = 0.4$ (strictly inside the unit circle, so the predictor is stable despite the plant pole at $q = 1.2$)."
+    "explanation": "Here $A = 1.2$, $B = 1$, $C = 1$, $D = 0$, and $K = 0.8$.\nThe predictor state-transition coefficient is\n$$A - KC = 1.2 - 0.8(1) = 0.4.$$\nThus $H^{-1}(q) = 1 - 0.8(q - 0.4)^{-1} = \\frac{q - 1.2}{q - 0.4}$, whose pole is at $q = 0.4$ (strictly inside the unit circle, so the predictor is stable despite the plant pole at $q = 1.2$).",
+    "busMcq": {
+      "options": [
+        "$q = 0.4$",
+        "$q = 1.2$",
+        "$q = 0.8$",
+        "$q = 2.0$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! The poles of $H^{-1}(q)$ and $H^{-1}(q)G(q)$ are the eigenvalues of $A - KC = 1.2 - (0.8)(1) = 0.4$.",
+        "Gave the open-loop unstable plant pole $A = 1.2$ instead of the predictor pole $A - KC = 0.4$.",
+        "Gave the Kalman gain $K = 0.8$.",
+        "Added $A + KC = 1.2 + 0.8 = 2.0$."
+      ]
+    }
   },
   {
     "id": "b7-007",
@@ -3491,7 +3876,7 @@ window.QUESTION_BANK = [
     "block": "block7",
     "topic": "State-Space & Subspace Identification",
     "subtopic": "ARMAX State-Space Noise Covariances (ESI Ex 2c)",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "adapted",
     "isMockExam": false,
@@ -3503,13 +3888,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "In Exercise 2(c) of `ESI.pdf`, the ARMAX system\n$$y(t) = \\frac{q^{-1}}{1 - 0.9q^{-1}}u(t) + \\frac{1 + 0.5q^{-1}}{1 - 0.9q^{-1}}\\nu(t), \\qquad \\lambda_\\nu = \\mathbb{E}[\\nu^2(t)] = 1,$$\nis represented in state-space form as\n$$x(t+1) = 0.9x(t) + u(t) + 1.4\\nu(t), \\qquad y(t) = x(t) + \\nu(t),$$\nwhere $\\eta(t) = N\\nu(t) = 1.4\\nu(t)$. What is the process noise variance $R_1 = \\mathbb{E}[\\eta^2(t)]$?",
     "hint": "Use $R_1 = \\mathbb{E}[\\eta(t)\\eta^\\top(t)] = N^2 \\mathbb{E}[\\nu^2(t)] = 1.4^2 \\lambda_\\nu$.",
-    "options": null,
-    "correctAnswer": 1.96,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal to two decimal places.",
+    "options": [
+      "$R_1 = 1.96$",
+      "$R_1 = 1.40$",
+      "$R_1 = 1.00$",
+      "$R_1 = 0.81$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Since $\\eta(t) = N\\nu(t) = 1.4\\nu(t)$ and $\\lambda_\\nu = \\mathbb{E}[\\nu^2(t)] = 1$, $R_1 = \\mathbb{E}[\\eta^2(t)] = N^2 \\lambda_\\nu = 1.4^2 \\times 1 = 1.96$.",
+      "Forgot to square $N = 1.4$ (this is the cross-covariance $R_{12} = \\mathbb{E}[\\eta(t)\\nu(t)] = 1.4$).",
+      "This is the measurement noise variance $R_2 = \\lambda_\\nu = 1.00$.",
+      "Squared $A = 0.9$ ($0.9^2 = 0.81$) instead of $N = 1.4$."
+    ],
     "explanation": "Since $\\eta(t) = 1.4\\nu(t)$ and $\\lambda_\\nu = \\mathbb{E}[\\nu^2(t)] = 1$, we have:\n$$R_1 = \\mathbb{E}[\\eta^2(t)] = 1.4^2 \\mathbb{E}[\\nu^2(t)] = 1.96,$$\n$$R_2 = \\mathbb{E}[\\nu^2(t)] = 1, \\qquad R_{12} = \\mathbb{E}[\\eta(t)\\nu(t)] = 1.4.$$\nSubstituting $P = 0$ into the right-hand side of the Riccati equation gives $R_1 - R_{12}^2 / R_2 = 1.96 - 1.4^2 / 1 = 0$, confirming $P = 0$ solves the Riccati equation and $K = R_{12}/R_2 = 1.4 = N$."
   },
   {
@@ -3517,7 +3912,7 @@ window.QUESTION_BANK = [
     "block": "block7",
     "topic": "State-Space & Subspace Identification",
     "subtopic": "Kalman Gain for Non-Minimum Phase Noise Model (ESI Ex 2d)",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "adapted",
     "isMockExam": false,
@@ -3529,13 +3924,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "In Exercise 2(d) of `ESI.pdf`, consider the ARMAX system\n$$y(t) = \\frac{q^{-1}}{1 - 0.9q^{-1}}u(t) + \\frac{1 + 2q^{-1}}{1 - 0.9q^{-1}}\\nu(t), \\qquad \\lambda_\\nu = 1,$$\nwith state-space representation $x(t+1) = 0.9x(t) + u(t) + 2.9\\nu(t)$, $y(t) = x(t) + \\nu(t)$ ($A = 0.9, B = 1, C = 1, N = 2.9$). Because $\\bar{H}(q) = \\frac{1+2q^{-1}}{1-0.9q^{-1}}$ has a zero at $q = -2$ outside the unit circle, the stabilizing solution to the Riccati equation is $P = 3$ (rather than $P = 0$). Using $P = 3$, compute the resulting Kalman gain $K$.",
     "hint": "Use $K = (APC^\\top + R_{12})(CPC^\\top + R_2)^{-1}$ with $A = 0.9, C = 1, P = 3, R_{12} = 2.9$, and $R_2 = 1$.",
-    "options": null,
-    "correctAnswer": 1.4,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal.",
+    "options": [
+      "$K = 1.4$",
+      "$K = 2.9$",
+      "$K = 0.5$",
+      "$K = 2.0$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Using $K = (APC^\\top + R_{12})(CPC^\\top + R_2)^{-1}$ with $A=0.9, C=1, P=3, R_{12}=2.9, R_2=1$ gives $K = \\frac{0.9(3)(1) + 2.9}{1(3)(1) + 1} = \\frac{2.7 + 2.9}{4} = \\frac{5.6}{4} = 1.4$.",
+      "Assumed $P = 0$ (which gives $K = N = 2.9$, leaving $A - KC = 0.9 - 2.9 = -2$ unstable!).",
+      "Confused the Kalman gain $K = 1.4$ with the resulting stable zero magnitude $0.5$.",
+      "Divided $5.6$ by $2.8$ instead of $CPC^\\top + R_2 = 3 + 1 = 4$."
+    ],
     "explanation": "Here $A = 0.9$, $C = 1$, $R_1 = 2.9^2 = 8.41$, $R_2 = 1$, and $R_{12} = 2.9$.\nFirst verify that $P = 3$ solves the Riccati equation:\n$$APA^\\top + R_1 - \\frac{(APC^\\top + R_{12})^2}{CPC^\\top + R_2} = 0.81(3) + 8.41 - \\frac{(0.9 \\cdot 3 + 2.9)^2}{3 + 1} = 2.43 + 8.41 - \\frac{5.6^2}{4} = 10.84 - 7.84 = 3 = P.$$\nThen the Kalman gain is:\n$$K = \\frac{APC^\\top + R_{12}}{CPC^\\top + R_2} = \\frac{0.9(3)(1) + 2.9}{1(3)(1) + 1} = \\frac{5.6}{4} = 1.4.$$"
   },
   {
@@ -3562,7 +3967,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "From Exercise 2(a), the innovation covariance is\n$$\\mathbb{E}[e^2(t)] = CPC^\\top + R_2.$$\nWith $C = 1$, $P = 3$, and $R_2 = \\lambda_\\nu = 1$, we obtain\n$$\\mathbb{E}[e^2(t)] = 1 \\cdot 3 \\cdot 1 + 1 = 4.$$\nNote that because $\\bar{H}^{-1}(q)$ was unstable (pole at $-2$), we cannot recover $\\nu(t)$ causally from past outputs; the optimal causal 1-step predictor has prediction error variance $4 > \\lambda_\\nu = 1$."
+    "explanation": "From Exercise 2(a), the innovation covariance is\n$$\\mathbb{E}[e^2(t)] = CPC^\\top + R_2.$$\nWith $C = 1$, $P = 3$, and $R_2 = \\lambda_\\nu = 1$, we obtain\n$$\\mathbb{E}[e^2(t)] = 1 \\cdot 3 \\cdot 1 + 1 = 4.$$\nNote that because $\\bar{H}^{-1}(q)$ was unstable (pole at $-2$), we cannot recover $\\nu(t)$ causally from past outputs; the optimal causal 1-step predictor has prediction error variance $4 > \\lambda_\\nu = 1$.",
+    "busMcq": {
+      "options": [
+        "$\\mathbb{E}[e^2(t)] = 4$",
+        "$\\mathbb{E}[e^2(t)] = 1$",
+        "$\\mathbb{E}[e^2(t)] = 3$",
+        "$\\mathbb{E}[e^2(t)] = 8.41$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! From `ESI.pdf` Exercise 2(a) & 2(d), the innovation variance is $\\mathbb{E}[e^2(t)] = CPC^\\top + R_2 = 1(3)(1) + 1 = 4$.",
+        "Gave the original measurement noise variance $\\lambda_\\nu = R_2 = 1$, forgetting the state estimation error variance $CPC^\\top = 3$.",
+        "Gave $P = 3$ without adding $R_2 = 1$.",
+        "Gave $R_1 = 2.9^2 = 8.41$."
+      ]
+    }
   },
   {
     "id": "b7-012",
@@ -3631,7 +4051,7 @@ window.QUESTION_BANK = [
     "block": "block7",
     "topic": "State-Space & Subspace Identification",
     "subtopic": "Solving the Scalar Riccati Equation (ESI Ex 2)",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "variant",
     "isMockExam": false,
@@ -3643,13 +4063,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider a scalar state-space model $x(t+1) = x(t) + u(t) + \\eta(t)$, $y(t) = x(t) + \\nu(t)$ ($A = 1, B = 1, C = 1$) where $\\eta(t)$ and $\\nu(t)$ are uncorrelated zero-mean white noise processes ($R_{12} = 0$) with variances $R_1 = 2$ and $R_2 = 4$. Find the positive semidefinite solution $P \\ge 0$ to the Riccati equation.",
     "hint": "Substitute $A=1, C=1, R_1=2, R_2=4, R_{12}=0$ into $P = APA^\\top + R_1 - \\frac{(APC^\\top + R_{12})^2}{CPC^\\top + R_2}$ and solve the resulting quadratic equation for $P \\ge 0$.",
-    "options": null,
-    "correctAnswer": 4,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact integer.",
+    "options": [
+      "$P = 4$",
+      "$P = 2$",
+      "$P = 0$",
+      "$P = 6$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! The scalar Riccati equation $P = P + 2 - \\frac{P^2}{P + 4}$ simplifies to $\\frac{P^2}{P + 4} = 2 \\implies P^2 - 2P - 8 = 0 \\implies (P - 4)(P + 2) = 0$. Since $P \\ge 0$, $P = 4$.",
+      "Picked the magnitude of the negative root $P = -2$ or set $P = R_1 = 2$.",
+      "$P = 0$ does not solve the Riccati equation when $R_1 = 2 > 0$ and $R_{12} = 0$.",
+      "Simply added $R_1 + R_2 = 2 + 4 = 6$."
+    ],
     "explanation": "Substituting $A = 1, C = 1, R_1 = 2, R_2 = 4, R_{12} = 0$ into the Riccati equation gives:\n$$P = P + 2 - \\frac{P^2}{P + 4}.$$\nSubtracting $P$ from both sides yields:\n$$\\frac{P^2}{P + 4} = 2 \\iff P^2 - 2P - 8 = 0 \\iff (P - 4)(P + 2) = 0.$$\nSince $P = \\mathbb{E}[(x(t)-\\hat{x}(t))^2] \\ge 0$ must be positive semidefinite, we get $P = 4$. (With $P = 4$, the Kalman gain is $K = \\frac{4}{4+4} = 0.5$, and $A - KC = 1 - 0.5 = 0.5$ is stable)."
   },
   {
@@ -3774,7 +4204,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "From Exercise 3(a), $MM^\\dagger = UU^\\top$ where $U \\in \\mathbb{R}^{4 \\times 3}$ satisfies $U^\\top U = I_3$. Using the cyclic property of the trace:\n$$\\text{tr}(MM^\\dagger) = \\text{tr}(UU^\\top) = \\text{tr}(U^\\top U) = \\text{tr}(I_3) = 3 = \\text{rank}(M).$$"
+    "explanation": "From Exercise 3(a), $MM^\\dagger = UU^\\top$ where $U \\in \\mathbb{R}^{4 \\times 3}$ satisfies $U^\\top U = I_3$. Using the cyclic property of the trace:\n$$\\text{tr}(MM^\\dagger) = \\text{tr}(UU^\\top) = \\text{tr}(U^\\top U) = \\text{tr}(I_3) = 3 = \\text{rank}(M).$$",
+    "busMcq": {
+      "options": [
+        "$3$",
+        "$4$",
+        "$10$",
+        "$1$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Since $MM^\\dagger = UU^\\top$ and $U^\\top U = I_r$ ($r=3$), $\\text{tr}(MM^\\dagger) = \\text{tr}(U^\\top U) = \\text{tr}(I_3) = r = 3$.",
+        "Used the number of rows $m = 4$, assuming $MM^\\dagger = I_4$ even though $\\text{rank}(M) = 3 < 4$.",
+        "Used the number of columns $n = 10$.",
+        "Assumed trace is always $1$."
+      ]
+    }
   },
   {
     "id": "b7-019",
@@ -3934,7 +4379,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "From `ESI.pdf` page 8 (Solution 4b):\n$$\\text{rank}(F) = \\text{rank}(\\mathbf{\\Phi}^\\top \\otimes I_{n+p}) = \\text{rank}(\\mathbf{\\Phi}^\\top)\\text{rank}(I_{n+p}) = (n + p)\\text{rank}(\\mathbf{\\Phi}).$$\nWith $n = 3$, $p = 2$, and $\\text{rank}(\\mathbf{\\Phi}) = 4$, we have:\n$$\\text{rank}(F) = (3 + 2) \\times 4 = 5 \\times 4 = 20.$$\n(Note that full column rank of $F$ would require $(n+p)(n+m) = 5 \\times 5 = 25$, so neither $\\hat{\\theta}$ nor $\\widehat{\\Theta}$ is unique here.)"
+    "explanation": "From `ESI.pdf` page 8 (Solution 4b):\n$$\\text{rank}(F) = \\text{rank}(\\mathbf{\\Phi}^\\top \\otimes I_{n+p}) = \\text{rank}(\\mathbf{\\Phi}^\\top)\\text{rank}(I_{n+p}) = (n + p)\\text{rank}(\\mathbf{\\Phi}).$$\nWith $n = 3$, $p = 2$, and $\\text{rank}(\\mathbf{\\Phi}) = 4$, we have:\n$$\\text{rank}(F) = (3 + 2) \\times 4 = 5 \\times 4 = 20.$$\n(Note that full column rank of $F$ would require $(n+p)(n+m) = 5 \\times 5 = 25$, so neither $\\hat{\\theta}$ nor $\\widehat{\\Theta}$ is unique here.)",
+    "busMcq": {
+      "options": [
+        "$20$",
+        "$25$",
+        "$16$",
+        "$9$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Using $\\text{rank}(A \\otimes B) = \\text{rank}(A)\\text{rank}(B)$, $\\text{rank}(F) = \\text{rank}(\\mathbf{\\Phi}^\\top)\\text{rank}(I_{n+p}) = 4 \\times (3 + 2) = 20$.",
+        "Used full row rank $n + m = 5$ instead of the actual $\\text{rank}(\\mathbf{\\Phi}) = 4$ ($5 \\times 5 = 25$).",
+        "Multiplied $\\text{rank}(\\mathbf{\\Phi}) = 4$ by $4$ instead of $n + p = 5$.",
+        "Added $4 + 5 = 9$ instead of multiplying."
+      ]
+    }
   },
   {
     "id": "b7-024",
@@ -3993,7 +4453,7 @@ window.QUESTION_BANK = [
     "block": "block7",
     "topic": "State-Space & Subspace Identification",
     "subtopic": "Numerical Calculation of Theta_hat = Y Phi^dagger (ESI Ex 4)",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "variant",
     "isMockExam": false,
@@ -4005,13 +4465,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider a noise-free scalar system ($n=1, m=1, p=1$) where two time steps ($N=2$) of states, inputs, and outputs are stacked into\n$$\\mathbf{\\Phi} = \\begin{bmatrix} x(1) & x(2) \\\\ u(1) & u(2) \\end{bmatrix} = \\begin{bmatrix} 2 & 0 \\\\ 0 & 4 \\end{bmatrix}, \\qquad \\mathbf{Y} = \\begin{bmatrix} x(2) & x(3) \\\\ y(1) & y(2) \\end{bmatrix} = \\begin{bmatrix} 1.6 & 4 \\\\ 3 & 0 \\end{bmatrix}.$$\nCompute the least-squares estimate $\\hat{A}$ (the $(1,1)$ entry of $\\widehat{\\Theta} = \\begin{bmatrix} \\hat{A} & \\hat{B} \\\\ \\hat{C} & \\hat{D} \\end{bmatrix} = \\mathbf{Y}\\mathbf{\\Phi}^\\dagger$).",
     "hint": "Since $\\mathbf{\\Phi}$ is a $2 \\times 2$ invertible diagonal matrix, $\\mathbf{\\Phi}^\\dagger = \\mathbf{\\Phi}^{-1} = \\text{diag}(0.5, 0.25)$.",
-    "options": null,
-    "correctAnswer": 0.8,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal.",
+    "options": [
+      "$\\hat{A} = 0.8$",
+      "$\\hat{A} = 1.5$",
+      "$\\hat{A} = 1.0$",
+      "$\\hat{A} = 3.2$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Since $\\mathbf{\\Phi} = \\text{diag}(2, 4)$ is invertible, $\\mathbf{\\Phi}^\\dagger = \\text{diag}(0.5, 0.25)$. Multiplying $\\mathbf{Y}\\mathbf{\\Phi}^\\dagger$ gives the $(1,1)$ entry $\\hat{A} = 1.6 \\times 0.5 = 0.8$.",
+      "Computed the $(2,1)$ entry $\\hat{C} = 3 \\times 0.5 = 1.5$ instead of $\\hat{A}$.",
+      "Computed the $(1,2)$ entry $\\hat{B} = 4 \\times 0.25 = 1.0$ instead of $\\hat{A}$.",
+      "Multiplied $1.6 \\times 2 = 3.2$ instead of dividing by $x(1) = 2$."
+    ],
     "explanation": "Since $\\mathbf{\\Phi} = \\begin{bmatrix} 2 & 0 \\\\ 0 & 4 \\end{bmatrix}$ is invertible, its pseudoinverse is $\\mathbf{\\Phi}^\\dagger = \\mathbf{\\Phi}^{-1} = \\begin{bmatrix} 0.5 & 0 \\\\ 0 & 0.25 \\end{bmatrix}$.\nMultiplying $\\widehat{\\Theta} = \\mathbf{Y}\\mathbf{\\Phi}^{-1}$ yields:\n$$\\widehat{\\Theta} = \\begin{bmatrix} 1.6 & 4 \\\\ 3 & 0 \\end{bmatrix} \\begin{bmatrix} 0.5 & 0 \\\\ 0 & 0.25 \\end{bmatrix} = \\begin{bmatrix} 0.8 & 1.0 \\\\ 1.5 & 0 \\end{bmatrix}.$$\nThus $\\hat{A} = 0.8$ (with $\\hat{B} = 1.0, \\hat{C} = 1.5, \\hat{D} = 0$)."
   },
   {
@@ -4224,7 +4694,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact decimal.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "Inspecting $\\hat{G} = L_{32} = \\begin{bmatrix} 5.0 & -10.0 \\\\ -1.5 & 3.0 \\end{bmatrix}$, we see that the second row is $-0.3$ times the first row ($-1.5 / 5.0 = -0.3$ and $3.0 / (-10.0) = -0.3$).\nThus, the 1-dimensional column space (range space) of $\\hat{G}$ is spanned by\n$$\\mathcal{O}_2 = \\begin{bmatrix} o_1 \\\\ o_2 \\end{bmatrix} = \\begin{bmatrix} c \\\\ ca \\end{bmatrix} = \\begin{bmatrix} 1 \\\\ -0.3 \\end{bmatrix} r \\quad (r \\neq 0).$$\nDividing the second component by the first gives the unique estimate\n$$\\hat{a} = \\frac{o_2}{o_1} = \\frac{ca}{c} = \\frac{-1.5}{5.0} = -0.3.$$"
+    "explanation": "Inspecting $\\hat{G} = L_{32} = \\begin{bmatrix} 5.0 & -10.0 \\\\ -1.5 & 3.0 \\end{bmatrix}$, we see that the second row is $-0.3$ times the first row ($-1.5 / 5.0 = -0.3$ and $3.0 / (-10.0) = -0.3$).\nThus, the 1-dimensional column space (range space) of $\\hat{G}$ is spanned by\n$$\\mathcal{O}_2 = \\begin{bmatrix} o_1 \\\\ o_2 \\end{bmatrix} = \\begin{bmatrix} c \\\\ ca \\end{bmatrix} = \\begin{bmatrix} 1 \\\\ -0.3 \\end{bmatrix} r \\quad (r \\neq 0).$$\nDividing the second component by the first gives the unique estimate\n$$\\hat{a} = \\frac{o_2}{o_1} = \\frac{ca}{c} = \\frac{-1.5}{5.0} = -0.3.$$",
+    "busMcq": {
+      "options": [
+        "$\\hat{a} = -0.3$",
+        "$\\hat{a} = -3.33$",
+        "$\\hat{a} = +0.3$",
+        "$\\hat{a} = 5.0$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Every column of $\\hat{G} = L_{32} = \\begin{bmatrix} 5.0 & -10.0 \\\\ -1.5 & 3.0 \\end{bmatrix}$ is a multiple of $\\begin{bmatrix} o_1 \\\\ o_2 \\end{bmatrix} = \\begin{bmatrix} 1 \\\\ -0.3 \\end{bmatrix}$, so $\\hat{a} = \\frac{o_2}{o_1} = \\frac{-1.5}{5.0} = -0.3$.",
+        "Divided the top row by the bottom row ($o_1 / o_2 = -10/3$) instead of $o_2 / o_1 = ca / c = a$.",
+        "Dropped the negative sign between the first and second row.",
+        "Picked the $(1,1)$ entry of $L_{32}$."
+      ]
+    }
   },
   {
     "id": "b7-034",
@@ -4293,7 +4778,7 @@ window.QUESTION_BANK = [
     "block": "block7",
     "topic": "State-Space & Subspace Identification",
     "subtopic": "Extracting State Matrix A via Shift Invariance of O_r (CL_SI Sec 1.2 & 3.1)",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "adapted",
     "isMockExam": false,
@@ -4305,13 +4790,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "In `CL_SI.pdf` Sections 1.2 and 3.1, given the extended observability matrix $\\mathcal{O}_r = \\begin{bmatrix} C \\\\ CA \\\\ \\vdots \\\\ CA^{r-1} \\end{bmatrix}$ for a SISO system ($n_y = 1$) of order $n = 2$ with $r = 3$, the state matrix $A$ satisfies the shift equation\n$$\\mathcal{O}_3(1:2, :) \\, A = \\mathcal{O}_3(2:3, :).$$\nSuppose the estimated extended observability matrix is\n$$\\hat{\\mathcal{O}}_3 = \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\\\ -0.7 & 1.5 \\end{bmatrix}.$$\nCompute the trace $\\text{tr}(\\hat{A})$ of the estimated $2 \\times 2$ state matrix $\\hat{A}$.",
     "hint": "Notice that $\\hat{\\mathcal{O}}_3(1:2, :) = I_2$, so $\\hat{A} = \\hat{\\mathcal{O}}_3(2:3, :)$. Then sum the diagonal elements of $\\hat{A}$.",
-    "options": null,
-    "correctAnswer": 1.5,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal.",
+    "options": [
+      "$\\text{tr}(\\hat{A}) = 1.5$",
+      "$\\text{tr}(\\hat{A}) = 0.8$",
+      "$\\text{tr}(\\hat{A}) = -0.7$",
+      "$\\text{tr}(\\hat{A}) = 1.0$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Since $\\hat{\\mathcal{O}}_3(1:2,:) = I_2$, the shift equation $\\hat{\\mathcal{O}}_3(1:2,:)\\hat{A} = \\hat{\\mathcal{O}}_3(2:3,:)$ gives $\\hat{A} = \\begin{bmatrix} 0 & 1 \\\\ -0.7 & 1.5 \\end{bmatrix}$, whose trace is $0 + 1.5 = 1.5$.",
+      "Added the second row entries $-0.7 + 1.5 = 0.8$ instead of the diagonal entries $0 + 1.5$.",
+      "Computed the determinant $\\det(\\hat{A}) = 0.7$ (or $(2,1)$ entry $-0.7$) instead of the trace.",
+      "Took the trace of $\\hat{\\mathcal{O}}_3(1:2,:) = I_2$ ($2$) or the off-diagonal entry $1.0$."
+    ],
     "explanation": "Following `CL_SI.pdf` pages 2 and 6:\nRemoving the last $n_y = 1$ row gives the top block $\\hat{\\mathcal{O}}_3(1:2, :) = \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix} = I_2$.\nRemoving the first $n_y = 1$ row gives the shifted bottom block $\\hat{\\mathcal{O}}_3(2:3, :) = \\begin{bmatrix} 0 & 1 \\\\ -0.7 & 1.5 \\end{bmatrix}$.\nSolving $\\hat{\\mathcal{O}}_3(1:2, :) \\hat{A} = \\hat{\\mathcal{O}}_3(2:3, :)$ gives:\n$$\\hat{A} = I_2^{-1} \\begin{bmatrix} 0 & 1 \\\\ -0.7 & 1.5 \\end{bmatrix} = \\begin{bmatrix} 0 & 1 \\\\ -0.7 & 1.5 \\end{bmatrix}.$$\nTherefore, $\\text{tr}(\\hat{A}) = 0 + 1.5 = 1.5$."
   },
   {
@@ -4338,7 +4833,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "In the noise-free case, $\\text{rank}(G) = \\text{rank}(\\mathcal{O}_r) = n$, so there are exactly $n$ non-zero singular values and the remaining $r - n$ singular values are zero.\nWith measurement/process noise (`CL_SI.pdf` pages 4 and 8), $G = \\mathcal{O}_r \\tilde{T} + E$ has full rank, but the singular values split into $\\hat{n}$ dominant singular values ($18.4, 9.2, 4.1$) and $r - \\hat{n}$ small singular values near zero due to noise ($0.03, 0.02, 0.01$). Thus $\\hat{n} = 3$."
+    "explanation": "In the noise-free case, $\\text{rank}(G) = \\text{rank}(\\mathcal{O}_r) = n$, so there are exactly $n$ non-zero singular values and the remaining $r - n$ singular values are zero.\nWith measurement/process noise (`CL_SI.pdf` pages 4 and 8), $G = \\mathcal{O}_r \\tilde{T} + E$ has full rank, but the singular values split into $\\hat{n}$ dominant singular values ($18.4, 9.2, 4.1$) and $r - \\hat{n}$ small singular values near zero due to noise ($0.03, 0.02, 0.01$). Thus $\\hat{n} = 3$.",
+    "busMcq": {
+      "options": [
+        "$\\hat{n} = 3$",
+        "$\\hat{n} = 6$",
+        "$\\hat{n} = 2$",
+        "$\\hat{n} = 1$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! There are $3$ large dominant singular values ($18.4, 9.2, 4.1$) followed by a sharp drop of two orders of magnitude to the noise floor ($0.03, 0.02, 0.01$), indicating $\\hat{n} = 3$.",
+        "Counted all $6$ non-zero singular values without truncating the noise singular values.",
+        "Stopped before the third significant singular value $4.1$.",
+        "Picked only the single largest singular value."
+      ]
+    }
   },
   {
     "id": "b7-038",
@@ -4453,7 +4963,7 @@ window.QUESTION_BANK = [
     "block": "block8",
     "topic": "Regularization, RLS & Nonlinear Modelling",
     "subtopic": "Ridge Regression & Bias-Variance",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "easy",
     "origin": "adapted",
     "isMockExam": false,
@@ -4465,13 +4975,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "We are given $N = 4$ noisy measurements of an unknown constant $b_o$ from the model $y(t) = b_o + e(t)$, where $e(t)$ is zero-mean white noise with variance $\\sigma^2 = 1$. The Ridge regression estimate is defined as\n$$\\hat{b} = \\arg\\min_b \\sum_{t=1}^N (y(t) - b)^2 + \\lambda b^2.$$\nGiven the measured values $y(1) = 2.75$, $y(2) = -1.75$, $y(3) = 0.40$, and $y(4) = 1.20$, compute the Ridge estimate $\\hat{b}$ when the regularization parameter is chosen as $\\lambda = 1$.",
     "hint": "Differentiating the criterion with respect to $b$ gives $\\hat{b} = \\frac{1}{N + \\lambda}\\sum_{t=1}^N y(t)$.",
-    "options": null,
-    "correctAnswer": 0.52,
-    "tolerance": 0.005,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal with two decimal places.",
+    "options": [
+      "$\\hat{b} = 0.52$",
+      "$\\hat{b} = 0.65$",
+      "$\\hat{b} = 2.60$",
+      "$\\hat{b} = 0.867$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Setting the derivative of $\\sum_{t=1}^4 (y(t)-b)^2 + \\lambda b^2$ to zero gives $(N + \\lambda)\\hat{b} = \\sum_{t=1}^4 y(t) = 2.75 - 1.75 + 0.40 + 1.20 = 2.60$. With $N=4$ and $\\lambda=1$, $\\hat{b} = \\frac{2.60}{4 + 1} = 0.52$.",
+      "Divided by $N = 4$ ($2.60 / 4 = 0.65$), which is the unregularized Least Squares estimate ($\\lambda = 0$).",
+      "Gave the raw sum $\\sum y(t) = 2.60$ without dividing by $N + \\lambda = 5$.",
+      "Subtracted $\\lambda = 1$ in the denominator ($2.60 / (4 - 1) \\approx 0.867$) instead of adding it."
+    ],
     "explanation": "Setting the derivative of $V(b) = \\sum_{t=1}^N (y(t) - b)^2 + \\lambda b^2$ with respect to $b$ to zero:\n$$0 = 2\\sum_{t=1}^N (\\hat{b} - y(t)) + 2\\lambda \\hat{b} = 2(N + \\lambda)\\hat{b} - 2\\sum_{t=1}^N y(t) \\iff \\hat{b} = \\frac{\\sum_{t=1}^N y(t)}{N + \\lambda}.$$\nHere $N = 4$ and $\\sum_{t=1}^4 y(t) = 2.75 - 1.75 + 0.40 + 1.20 = 2.60$. Note that for $\\lambda = 0$ (standard least squares), $\\hat{b} = 2.60 / 4 = 0.65$. For $\\lambda = 1$, we obtain:\n$$\\hat{b} = \\frac{2.60}{4 + 1} = \\frac{2.60}{5} = 0.52.$$"
   },
   {
@@ -4515,7 +5035,7 @@ window.QUESTION_BANK = [
     "block": "block8",
     "topic": "Regularization, RLS & Nonlinear Modelling",
     "subtopic": "Ridge Regression & Bias-Variance",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "variant",
     "isMockExam": false,
@@ -4527,13 +5047,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "In the scalar Ridge regression problem $\\hat{b}(\\lambda) = \\arg\\min_b \\sum_{t=1}^N (y(t) - b)^2 + \\lambda b^2$ for $y(t) = b_o + e(t)$ with zero-mean white noise of variance $\\sigma^2$, the Mean Square Error is\n$$\\operatorname{MSE}(\\hat{b}(\\lambda)) = \\left(\\mathbb{E}[\\hat{b}(\\lambda)] - b_o\\right)^2 + \\operatorname{Var}(\\hat{b}(\\lambda)) = \\frac{\\lambda^2 b_o^2 + N\\sigma^2}{(N + \\lambda)^2}.$$\nSuppose the true constant is $b_o = 2$, the noise variance is $\\sigma^2 = 6$, and $N = 10$ samples are collected. Find the optimal regularization parameter $\\lambda^\\star > 0$ that minimizes $\\operatorname{MSE}(\\hat{b}(\\lambda))$.",
     "hint": "Differentiate $\\operatorname{MSE}(\\lambda) = \\frac{\\lambda^2 b_o^2 + N\\sigma^2}{(N + \\lambda)^2}$ with respect to $\\lambda$ and set the numerator to zero (or use the general optimal regularizer result from Lecture 10).",
-    "options": null,
-    "correctAnswer": 1.5,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal.",
+    "options": [
+      "$\\lambda^\\star = 1.5$",
+      "$\\lambda^\\star = 3.0$",
+      "$\\lambda^\\star = 0.667$",
+      "$\\lambda^\\star = 0.15$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Differentiating $\\operatorname{MSE}(\\hat{b}(\\lambda)) = \\frac{\\lambda^2 b_o^2 + N\\sigma^2}{(N+\\lambda)^2}$ with respect to $\\lambda$ and setting to zero yields $\\lambda^\\star = \\frac{\\sigma^2}{b_o^2} = \\frac{6}{2^2} = 1.5$ (independent of $N$!).",
+      "Divided $\\sigma^2 = 6$ by $b_o = 2$ instead of $b_o^2 = 4$.",
+      "Inverted the ratio ($b_o^2 / \\sigma^2 = 4/6 \\approx 0.667$).",
+      "Divided $\\sigma^2 / b_o^2 = 1.5$ by $N = 10$."
+    ],
     "explanation": "The bias is $\\mathbb{E}[\\hat{b}(\\lambda)] - b_o = \\frac{N}{N+\\lambda}b_o - b_o = -\\frac{\\lambda}{N+\\lambda}b_o$, so:\n$$\\operatorname{MSE}(\\lambda) = \\frac{\\lambda^2 b_o^2 + N\\sigma^2}{(N + \\lambda)^2}.$$\nDifferentiating with respect to $\\lambda$ using the quotient rule:\n$$\\frac{d}{d\\lambda}\\operatorname{MSE}(\\lambda) = \\frac{2\\lambda b_o^2 (N + \\lambda)^2 - 2(N + \\lambda)(\\lambda^2 b_o^2 + N\\sigma^2)}{(N + \\lambda)^4} = \\frac{2N(\\lambda b_o^2 - \\sigma^2)}{(N + \\lambda)^3} = 0.$$\nSolving $\\lambda b_o^2 - \\sigma^2 = 0$ yields the optimal regularization parameter (independent of $N$):\n$$\\lambda^\\star = \\frac{\\sigma^2}{b_o^2} = \\frac{6}{2^2} = \\frac{6}{4} = 1.5.$$\nNote that this matches the general lecture result $\\gamma^\\star = \\sigma^2$, $P^\\star = b_o^2$ where the penalty is $\\gamma P^{-1} b^2 = \\frac{\\sigma^2}{b_o^2}b^2$."
   },
   {
@@ -4639,7 +5169,7 @@ window.QUESTION_BANK = [
     "block": "block8",
     "topic": "Regularization, RLS & Nonlinear Modelling",
     "subtopic": "LASSO & Sparsity",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "variant",
     "isMockExam": false,
@@ -4651,13 +5181,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Let $\\mathbf{X} \\in \\mathbb{R}^{n \\times 3}$ have orthonormal columns ($\\mathbf{X}^\\top\\mathbf{X} = \\mathbf{I}_3$), and suppose $\\mathbf{X}^\\top\\mathbf{y} = \\begin{bmatrix} 2.4 & -0.7 & -1.5 \\end{bmatrix}^\\top$. We compute the LASSO estimator\n$$\\widehat{\\boldsymbol{\\theta}}^{\\text{Lasso}} = \\arg\\min_{\\boldsymbol{\\theta} \\in \\mathbb{R}^3} \\left(\\|\\mathbf{y} - \\mathbf{X}\\boldsymbol{\\theta}\\|_2^2 + \\lambda\\|\\boldsymbol{\\theta}\\|_1\\right)$$\nwith regularization parameter $\\lambda = 1.8$. Compute the $\\ell_1$-norm $\\|\\widehat{\\boldsymbol{\\theta}}^{\\text{Lasso}}\\|_1 = \\sum_{j=1}^3 |\\widehat{\\theta}_j^{\\text{Lasso}}|$ of the resulting LASSO estimate.",
     "hint": "First note $\\widehat{\\boldsymbol{\\theta}}^{\\text{LS}} = \\mathbf{X}^\\top\\mathbf{y} = [2.4, -0.7, -1.5]^\\top$ and the soft-thresholding threshold is $\\tau = \\lambda/2 = 0.9$. Apply $\\widehat{\\theta}_j^{\\text{Lasso}} = \\operatorname{sign}(\\widehat{\\theta}_j^{\\text{LS}})(|\\widehat{\\theta}_j^{\\text{LS}}| - 0.9)_+$ to each component.",
-    "options": null,
-    "correctAnswer": 2.1,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal.",
+    "options": [
+      "$\\|\\widehat{\\boldsymbol{\\theta}}^{\\text{Lasso}}\\|_1 = 2.1$",
+      "$\\|\\widehat{\\boldsymbol{\\theta}}^{\\text{Lasso}}\\|_1 = 4.6$",
+      "$\\|\\widehat{\\boldsymbol{\\theta}}^{\\text{Lasso}}\\|_1 = 1.5$",
+      "$\\|\\widehat{\\boldsymbol{\\theta}}^{\\text{Lasso}}\\|_1 = 0.9$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! With $\\mathbf{X}^\\top\\mathbf{X} = \\mathbf{I}_3$, soft-thresholding shrinks each component of $\\widehat{\\boldsymbol{\\theta}}^{\\text{LS}} = [2.4, -0.7, -1.5]^\\top$ toward zero by $\\frac{\\lambda}{2} = 0.9$: $\\widehat{\\boldsymbol{\\theta}}^{\\text{Lasso}} = [1.5,\\; 0,\\; -0.6]^\\top$, so $\\|\\widehat{\\boldsymbol{\\theta}}^{\\text{Lasso}}\\|_1 = 1.5 + 0 + 0.6 = 2.1$.",
+      "Computed the $\\ell_1$-norm of the unregularized LS estimate ($2.4 + 0.7 + 1.5 = 4.6$).",
+      "Subtracted the full $\\lambda = 1.8$ instead of $\\lambda/2 = 0.9$ (or forgot the third component $|-0.6|$).",
+      "Did not truncate the second component $|-0.7| - 0.9 = -0.2$ at zero."
+    ],
     "explanation": "Since $\\mathbf{X}^\\top\\mathbf{X} = \\mathbf{I}_3$, the least-squares estimate is $\\widehat{\\boldsymbol{\\theta}}^{\\text{LS}} = \\mathbf{X}^\\top\\mathbf{y} = [2.4, -0.7, -1.5]^\\top$. With $\\lambda = 1.8$, the soft-thresholding level is $\\tau = \\frac{\\lambda}{2} = 0.9$. Applying $\\widehat{\\theta}_j^{\\text{Lasso}} = \\operatorname{sign}(\\widehat{\\theta}_j^{\\text{LS}})(|\\widehat{\\theta}_j^{\\text{LS}}| - 0.9)_+$ coordinate-wise:\n- $\\widehat{\\theta}_1^{\\text{Lasso}} = +1 \\cdot (2.4 - 0.9)_+ = 1.5$\n- $\\widehat{\\theta}_2^{\\text{Lasso}} = -1 \\cdot (0.7 - 0.9)_+ = 0$ (sparsified to zero since $|\\widehat{\\theta}_2^{\\text{LS}}| = 0.7 \\le 0.9$)\n- $\\widehat{\\theta}_3^{\\text{Lasso}} = -1 \\cdot (1.5 - 0.9)_+ = -0.6$\n\nThus $\\widehat{\\boldsymbol{\\theta}}^{\\text{Lasso}} = [1.5, 0, -0.6]^\\top$, and its $\\ell_1$-norm is:\n$$\\|\\widehat{\\boldsymbol{\\theta}}^{\\text{Lasso}}\\|_1 = |1.5| + |0| + |-0.6| = 2.1.$$"
   },
   {
@@ -4753,7 +5293,7 @@ window.QUESTION_BANK = [
     "block": "block8",
     "topic": "Regularization, RLS & Nonlinear Modelling",
     "subtopic": "James-Stein & Regularized FIR",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "variant",
     "isMockExam": false,
@@ -4765,13 +5305,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider the Tuned-Correlated (TC) regularization kernel matrix $P(\\alpha) \\in \\mathbb{R}^{3 \\times 3}$ for a 3-parameter FIR model, defined by\n$$[P(\\alpha)]_{ij} = c\\,\\alpha^{\\max\\{i, j\\}}, \\quad i, j \\in \\{1, 2, 3\\},$$\nwhich is a special case of the Diagonally-Correlated (DC) kernel $[P]_{ij} = c\\,\\alpha^{\\frac{i+j}{2}}\\rho^{|i-j|}$ with $\\rho = \\sqrt{\\alpha}$. For $c = 1$ and $\\alpha = 0.5$, compute the sum of all 9 entries of the matrix $P(0.5)$, i.e., $\\mathbf{1}_3^\\top P(0.5) \\mathbf{1}_3 = \\sum_{i=1}^3 \\sum_{j=1}^3 [P(0.5)]_{ij}$.",
     "hint": "Write out the $3 \\times 3$ matrix $P(\\alpha) = \\begin{bmatrix} \\alpha & \\alpha^2 & \\alpha^3 \\\\ \\alpha^2 & \\alpha^2 & \\alpha^3 \\\\ \\alpha^3 & \\alpha^3 & \\alpha^3 \\end{bmatrix}$ and count how many times $\\alpha$, $\\alpha^2$, and $\\alpha^3$ appear.",
-    "options": null,
-    "correctAnswer": 1.875,
-    "tolerance": 0.005,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal (three decimal places).",
+    "options": [
+      "$1.875$",
+      "$0.875$",
+      "$2.250$",
+      "$1.500$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! In $P(0.5)$ where $[P]_{ij} = 0.5^{\\max(i,j)}$, the $(1,1)$ entry is $0.5^1 = 0.5$, the $3$ entries with $\\max(i,j)=2$ are each $0.5^2 = 0.25$, and the $5$ entries with $\\max(i,j)=3$ are each $0.5^3 = 0.125$. Summing gives $0.5 + 3(0.25) + 5(0.125) = 0.5 + 0.75 + 0.625 = 1.875$.",
+      "Summed only the $3$ diagonal entries $0.5 + 0.25 + 0.125 = 0.875$.",
+      "Used $\\min(i,j)$ instead of $\\max(i,j)$. ",
+      "Counted $3$ entries of each value instead of $1, 3, 5$."
+    ],
     "explanation": "From Lecture 10 (Slide 22), with $c = 1$ and $n = 3$, the TC-kernel matrix is:\n$$P(\\alpha) = \\begin{bmatrix} \\alpha & \\alpha^2 & \\alpha^3 \\\\ \\alpha^2 & \\alpha^2 & \\alpha^3 \\\\ \\alpha^3 & \\alpha^3 & \\alpha^3 \\end{bmatrix}.$$\nNotice that $\\alpha$ appears $1$ time, $\\alpha^2$ appears $3$ times, and $\\alpha^3$ appears $5$ times. For $\\alpha = 0.5$, we have $\\alpha = 0.5$, $\\alpha^2 = 0.25$, and $\\alpha^3 = 0.125$. Summing all 9 entries gives:\n$$\\sum_{i=1}^3 \\sum_{j=1}^3 [P(0.5)]_{ij} = 1(0.5) + 3(0.25) + 5(0.125) = 0.5 + 0.75 + 0.625 = 1.875.$$"
   },
   {
@@ -4824,7 +5374,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact decimal with two decimal places.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "Using the recursive update equation at $t = 10$:\n$$\\hat{\\theta}(10) = \\hat{\\theta}(9) + \\frac{1}{10}\\left(y(10) - \\hat{\\theta}(9)\\right) = 2.0 + \\frac{1}{10}(6.5 - 2.0) = 2.0 + 0.45 = 2.45.$$\nNote that the gain $K(t) = \\frac{1}{t} = 0.1$ decreases to $0$ as $t \\to \\infty$, illustrating why standard unweighted RLS reacts increasingly slowly to parameter changes when $t$ is large."
+    "explanation": "Using the recursive update equation at $t = 10$:\n$$\\hat{\\theta}(10) = \\hat{\\theta}(9) + \\frac{1}{10}\\left(y(10) - \\hat{\\theta}(9)\\right) = 2.0 + \\frac{1}{10}(6.5 - 2.0) = 2.0 + 0.45 = 2.45.$$\nNote that the gain $K(t) = \\frac{1}{t} = 0.1$ decreases to $0$ as $t \\to \\infty$, illustrating why standard unweighted RLS reacts increasingly slowly to parameter changes when $t$ is large.",
+    "busMcq": {
+      "options": [
+        "$\\hat{\\theta}(10) = 2.45$",
+        "$\\hat{\\theta}(10) = 2.50$",
+        "$\\hat{\\theta}(10) = 4.25$",
+        "$\\hat{\\theta}(10) = 2.00$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! $\\hat{\\theta}(10) = \\hat{\\theta}(9) + \\frac{1}{10}(y(10) - \\hat{\\theta}(9)) = 2.0 + 0.1(6.5 - 2.0) = 2.0 + 0.45 = 2.45$.",
+        "Divided $6.5 - 2.0 = 4.5$ by $9$ instead of $t = 10$ ($2.0 + 0.5 = 2.50$).",
+        "Averaged $2.0$ and $6.5$ with equal weights.",
+        "Did not update the estimate."
+      ]
+    }
   },
   {
     "id": "b8-016",
@@ -4903,7 +5468,7 @@ window.QUESTION_BANK = [
     "block": "block8",
     "topic": "Regularization, RLS & Nonlinear Modelling",
     "subtopic": "Recursive Least Squares & Forgetting Factor",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "variant",
     "isMockExam": false,
@@ -4915,13 +5480,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider standard Recursive Least Squares (RLS, $\\lambda = 1$) for a scalar parameter model $\\hat{y}(t) = \\varphi(t)\\theta$. At time $t - 1$, the parameter estimate is $\\hat{\\theta}(t-1) = 1.5$ and $P(t-1) = 0.5$. At time $t$, a new sample arrives with regressor $\\varphi(t) = 2$ and measured output $y(t) = 4.5$. Compute the updated parameter estimate $\\hat{\\theta}(t)$.",
     "hint": "Compute $\\varepsilon(t) = y(t) - \\varphi(t)\\hat{\\theta}(t-1)$ and $K(t) = \\frac{P(t-1)\\varphi(t)}{1 + \\varphi(t)P(t-1)\\varphi(t)}$ (or compute $P(t)$ first and then $K(t) = P(t)\\varphi(t)$), and finally evaluate $\\hat{\\theta}(t) = \\hat{\\theta}(t-1) + K(t)\\varepsilon(t)$.",
-    "options": null,
-    "correctAnswer": 2.0,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact integer or decimal.",
+    "options": [
+      "$\\hat{\\theta}(t) = 2.0$",
+      "$\\hat{\\theta}(t) = 2.25$",
+      "$\\hat{\\theta}(t) = 1.75$",
+      "$\\hat{\\theta}(t) = 1.5$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! First compute the RLS gain $K(t) = \\frac{P(t-1)\\varphi(t)}{1 + \\varphi^2(t)P(t-1)} = \\frac{0.5(2)}{1 + 4(0.5)} = \\frac{1}{3}$ (or update $P(t) = (P(t-1)^{-1} + \\varphi^2(t))^{-1} = (2 + 4)^{-1} = \\frac{1}{6}$ so $K(t) = P(t)\\varphi(t) = \\frac{2}{6} = \\frac{1}{3}$). Then $\\hat{\\theta}(t) = 1.5 + \\frac{1}{3}(4.5 - 2(1.5)) = 1.5 + \\frac{1}{3}(1.5) = 2.0$.",
+      "Used $K(t) = P(t-1)\\varphi(t) = 0.5(2) = 1.0$ or $0.5$ without dividing by $1 + \\varphi^2(t)P(t-1) = 3$.",
+      "Used $P(t) = 1/6$ directly as the gain $K(t)$ without multiplying by $\\varphi(t) = 2$.",
+      "Assumed zero prediction error."
+    ],
     "explanation": "Step 1 — Prediction error:\n$$\\varepsilon(t) = y(t) - \\varphi(t)\\hat{\\theta}(t-1) = 4.5 - 2(1.5) = 1.5.$$\nStep 2 — Update $P(t)$ and gain $K(t)$:\n$$P(t) = P(t-1) - \\frac{P(t-1)\\varphi(t)\\varphi(t)P(t-1)}{1 + \\varphi(t)P(t-1)\\varphi(t)} = 0.5 - \\frac{0.5 \\cdot 2 \\cdot 2 \\cdot 0.5}{1 + 2 \\cdot 0.5 \\cdot 2} = 0.5 - \\frac{1}{3} = \\frac{1}{6}.$$\nHence the gain is $K(t) = P(t)\\varphi(t) = \\frac{1}{6} \\cdot 2 = \\frac{1}{3}$ (which also matches $\\frac{P(t-1)\\varphi(t)}{1 + \\varphi^2(t)P(t-1)} = \\frac{1}{1+2} = \\frac{1}{3}$).\nStep 3 — Parameter update:\n$$\\hat{\\theta}(t) = \\hat{\\theta}(t-1) + K(t)\\varepsilon(t) = 1.5 + \\frac{1}{3}(1.5) = 1.5 + 0.5 = 2.0.$$"
   },
   {
@@ -4984,7 +5559,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact decimal with two decimal places.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "For $\\varphi(t) = 1$ and $0 < \\lambda < 1$, the denominator of the gain is a finite geometric sum:\n$$\\sum_{k=1}^t \\lambda^{t-k} = \\sum_{j=0}^{t-1} \\lambda^j = \\frac{1 - \\lambda^t}{1 - \\lambda} \\xrightarrow{t \\to \\infty} \\frac{1}{1 - \\lambda}.$$\nTherefore, the asymptotic gain is:\n$$\\lim_{t \\to \\infty} K(t) = 1 - \\lambda = 1 - 0.96 = 0.04.$$\nUnlike standard RLS ($\\lambda = 1$) where $K(t) = 1/t \\to 0$, for $\\lambda = 0.96$ the gain converges to the positive constant $0.04$, ensuring that new measurements always influence the estimate."
+    "explanation": "For $\\varphi(t) = 1$ and $0 < \\lambda < 1$, the denominator of the gain is a finite geometric sum:\n$$\\sum_{k=1}^t \\lambda^{t-k} = \\sum_{j=0}^{t-1} \\lambda^j = \\frac{1 - \\lambda^t}{1 - \\lambda} \\xrightarrow{t \\to \\infty} \\frac{1}{1 - \\lambda}.$$\nTherefore, the asymptotic gain is:\n$$\\lim_{t \\to \\infty} K(t) = 1 - \\lambda = 1 - 0.96 = 0.04.$$\nUnlike standard RLS ($\\lambda = 1$) where $K(t) = 1/t \\to 0$, for $\\lambda = 0.96$ the gain converges to the positive constant $0.04$, ensuring that new measurements always influence the estimate.",
+    "busMcq": {
+      "options": [
+        "$0.04$",
+        "$0.96$",
+        "$25.0$",
+        "$0.02$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Since $\\sum_{k=1}^t \\lambda^{t-k} \\to \\frac{1}{1 - \\lambda}$ as $t \\to \\infty$, the asymptotic gain is $K(t) \\to 1 - \\lambda = 1 - 0.96 = 0.04$.",
+        "Gave $\\lambda = 0.96$ instead of $1 - \\lambda = 0.04$.",
+        "Gave the effective memory horizon $\\frac{1}{1 - \\lambda} = 25$ instead of its reciprocal $K(t) = 1 - \\lambda = 0.04$.",
+        "Divided $1 - \\lambda$ by $2$."
+      ]
+    }
   },
   {
     "id": "b8-021",
@@ -5213,7 +5803,7 @@ window.QUESTION_BANK = [
     "block": "block8",
     "topic": "Regularization, RLS & Nonlinear Modelling",
     "subtopic": "Past Exam Synthesis Problems",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "adapted",
     "isMockExam": false,
@@ -5225,13 +5815,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Data is collected from the system\n$$y(t) = b_o u(t-1) + e(t) + c_o e(t-1),$$\nwhere $e(t)$ is zero-mean white noise with variance $\\sigma^2 = 1$, the input is $u(t) = 1$ for all $t$, and $N = 3$ samples $y(1), y(2), y(3)$ are used to estimate $b_o$. Let $\\varepsilon = [\\varepsilon(1), \\varepsilon(2), \\varepsilon(3)]^\\top$ where $\\varepsilon(t) = e(t) + c_o e(t-1)$ has covariance matrix\n$$R = \\mathbb{E}[\\varepsilon\\varepsilon^\\top] = \\sigma^2 \\begin{bmatrix} 1 + c_o^2 & c_o & 0 \\\\ c_o & 1 + c_o^2 & c_o \\\\ 0 & c_o & 1 + c_o^2 \\end{bmatrix}.$$\nIf $b_o$ is estimated using ordinary Least Squares $\\hat{b}_{\\text{LS}} = \\frac{1}{3}\\sum_{t=1}^3 y(t)$, its variance is $\\operatorname{Var}(\\hat{b}_{\\text{LS}}) = (\\Phi^\\top\\Phi)^{-1}\\Phi^\\top R\\Phi(\\Phi^\\top\\Phi)^{-1} = \\frac{\\sigma^2}{9}(3c_o^2 + 4c_o + 3)$ where $\\Phi = [1, 1, 1]^\\top$. Calculate $\\operatorname{Var}(\\hat{b}_{\\text{LS}})$ when $c_o = 0.8$ and $\\sigma^2 = 1$.",
     "hint": "Substitute $c_o = 0.8$ and $\\sigma^2 = 1$ into $\\operatorname{Var}(\\hat{b}_{\\text{LS}}) = \\frac{\\sigma^2}{9}(3c_o^2 + 4c_o + 3)$.",
-    "options": null,
-    "correctAnswer": 0.902222,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give a fraction (203/225) or decimal rounded to 2–3 decimal places (0.90 or 0.902).",
+    "options": [
+      "$\\frac{8.12}{9} = \\frac{203}{225} \\approx 0.902$",
+      "$\\frac{4.92}{9} \\approx 0.547$",
+      "$\\frac{1}{3} \\approx 0.333$",
+      "$\\frac{8.12}{3} \\approx 2.707$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Plugging $c_o = 0.8$ and $\\sigma^2 = 1$ into $\\frac{\\sigma^2}{9}(3c_o^2 + 4c_o + 3)$ gives $\\frac{1}{9}(3(0.64) + 3.2 + 3) = \\frac{1.92 + 3.2 + 3}{9} = \\frac{8.12}{9} \\approx 0.902$.",
+      "Omitted the off-diagonal covariance terms $4c_o = 3.2$ ($\\frac{3(1.64)}{9} = \\frac{4.92}{9} \\approx 0.547$).",
+      "Used the white-noise variance formula $\\sigma^2 / N = 1/3$.",
+      "Divided by $N = 3$ instead of $N^2 = 9$."
+    ],
     "explanation": "For $\\varepsilon(t) = e(t) + c_o e(t-1)$ with $\\sigma^2 = 1$, we have $r_\\varepsilon(0) = 1 + c_o^2$, $r_\\varepsilon(1) = c_o$, and $r_\\varepsilon(2) = 0$. With $\\Phi = [1, 1, 1]^\\top$, $\\Phi^\\top\\Phi = 3$ and:\n$$\\Phi^\\top R \\Phi = \\sum_{i=1}^3 \\sum_{j=1}^3 R_{ij} = 3(1 + c_o^2) + 4c_o = 3c_o^2 + 4c_o + 3.$$\nThus the variance of the ordinary LS estimate $\\hat{b}_{\\text{LS}} = \\frac{1}{3}\\sum_{t=1}^3 y(t)$ is:\n$$\\operatorname{Var}(\\hat{b}_{\\text{LS}}) = \\frac{3c_o^2 + 4c_o + 3}{9}.$$\nFor $c_o = 0.8$:\n$$\\operatorname{Var}(\\hat{b}_{\\text{LS}}) = \\frac{3(0.64) + 4(0.8) + 3}{9} = \\frac{1.92 + 3.20 + 3}{9} = \\frac{8.12}{9} \\approx 0.9022.$$\n*(Note from part (c): If $c_o = 0.8$ is known, using the BLUE estimator $\\hat{b}_{\\text{BLUE}} = (\\Phi^\\top R^{-1}\\Phi)^{-1}\\Phi^\\top R^{-1}Y = \\frac{1}{1.22}(0.60y(1) + 0.02y(2) + 0.60y(3))$ reduces the variance to $(\\Phi^\\top R^{-1}\\Phi)^{-1} = \\frac{1}{1.22} \\approx 0.820 < 0.902$.)*"
   },
   {
@@ -5239,7 +5839,7 @@ window.QUESTION_BANK = [
     "block": "block8",
     "topic": "Regularization, RLS & Nonlinear Modelling",
     "subtopic": "Past Exam Synthesis Problems",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "adapted",
     "isMockExam": false,
@@ -5251,13 +5851,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider the system\n$$y(t) = b_o u(t-1) + e(t) + c_o e(t-1),$$\nwhere $c_o = 0.8$, $e(t)$ is zero-mean white noise with variance $\\sigma^2 = 1$, and the input $u(t)$ is zero-mean white noise with variance $\\lambda^2 = 1$ uncorrelated with $e(t)$. We estimate $\\theta_o = [b_o, c_o]^\\top$ using the Prediction Error Method (PEM) with the optimal 1-step predictor $\\hat{y}(t|t-1; \\theta) = bu(t-1) + c\\varepsilon(t-1, \\theta)$, whose predictor gradient is\n$$\\psi(t, \\theta) = \\frac{\\partial}{\\partial\\theta}\\hat{y}(t|t-1; \\theta) = \\frac{1}{1 + cq^{-1}}\\begin{bmatrix} u(t-1) \\\\ \\varepsilon(t-1, \\theta) \\end{bmatrix}.$$\nFor large $N$, the covariance matrix of $\\hat{\\theta}$ is $\\operatorname{cov}(\\hat{\\theta}) = \\frac{\\sigma^2}{N}R^{-1}$ where $R = \\mathbb{E}[\\psi(t, \\theta_o)\\psi^\\top(t, \\theta_o)]$. Compute the scaled asymptotic variance $N \\cdot \\operatorname{Var}(\\hat{b})$ of the first parameter estimate $\\hat{b}$.",
     "hint": "At $\\theta = \\theta_o$, $\\varepsilon(t-1, \\theta_o) = e(t-1)$. Use the fact that $x(t) = \\frac{1}{1 + c_o q^{-1}}u(t-1)$ has variance $r_x(0) = \\frac{\\lambda^2}{1 - c_o^2}$ and is uncorrelated with $z(t) = \\frac{1}{1 + c_o q^{-1}}e(t-1)$.",
-    "options": null,
-    "correctAnswer": 0.36,
-    "tolerance": 0.005,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal with two decimal places.",
+    "options": [
+      "$0.36$",
+      "$1.00$",
+      "$0.64$",
+      "$2.78$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Since $u(t)$ and $e(t)$ are independent white noise with unit variance, $R = \\text{diag}(\\mathbb{E}[\\psi_1^2], \\mathbb{E}[\\psi_2^2])$ where $\\psi_1(t) = \\frac{1}{1 + 0.8q^{-1}}u(t-1)$ has variance $\\frac{1}{1 - 0.8^2} = \\frac{1}{0.36}$. Thus $N\\cdot\\operatorname{Var}(\\hat{b}) = \\sigma^2 / \\mathbb{E}[\\psi_1^2] = 0.36$.",
+      "Ignored the pre-filtering $\\frac{1}{1 + c_o q^{-1}}$ in the PEM gradient $\\psi(t,\\theta_o)$ and assumed $N\\operatorname{Var}(\\hat{b}) = 1.00$.",
+      "Used $c_o^2 = 0.64$ instead of $1 - c_o^2 = 0.36$.",
+      "Computed $\\mathbb{E}[\\psi_1^2] = \\frac{1}{0.36} \\approx 2.78$ without inverting $R$ to get $R^{-1}$."
+    ],
     "explanation": "At the true parameter vector $\\theta_o = [b_o, c_o]^\\top$, the prediction error is $\\varepsilon(t, \\theta_o) = e(t)$, so:\n$$\\psi(t, \\theta_o) = \\begin{bmatrix} x(t) \\\\ z(t) \\end{bmatrix}, \\quad x(t) = \\frac{1}{1 + c_o q^{-1}}u(t-1), \\quad z(t) = \\frac{1}{1 + c_o q^{-1}}e(t-1).$$\nSince $u(t)$ and $e(t)$ are uncorrelated white noise processes, $x(t)$ and $z(t)$ are uncorrelated ($\\mathbb{E}[x(t)z(t)] = 0$), and their variances are:\n$$\\mathbb{E}[x^2(t)] = \\frac{\\lambda^2}{1 - c_o^2}, \\quad \\mathbb{E}[z^2(t)] = \\frac{\\sigma^2}{1 - c_o^2}.$$\nThus $R = \\operatorname{diag}\\left(\\frac{\\lambda^2}{1 - c_o^2},\\; \\frac{\\sigma^2}{1 - c_o^2}\\right)$, and the asymptotic covariance matrix is:\n$$\\operatorname{cov}(\\hat{\\theta}) = \\frac{\\sigma^2}{N}R^{-1} = \\frac{1}{N}\\begin{bmatrix} \\frac{\\sigma^2(1 - c_o^2)}{\\lambda^2} & 0 \\\\ 0 & 1 - c_o^2 \\end{bmatrix}.$$\nSubstituting $\\sigma^2 = 1$, $\\lambda^2 = 1$, and $c_o = 0.8$ gives:\n$$N \\cdot \\operatorname{Var}(\\hat{b}) = \\frac{\\sigma^2(1 - c_o^2)}{\\lambda^2} = 1 - 0.8^2 = 1 - 0.64 = 0.36.$$"
   },
   {
@@ -5301,7 +5911,7 @@ window.QUESTION_BANK = [
     "block": "block8",
     "topic": "Regularization, RLS & Nonlinear Modelling",
     "subtopic": "Past Exam Synthesis Problems",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "adapted",
     "isMockExam": false,
@@ -5313,13 +5923,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Data is generated by the delayed FIR system\n$$y(t) = b_1^o u(t - n_k) + b_2^o u(t - n_k - 1) + e(t),$$\nwhere $e(t)$ is zero-mean white noise with variance $\\lambda$ and $u(t) = 0$ for $t \\le 0$. During data collection, a unit impulse input $u(1) = 1$ and $u(t) = 0$ for $t \\neq 1$ was applied, producing the $N = 6$ measured outputs:\n$$y(1) = -0.10, \\quad y(2) = 0.12, \\quad y(3) = 0.07, \\quad y(4) = 2.14, \\quad y(5) = 1.06, \\quad y(6) = -0.06.$$\nFirst determine the reasonable integer delay $n_k$ from the measurements, and then compute the sum $\\hat{b}_1 + \\hat{b}_2$ of the Least Squares estimates of $b_1$ and $b_2$ using your chosen $n_k$.",
     "hint": "Without noise, $y(t) = 0$ for all $t$ except $t = 1 + n_k$ (where $y(1+n_k) = b_1^o$) and $t = 2 + n_k$ (where $y(2+n_k) = b_2^o$). Look at which two consecutive samples jump far above the noise floor.",
-    "options": null,
-    "correctAnswer": 3.2,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal.",
+    "options": [
+      "$3.20$",
+      "$2.14$",
+      "$1.06$",
+      "$3.27$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! From the impulse at $t=1$, the response appears at $t=4$ and $t=5$ ($n_k = 3$), so $\\hat{b}_1 = y(4) = 2.14$ and $\\hat{b}_2 = y(5) = 1.06$, giving $\\hat{b}_1 + \\hat{b}_2 = 2.14 + 1.06 = 3.20$.",
+      "Gave $\\hat{b}_1 = 2.14$ alone without adding $\\hat{b}_2 = 1.06$.",
+      "Gave $\\hat{b}_2 = 1.06$ alone.",
+      "Included the noise sample $y(3) = 0.07$."
+    ],
     "explanation": "1. **Determining $n_k$:** Since $u(1) = 1$ and $u(t) = 0$ for $t \\neq 1$, the noiseless output is zero for all $t$ except $t = 1 + n_k$ and $t = 2 + n_k$. In the data, $y(1), y(2), y(3), y(6)$ are all close to zero (noise), whereas $y(4) = 2.14$ and $y(5) = 1.06$ are large. Setting $1 + n_k = 4$ gives $n_k = 3$.\n2. **Computing $\\hat{b}_1$ and $\\hat{b}_2$:** With $n_k = 3$, the regressor is $\\varphi(t) = [u(t-3),\\; u(t-4)]^\\top$. Since $u(t-3) = 1$ only at $t = 4$ and $u(t-4) = 1$ only at $t = 5$, we have:\n$$\\sum_{t=1}^6 \\varphi(t)\\varphi^\\top(t) = \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\end{bmatrix} = I_2, \\quad \\hat{\\theta} = \\sum_{t=1}^6 \\varphi(t)y(t) = \\begin{bmatrix} y(4) \\\\ y(5) \\end{bmatrix} = \\begin{bmatrix} 2.14 \\\\ 1.06 \\end{bmatrix}.$$\nThus $\\hat{b}_1 = 2.14$ and $\\hat{b}_2 = 1.06$, so $\\hat{b}_1 + \\hat{b}_2 = 2.14 + 1.06 = 3.20$.\n*(Note from part (c): Because $u(t) = 0$ for all $t > 1$, $\\sum_{t=1}^N \\varphi(t)\\varphi^\\top(t) = I_2$ and $\\operatorname{cov}(\\hat{\\theta}) = \\lambda I_2$ for any $N \\ge 5$; measuring $N = 100$ outputs with the same impulse input adds only zero regressors and does NOT improve accuracy! One must instead apply a persistently exciting input such as white noise.)*"
   },
   {
@@ -5327,7 +5947,7 @@ window.QUESTION_BANK = [
     "block": "block8",
     "topic": "Regularization, RLS & Nonlinear Modelling",
     "subtopic": "Past Exam Synthesis Problems",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "adapted",
     "isMockExam": false,
@@ -5339,13 +5959,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Consider the system $y(t) = b_o u(t-1) + e(t)$ where the true input is generated by the AR(1) process\n$$u(t) = 0.5u(t-1) + w(t),$$\nand we only have access to noisy input measurements $\\hat{u}(t) = u(t) + v(t)$. Here $e(t)$, $w(t)$, and $v(t)$ are mutually uncorrelated zero-mean white noise processes with variances $\\lambda_e$, $\\lambda_w = 3$, and $\\lambda_v = 1$, respectively, and the true parameter is $b_o = 2.8$. If we estimate $b_o$ via ordinary Least Squares using the predictor $\\hat{y}(t) = b\\hat{u}(t-1)$, i.e., $\\hat{b}_{\\text{LS}} = \\left(\\sum_{t=1}^N \\hat{u}^2(t-1)\\right)^{-1}\\sum_{t=1}^N \\hat{u}(t-1)y(t)$, what value does $\\hat{b}_{\\text{LS}}$ converge to as $N \\to \\infty$?",
     "hint": "First find $R_u(0) = \\frac{\\lambda_w}{1 - 0.5^2} = \\frac{4}{3}\\lambda_w$ and $R_{\\hat{u}}(0) = R_u(0) + \\lambda_v$. Then evaluate $\\hat{b}_{\\text{LS}} \\to \\frac{\\mathbb{E}[\\hat{u}(t-1)y(t)]}{\\mathbb{E}[\\hat{u}^2(t-1)]} = b_o \\frac{R_u(0)}{R_u(0) + \\lambda_v}$.",
-    "options": null,
-    "correctAnswer": 2.24,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact decimal with two decimal places.",
+    "options": [
+      "$\\hat{b}_{\\text{LS}} \\to 2.24$",
+      "$\\hat{b}_{\\text{LS}} \\to 2.80$",
+      "$\\hat{b}_{\\text{LS}} \\to 2.10$",
+      "$\\hat{b}_{\\text{LS}} \\to 1.87$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! With $R_u(0) = \\frac{\\lambda_w}{1 - 0.5^2} = \\frac{3}{0.75} = 4$ and $\\lambda_v = 1$, $\\hat{b}_{\\text{LS}} \\to b_o \\frac{R_u(0)}{R_u(0) + \\lambda_v} = 2.8 \\times \\frac{4}{4 + 1} = 2.24$.",
+      "Ignored the input measurement noise attenuation factor $\\frac{4}{5}$.",
+      "Used $\\lambda_w = 3$ instead of $R_u(0) = 4$: $2.8 \\times \\frac{3}{3+1} = 2.10$.",
+      "Used $R_u(0) = 2$ instead of $4$."
+    ],
     "explanation": "1. **Autocovariance of $u(t)$ and $\\hat{u}(t)$:**\nSince $u(t) = 0.5u(t-1) + w(t)$ with $u(t-1) \\perp w(t)$,\n$$R_u(0) = 0.25R_u(0) + \\lambda_w \\implies R_u(0) = \\frac{4}{3}\\lambda_w, \\quad R_u(\\tau) = \\left(\\frac{1}{2}\\right)^\\tau \\frac{4}{3}\\lambda_w \\; (\\tau \\ge 0).$$\nFor $\\hat{u}(t) = u(t) + v(t)$ with $u \\perp v$, $R_{\\hat{u}}(0) = R_u(0) + \\lambda_v = \\frac{4}{3}\\lambda_w + \\lambda_v$.\n2. **Asymptotic limit of $\\hat{b}_{\\text{LS}}$ (Errors-in-Variables attenuation bias):**\nAs $N \\to \\infty$, $\\mathbb{E}[\\hat{u}(t-1)y(t)] = \\mathbb{E}[(u(t-1)+v(t-1))(b_o u(t-1)+e(t))] = b_o R_u(0)$, so:\n$$\\hat{b}_{\\text{LS}} \\to \\frac{\\mathbb{E}[\\hat{u}(t-1)y(t)]}{\\mathbb{E}[\\hat{u}^2(t-1)]} = b_o \\frac{R_u(0)}{R_u(0) + \\lambda_v} = \\frac{4\\lambda_w}{4\\lambda_w + 3\\lambda_v}b_o.$$\nSubstituting $\\lambda_w = 3$, $\\lambda_v = 1$, and $b_o = 2.8$ gives:\n$$\\hat{b}_{\\text{LS}} \\to \\frac{4(3)}{4(3) + 3(1)}(2.8) = \\frac{12}{15}(2.8) = 0.8 \\times 2.8 = 2.24.$$\n*(Note from part (c): The alternative Instrumental Variable estimator $\\hat{b}_{\\text{IV}} = \\left(\\sum_{t=1}^N y(t-1)\\hat{u}(t-1)\\right)^{-1}\\sum_{t=1}^N y(t-1)y(t)$ uses the instrument $z(t) = y(t-1)$, which is correlated with $u(t-1)$ since $R_u(1) = \\frac{2}{3}\\lambda_w \\neq 0$, but uncorrelated with both $v(t-1)$ and $e(t)$, so $\\hat{b}_{\\text{IV}} \\to \\frac{b_o^2 R_u(1)}{b_o R_u(1)} = b_o = 2.8$ is consistent for any $\\lambda_v \\ge 0$!)*"
   },
   {
@@ -5353,7 +5983,7 @@ window.QUESTION_BANK = [
     "block": "block8",
     "topic": "Regularization, RLS & Nonlinear Modelling",
     "subtopic": "Past Exam Synthesis Problems",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "medium",
     "origin": "adapted",
     "isMockExam": false,
@@ -5365,13 +5995,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "In a medical trial, a constant glucose level $c$ is measured by two independent unbiased instruments: $y(t) = c + e(t)$ for $t = 1, 2$, where $\\mathbb{E}[e(1)] = \\mathbb{E}[e(2)] = 0$, $\\mathbb{E}[e(1)e(2)] = 0$, the lab measurement has variance $\\mathbb{E}[e^2(1)] = \\lambda$, and the quick glucose meter has variance $\\mathbb{E}[e^2(2)] = 10\\lambda$. Consider linear estimators of the form $\\hat{c} = ay(1) + by(2)$ with $a + b = 1$ (so that $\\mathbb{E}[\\hat{c}] = c$ is unbiased and $\\operatorname{Var}(\\hat{c}) = \\lambda(a^2 + 10b^2)$). What is the ratio $\\frac{\\operatorname{Var}(\\hat{c}_{\\text{BLUE}})}{\\operatorname{Var}(\\hat{c}_{\\text{LS}})}$ of the variance of the optimal Best Linear Unbiased Estimator (which chooses $a, b$ to minimize $\\operatorname{Var}(\\hat{c})$) to the variance of the standard unweighted Least Squares estimator ($a = b = 1/2$)?",
     "hint": "For LS ($a=b=1/2$), compute $\\operatorname{Var}(\\hat{c}_{\\text{LS}}) = \\lambda(0.25 + 10 \\times 0.25) = 2.75\\lambda$. For BLUE, minimize $\\lambda((1-b)^2 + 10b^2)$ to find $b^\\star = 1/11, a^\\star = 10/11$ and $\\operatorname{Var}(\\hat{c}_{\\text{BLUE}}) = \\frac{10}{11}\\lambda$, then divide the two variances.",
-    "options": null,
-    "correctAnswer": 0.330579,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact fraction (40/121) or decimal rounded to 2–3 decimal places (0.33 or 0.331).",
+    "options": [
+      "$\\frac{40}{121} \\approx 0.331$",
+      "$\\frac{10}{11} \\approx 0.909$",
+      "$\\frac{11}{4} = 2.750$",
+      "$\\frac{1}{10} = 0.100$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Standard LS ($a=b=1/2$) has variance $\\frac{11}{4}\\lambda = 2.75\\lambda$, whereas BLUE weights inversely to variance ($a=10/11, b=1/11$), achieving variance $\\frac{10}{11}\\lambda$. Their ratio is $\\frac{10/11}{11/4} = \\frac{40}{121} \\approx 0.331$.",
+      "This is the BLUE variance coefficient $\\frac{10}{11}$, before dividing by the LS variance coefficient $\\frac{11}{4}$.",
+      "This is the unweighted LS variance coefficient $\\frac{11}{4}$.",
+      "Took the ratio of the raw instrument variances $\\lambda / (10\\lambda) = 1/10$."
+    ],
     "explanation": "1. **Standard Least Squares ($a = b = 1/2$):**\n$$\\operatorname{Var}(\\hat{c}_{\\text{LS}}) = \\lambda\\left(\\left(\\frac{1}{2}\\right)^2 + 10\\left(\\frac{1}{2}\\right)^2\\right) = \\frac{11}{4}\\lambda = 2.75\\lambda.$$\n(Notice this is actually worse than ignoring $y(2)$ completely, which has variance $\\lambda$!)\n2. **Optimal Unbiased Estimator (BLUE):**\nWith $a = 1 - b$, we minimize $\\operatorname{Var}(\\hat{c}) = \\lambda((1-b)^2 + 10b^2) = \\lambda(1 - 2b + 11b^2)$:\n$$\\frac{d}{db}\\operatorname{Var}(\\hat{c}) = \\lambda(-2 + 22b) = 0 \\implies b^\\star = \\frac{1}{11}, \\quad a^\\star = \\frac{10}{11}.$$\n(Equivalently, $\\hat{c}_{\\text{BLUE}} = (\\Phi^\\top R^{-1}\\Phi)^{-1}\\Phi^\\top R^{-1}Y$ with $\\Phi = [1, 1]^\\top$ and $R = \\lambda\\operatorname{diag}(1, 10)$.)\nThe optimal variance is:\n$$\\operatorname{Var}(\\hat{c}_{\\text{BLUE}}) = (\\Phi^\\top R^{-1}\\Phi)^{-1} = \\lambda\\left(\\frac{10^2}{11^2} + \\frac{10}{11^2}\\right) = \\frac{10}{11}\\lambda \\approx 0.9091\\lambda < \\lambda.$$\n3. **Variance Ratio:**\n$$\\frac{\\operatorname{Var}(\\hat{c}_{\\text{BLUE}})}{\\operatorname{Var}(\\hat{c}_{\\text{LS}})} = \\frac{10/11}{11/4} = \\frac{40}{121} \\approx 0.3306.$$"
   },
   {
@@ -5379,7 +6019,7 @@ window.QUESTION_BANK = [
     "block": "block8",
     "topic": "Regularization, RLS & Nonlinear Modelling",
     "subtopic": "Past Exam Synthesis Problems",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "adapted",
     "isMockExam": false,
@@ -5391,13 +6031,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Data is generated from a linear trend $y(t) = a_o + b_o t + e(t)$ for $t = 1, \\dots, N$ with $N = 10$, where $e(t)$ is zero-mean white noise with variance $\\lambda = 8.25$. We compare two unbiased estimators of the slope $b_o$:\n- **Method A (Joint LS):** Fit $\\hat{y}(t) = a + bt$ for $t = 1, \\dots, 10$ using least squares, where $\\sum_{t=1}^{10} \\varphi(t)\\varphi^\\top(t) = \\begin{bmatrix} 10 & 55 \\\\ 55 & 385 \\end{bmatrix}$.\n- **Method B (Differenced LS):** Form $z(t) = y(t) - y(t-1) = b_o + e(t) - e(t-1)$ for $t = 2, \\dots, 10$ and estimate $\\hat{b}_{\\text{diff}} = \\frac{1}{9}\\sum_{t=2}^{10} z(t)$.\nCompute the difference $\\operatorname{Var}(\\hat{b}_{\\text{diff}}) - \\operatorname{Var}(\\hat{b}_{\\text{LS}})$ between the variances of the two slope estimators.",
     "hint": "For Method A, invert $\\begin{bmatrix} 10 & 55 \\\\ 55 & 385 \\end{bmatrix}$ ($\\det = 825$) to find $\\operatorname{Var}(\\hat{b}_{\\text{LS}}) = \\frac{10}{825}\\lambda$. For Method B, notice the telescoping sum $\\sum_{t=2}^{10} (e(t) - e(t-1)) = e(10) - e(1)$, so $\\operatorname{Var}(\\hat{b}_{\\text{diff}}) = \\frac{2\\lambda}{81}$.",
-    "options": null,
-    "correctAnswer": 0.104938,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact fraction (17/162) or decimal rounded to 2–3 decimal places (0.105 or 0.104).",
+    "options": [
+      "$\\frac{17}{162} \\approx 0.105$",
+      "$\\frac{1}{10} = 0.100$",
+      "$\\frac{33}{162} \\approx 0.204$",
+      "$0.000\\text{ (identical variances)}$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Joint LS gives $\\operatorname{Var}(\\hat{b}_{\\text{LS}}) = 8.25 \\times \\frac{10}{825} = 0.100$. Differenced LS telescopes to $\\hat{b}_{\\text{diff}} = \\frac{y(10)-y(1)}{9} = b_o + \\frac{e(10)-e(1)}{9}$, which has variance $\\frac{2\\lambda}{81} = \\frac{16.5}{81} = \\frac{33}{162} \\approx 0.2037$. The difference is $\\frac{33}{162} - \\frac{1}{10} = \\frac{17}{162} \\approx 0.105$.",
+      "This is $\\operatorname{Var}(\\hat{b}_{\\text{LS}}) = 0.100$ alone.",
+      "This is $\\operatorname{Var}(\\hat{b}_{\\text{diff}}) = \\frac{33}{162} \\approx 0.204$ alone.",
+      "Assumed differencing is just as efficient as joint LS, overlooking that differencing discards the interior measurements $y(2),\\dots,y(9)$!"
+    ],
     "explanation": "1. **Method A (Joint LS on $y(t) = a + bt$):**\nWith $\\sum_{t=1}^{10} \\varphi(t)\\varphi^\\top(t) = \\begin{bmatrix} 10 & 55 \\\\ 55 & 385 \\end{bmatrix}$ and determinant $10(385) - 55^2 = 3850 - 3025 = 825$, the covariance matrix is:\n$$\\operatorname{cov}\\left(\\begin{bmatrix} \\hat{a} \\\\ \\hat{b}_{\\text{LS}} \\end{bmatrix}\\right) = \\frac{\\lambda}{825}\\begin{bmatrix} 385 & -55 \\\\ -55 & 10 \\end{bmatrix} \\implies \\operatorname{Var}(\\hat{b}_{\\text{LS}}) = \\frac{10\\lambda}{825}.$$\nFor $\\lambda = 8.25$, $\\operatorname{Var}(\\hat{b}_{\\text{LS}}) = \\frac{10 \\times 8.25}{825} = 0.10$.\n2. **Method B (LS on differenced data $z(t) = y(t) - y(t-1)$):**\nBecause the sum telescopes, $\\sum_{t=2}^{10} (e(t) - e(t-1)) = e(10) - e(1)$, so $\\hat{b}_{\\text{diff}} = \\frac{y(10) - y(1)}{9} = b_o + \\frac{e(10) - e(1)}{9}$ (throwing away all intermediate points $y(2), \\dots, y(9)$!). Since $e(10)$ and $e(1)$ are independent with variance $\\lambda$:\n$$\\operatorname{Var}(\\hat{b}_{\\text{diff}}) = \\frac{\\mathbb{E}[(e(10) - e(1))^2]}{9^2} = \\frac{2\\lambda}{81}.$$\nFor $\\lambda = 8.25$, $\\operatorname{Var}(\\hat{b}_{\\text{diff}}) = \\frac{16.5}{81} \\approx 0.2037$.\n3. **Difference:**\n$$\\operatorname{Var}(\\hat{b}_{\\text{diff}}) - \\operatorname{Var}(\\hat{b}_{\\text{LS}}) = 0.2037 - 0.10 = 0.1037 \\approx 0.104.$$"
   },
   {
@@ -5405,7 +6055,7 @@ window.QUESTION_BANK = [
     "block": "block8",
     "topic": "Regularization, RLS & Nonlinear Modelling",
     "subtopic": "Past Exam Synthesis Problems",
-    "format": "numeric",
+    "format": "mcq",
     "difficulty": "hard",
     "origin": "adapted",
     "isMockExam": false,
@@ -5417,13 +6067,23 @@ window.QUESTION_BANK = [
     },
     "prompt": "Data is generated by the ARMAX system\n$$y(t) = -a_o y(t-1) + b_o u(t-1) + e(t) + 0.5e(t-1),$$\nwith $a_o = -0.8$, $b_o = 1$, where $e(t)$ and $u(t)$ are mutually uncorrelated zero-mean white noise processes with variances $\\lambda_e = 1$ and $\\lambda_u = 1$. It is given that $R_y(0) = \\mathbb{E}[y^2(t)] = \\frac{b_o^2\\lambda_u + (1.25 - a_o)\\lambda_e}{1 - a_o^2} = \\frac{3.05}{0.36} \\approx 8.472$ (or $8.5$) and $R_{yu}(0) = 0$. If we fit the misspecified ARX predictor $\\hat{y}(t) = -ay(t-1) + bu(t-1) = \\varphi^\\top(t)\\theta$ using Least Squares, what value does the pole parameter estimate $\\hat{a}$ converge to as $N \\to \\infty$? (Use $R_y(0) = 8.5$ as in the exam hint.)",
     "hint": "Use $\\hat{\\theta} \\to \\theta_o + \\mathbb{E}[\\varphi(t)\\varphi^\\top(t)]^{-1}\\mathbb{E}[\\varphi(t)w(t)]$ where $\\varphi(t) = [-y(t-1),\\; u(t-1)]^\\top$ and $w(t) = e(t) + 0.5e(t-1)$. Note that $\\mathbb{E}[-y(t-1)w(t)] = -0.5\\mathbb{E}[y(t-1)e(t-1)] = -0.5\\lambda_e$.",
-    "options": null,
-    "correctAnswer": -0.858824,
-    "tolerance": 0.01,
-    "unit": "dimensionless",
-    "roundingNote": "Give an exact fraction (-73/85) or decimal rounded to 2–3 decimal places (-0.86 or -0.859).",
+    "options": [
+      "$\\hat{a} \\to -\\frac{73}{85} \\approx -0.859$",
+      "$\\hat{a} \\to -0.800$",
+      "$\\hat{a} \\to -\\frac{63}{85} \\approx -0.741$",
+      "$\\hat{a} \\to -0.500$"
+    ],
+    "correctAnswer": 0,
+    "tolerance": null,
+    "unit": null,
+    "roundingNote": null,
     "correctedStatement": null,
-    "distractorExplanations": null,
+    "distractorExplanations": [
+      "Correct! Since $R_{yu}(0) = 0$, $\\hat{a} \\to a_o - \\frac{\\mathbb{E}[y(t-1)w(t)]}{R_y(0)} = -0.8 - \\frac{0.5\\lambda_e}{8.5} = -0.8 - \\frac{1}{17} = -\\frac{73}{85} \\approx -0.859$.",
+      "Assumed the ARX estimate of $a_o = -0.8$ is unbiased under MA(1) noise $w(t) = e(t) + 0.5e(t-1)$.",
+      "Sign error: added $+\\frac{0.5}{8.5}$ instead of subtracting $-\\frac{0.5}{8.5}$.",
+      "Confused the asymptotic pole estimate with the negative of the MA parameter $0.5$."
+    ],
     "explanation": "Write $y(t) = \\varphi^\\top(t)\\theta_o + w(t)$ with $\\varphi(t) = [-y(t-1),\\; u(t-1)]^\\top$, $\\theta_o = [-0.8,\\; 1]^\\top$, and $w(t) = e(t) + 0.5e(t-1)$. As $N \\to \\infty$:\n$$\\hat{\\theta} \\to \\theta_o + \\mathbb{E}[\\varphi(t)\\varphi^\\top(t)]^{-1}\\mathbb{E}[\\varphi(t)w(t)].$$\nSince $u(t)$ is white noise uncorrelated with $e(t)$ and $R_{yu}(0) = 0$, we have $\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)] = \\operatorname{diag}(R_y(0),\\; \\lambda_u)$. Next, because $y(t-1) = 0.8y(t-2) + u(t-2) + e(t-1) + 0.5e(t-2)$ is uncorrelated with $e(t)$ and satisfies $\\mathbb{E}[y(t-1)e(t-1)] = \\mathbb{E}[e^2(t-1)] = \\lambda_e$:\n$$\\mathbb{E}[\\varphi(t)w(t)] = \\mathbb{E}\\begin{bmatrix} -y(t-1)(e(t) + 0.5e(t-1)) \\\\ u(t-1)(e(t) + 0.5e(t-1)) \\end{bmatrix} = \\begin{bmatrix} -0.5\\lambda_e \\\\ 0 \\end{bmatrix}.$$\nTherefore, $\\hat{b} \\to b_o = 1$ (unbiased), whereas $\\hat{a}$ has asymptotic bias:\n$$\\hat{a} \\to a_o - \\frac{0.5\\lambda_e}{R_y(0)} = -0.8 - \\frac{0.5}{8.5} \\approx -0.8588 \\approx -0.859.$$\n*(Note from part (c): Using the Instrumental Variable estimator $\\hat{\\theta}_{\\text{IV}} = (\\sum z(t)\\varphi^\\top(t))^{-1}\\sum z(t)y(t)$ with delayed-input instruments $z(t) = [u(t-2),\\; u(t-1)]^\\top$ gives $\\mathbb{E}[z(t)\\varphi^\\top(t)] = \\operatorname{diag}(-\\lambda_u, \\lambda_u)$ invertible and $\\mathbb{E}[z(t)w(t)] = 0$, achieving consistency $\\hat{\\theta}_{\\text{IV}} \\to \\theta_o$ without nonlinear optimization!)*"
   },
   {
@@ -5646,7 +6306,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact decimal.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "Since $\\mathbf{U}, \\mathbf{\\Phi}, \\mathbf{Y}$ each have 2 rows, each block $L_{ij}$ is $2 \\times 2$. Inspecting rows 5–6 and columns 3–4 of $L$ gives:\n$$\\hat{G} = L_{32} = \\begin{bmatrix} -4.64 & 10 \\\\ -2.32 & 5 \\end{bmatrix}$$\nNotice that the top row of $\\hat{G}$ is exactly 2 times the bottom row ($-4.64 = 2 \\times (-2.32)$ and $10 = 2 \\times 5$). Thus, for any vector $z \\in \\mathbb{R}^2$,\n$$\\hat{G}z = \\begin{bmatrix} 2r \\\\ r \\end{bmatrix} = \\begin{bmatrix} 2 \\\\ 1 \\end{bmatrix} r$$\nfor some scalar $r$. The 1-dimensional range space of $\\hat{G}$ is spanned by $\\begin{bmatrix} 2 \\\\ 1 \\end{bmatrix}$, so we can take the estimated observability matrix as\n$$\\hat{\\mathcal{O}}_2 = \\begin{bmatrix} \\hat{c} \\\\ \\hat{c}\\hat{a} \\end{bmatrix} = \\begin{bmatrix} 2 \\\\ 1 \\end{bmatrix}r.$$\nAs shown in Problem 2(a), the estimate of $a$ is uniquely determined by the ratio of the second component to the first:\n$$\\hat{a} = \\frac{\\hat{c}\\hat{a}}{\\hat{c}} = \\frac{r}{2r} = 0.5.$$"
+    "explanation": "Since $\\mathbf{U}, \\mathbf{\\Phi}, \\mathbf{Y}$ each have 2 rows, each block $L_{ij}$ is $2 \\times 2$. Inspecting rows 5–6 and columns 3–4 of $L$ gives:\n$$\\hat{G} = L_{32} = \\begin{bmatrix} -4.64 & 10 \\\\ -2.32 & 5 \\end{bmatrix}$$\nNotice that the top row of $\\hat{G}$ is exactly 2 times the bottom row ($-4.64 = 2 \\times (-2.32)$ and $10 = 2 \\times 5$). Thus, for any vector $z \\in \\mathbb{R}^2$,\n$$\\hat{G}z = \\begin{bmatrix} 2r \\\\ r \\end{bmatrix} = \\begin{bmatrix} 2 \\\\ 1 \\end{bmatrix} r$$\nfor some scalar $r$. The 1-dimensional range space of $\\hat{G}$ is spanned by $\\begin{bmatrix} 2 \\\\ 1 \\end{bmatrix}$, so we can take the estimated observability matrix as\n$$\\hat{\\mathcal{O}}_2 = \\begin{bmatrix} \\hat{c} \\\\ \\hat{c}\\hat{a} \\end{bmatrix} = \\begin{bmatrix} 2 \\\\ 1 \\end{bmatrix}r.$$\nAs shown in Problem 2(a), the estimate of $a$ is uniquely determined by the ratio of the second component to the first:\n$$\\hat{a} = \\frac{\\hat{c}\\hat{a}}{\\hat{c}} = \\frac{r}{2r} = 0.5.$$",
+    "busMcq": {
+      "options": [
+        "$\\hat{a} = 0.5$",
+        "$\\hat{a} = 2.0$",
+        "$\\hat{a} = -0.5$",
+        "$\\hat{a} = -2.32$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Since the top row of $\\hat{G} = L_{32} = \\begin{bmatrix} -4.64 & 10 \\\\ -2.32 & 5 \\end{bmatrix}$ is $2$ times the bottom row, $\\mathcal{O}_2 = \\begin{bmatrix} c \\\\ ca \\end{bmatrix}$ is spanned by $\\begin{bmatrix} 2 \\\\ 1 \\end{bmatrix}$, giving $\\hat{a} = \\frac{ca}{c} = \\frac{1}{2} = 0.5$.",
+        "Computed $o_1 / o_2 = 2/1 = 2.0$ instead of $o_2 / o_1 = ca / c = 0.5$.",
+        "Sign error when comparing the first and second rows of $L_{32}$.",
+        "Picked the $(2,1)$ entry of $L_{32}$ directly."
+      ]
+    }
   },
   {
     "id": "mock-2025-3a",
@@ -6054,7 +6729,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact fraction (1/3) or decimal rounded to 2–4 decimal places (0.33 or 0.3333).",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "With deterministic regressors and white noise $e(t)$ of variance $\\lambda_e = 2$, the covariance matrix of the least squares estimator $\\hat{\\theta}$ is:\n$$\\operatorname{cov}(\\hat{\\theta}) = \\lambda_e \\left(\\sum_{t=1}^{10} \\varphi(t)\\varphi^\\top(t)\\right)^{-1} = 2 \\begin{bmatrix} 10 & 2 \\\\ 2 & 10 \\end{bmatrix}^{-1}.$$\nSince $\\det\\begin{bmatrix} 10 & 2 \\\\ 2 & 10 \\end{bmatrix} = 100 - 4 = 96$, we get:\n$$\\operatorname{cov}(\\hat{\\theta}) = \\frac{2}{96} \\begin{bmatrix} 10 & -2 \\\\ -2 & 10 \\end{bmatrix} = \\frac{1}{24} \\begin{bmatrix} 5 & -1 \\\\ -1 & 5 \\end{bmatrix}.$$\nTherefore, the variance of the estimated static gain $\\hat{b}_1 + \\hat{b}_2 = \\begin{bmatrix} 1 & 1 \\end{bmatrix}\\hat{\\theta}$ is:\n$$\\operatorname{var}(\\hat{b}_1 + \\hat{b}_2) = \\begin{bmatrix} 1 & 1 \\end{bmatrix} \\operatorname{cov}(\\hat{\\theta}) \\begin{bmatrix} 1 \\\\ 1 \\end{bmatrix} = \\frac{1}{24} \\begin{bmatrix} 1 & 1 \\end{bmatrix} \\begin{bmatrix} 5 & -1 \\\\ -1 & 5 \\end{bmatrix} \\begin{bmatrix} 1 \\\\ 1 \\end{bmatrix} = \\frac{1}{24} \\begin{bmatrix} 1 & 1 \\end{bmatrix} \\begin{bmatrix} 4 \\\\ 4 \\end{bmatrix} = \\frac{8}{24} = \\frac{1}{3} \\approx 0.3333.$$"
+    "explanation": "With deterministic regressors and white noise $e(t)$ of variance $\\lambda_e = 2$, the covariance matrix of the least squares estimator $\\hat{\\theta}$ is:\n$$\\operatorname{cov}(\\hat{\\theta}) = \\lambda_e \\left(\\sum_{t=1}^{10} \\varphi(t)\\varphi^\\top(t)\\right)^{-1} = 2 \\begin{bmatrix} 10 & 2 \\\\ 2 & 10 \\end{bmatrix}^{-1}.$$\nSince $\\det\\begin{bmatrix} 10 & 2 \\\\ 2 & 10 \\end{bmatrix} = 100 - 4 = 96$, we get:\n$$\\operatorname{cov}(\\hat{\\theta}) = \\frac{2}{96} \\begin{bmatrix} 10 & -2 \\\\ -2 & 10 \\end{bmatrix} = \\frac{1}{24} \\begin{bmatrix} 5 & -1 \\\\ -1 & 5 \\end{bmatrix}.$$\nTherefore, the variance of the estimated static gain $\\hat{b}_1 + \\hat{b}_2 = \\begin{bmatrix} 1 & 1 \\end{bmatrix}\\hat{\\theta}$ is:\n$$\\operatorname{var}(\\hat{b}_1 + \\hat{b}_2) = \\begin{bmatrix} 1 & 1 \\end{bmatrix} \\operatorname{cov}(\\hat{\\theta}) \\begin{bmatrix} 1 \\\\ 1 \\end{bmatrix} = \\frac{1}{24} \\begin{bmatrix} 1 & 1 \\end{bmatrix} \\begin{bmatrix} 5 & -1 \\\\ -1 & 5 \\end{bmatrix} \\begin{bmatrix} 1 \\\\ 1 \\end{bmatrix} = \\frac{1}{24} \\begin{bmatrix} 1 & 1 \\end{bmatrix} \\begin{bmatrix} 4 \\\\ 4 \\end{bmatrix} = \\frac{8}{24} = \\frac{1}{3} \\approx 0.3333.$$",
+    "busMcq": {
+      "options": [
+        "$\\operatorname{var}(\\hat{b}_1 + \\hat{b}_2) = \\frac{1}{3} \\approx 0.3333$",
+        "$\\operatorname{var}(\\hat{b}_1 + \\hat{b}_2) = \\frac{5}{12} \\approx 0.4167$",
+        "$\\operatorname{var}(\\hat{b}_1 + \\hat{b}_2) = \\frac{1}{6} \\approx 0.1667$",
+        "$\\operatorname{var}(\\hat{b}_1 + \\hat{b}_2) = 0.2000$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! With $\\operatorname{cov}(\\hat{\\theta}) = \\frac{1}{24}\\begin{bmatrix} 5 & -1 \\\\ -1 & 5 \\end{bmatrix}$, $\\operatorname{var}(\\hat{b}_1 + \\hat{b}_2) = [1,\\; 1]\\operatorname{cov}(\\hat{\\theta})[1,\\; 1]^\\top = \\frac{5 - 1 - 1 + 5}{24} = \\frac{8}{24} = \\frac{1}{3}$.",
+        "Forgot the negative off-diagonal covariance terms $2\\operatorname{cov}(\\hat{b}_1,\\hat{b}_2) = -2/24$ and summed only $\\operatorname{var}(\\hat{b}_1) + \\operatorname{var}(\\hat{b}_2) = 10/24 = 5/12$.",
+        "Forgot to multiply by $\\lambda_e = 2$.",
+        "Confused Data Set 1 with Data Set 2 ($0.2$)."
+      ]
+    }
   },
   {
     "id": "mock-2024-4b",
@@ -6080,7 +6770,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact decimal.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "1. **Same static gain:** When $u(t) = 1$ for all $t$, $\\varphi(t) = \\begin{bmatrix} 1 \\\\ 1 \\end{bmatrix}$, so $\\sum_{t=1}^N \\varphi(t)\\varphi^\\top(t) = N\\begin{bmatrix} 1 & 1 \\\\ 1 & 1 \\end{bmatrix}$ and $\\sum_{t=1}^N \\varphi(t)y(t) = \\begin{bmatrix} \\sum_{t=1}^N y(t) \\\\ \\sum_{t=1}^N y(t) \\end{bmatrix}$. Both rows of the normal equations are identical: $N(\\hat{b}_1 + \\hat{b}_2) = \\sum_{t=1}^N y(t)$, so $(\\hat{b}_1, \\hat{b}_2)$ is a solution if and only if $\\hat{b}_1 + \\hat{b}_2 = \\frac{1}{N}\\sum_{t=1}^N y(t)$.\n2. **Unbiasedness:** Substituting $y(t) = b_1^o + b_2^o + e(t)$ gives $\\hat{b}_1 + \\hat{b}_2 = b_1^o + b_2^o + \\frac{1}{N}\\sum_{t=1}^N e(t)$, so $\\mathbb{E}[\\hat{b}_1 + \\hat{b}_2] = b_1^o + b_2^o + \\frac{1}{N}\\sum_{t=1}^N \\mathbb{E}[e(t)] = b_1^o + b_2^o$.\n3. **Variance:** Since $\\mathbb{E}[e(k)e(t)] = 0$ for $k \\neq t$,\n$$\\operatorname{var}(\\hat{b}_1 + \\hat{b}_2) = \\mathbb{E}\\left[\\left(\\frac{1}{N}\\sum_{t=1}^N e(t)\\right)^2\\right] = \\frac{1}{N^2}\\sum_{k=1}^N \\sum_{t=1}^N \\mathbb{E}[e(k)e(t)] = \\frac{1}{N^2}\\sum_{t=1}^N \\mathbb{E}[e^2(t)] = \\frac{\\lambda_e}{N} = \\frac{2}{10} = \\frac{1}{5} = 0.2.$$"
+    "explanation": "1. **Same static gain:** When $u(t) = 1$ for all $t$, $\\varphi(t) = \\begin{bmatrix} 1 \\\\ 1 \\end{bmatrix}$, so $\\sum_{t=1}^N \\varphi(t)\\varphi^\\top(t) = N\\begin{bmatrix} 1 & 1 \\\\ 1 & 1 \\end{bmatrix}$ and $\\sum_{t=1}^N \\varphi(t)y(t) = \\begin{bmatrix} \\sum_{t=1}^N y(t) \\\\ \\sum_{t=1}^N y(t) \\end{bmatrix}$. Both rows of the normal equations are identical: $N(\\hat{b}_1 + \\hat{b}_2) = \\sum_{t=1}^N y(t)$, so $(\\hat{b}_1, \\hat{b}_2)$ is a solution if and only if $\\hat{b}_1 + \\hat{b}_2 = \\frac{1}{N}\\sum_{t=1}^N y(t)$.\n2. **Unbiasedness:** Substituting $y(t) = b_1^o + b_2^o + e(t)$ gives $\\hat{b}_1 + \\hat{b}_2 = b_1^o + b_2^o + \\frac{1}{N}\\sum_{t=1}^N e(t)$, so $\\mathbb{E}[\\hat{b}_1 + \\hat{b}_2] = b_1^o + b_2^o + \\frac{1}{N}\\sum_{t=1}^N \\mathbb{E}[e(t)] = b_1^o + b_2^o$.\n3. **Variance:** Since $\\mathbb{E}[e(k)e(t)] = 0$ for $k \\neq t$,\n$$\\operatorname{var}(\\hat{b}_1 + \\hat{b}_2) = \\mathbb{E}\\left[\\left(\\frac{1}{N}\\sum_{t=1}^N e(t)\\right)^2\\right] = \\frac{1}{N^2}\\sum_{k=1}^N \\sum_{t=1}^N \\mathbb{E}[e(k)e(t)] = \\frac{1}{N^2}\\sum_{t=1}^N \\mathbb{E}[e^2(t)] = \\frac{\\lambda_e}{N} = \\frac{2}{10} = \\frac{1}{5} = 0.2.$$",
+    "busMcq": {
+      "options": [
+        "$0.20$",
+        "$0.3333$",
+        "$0.10$",
+        "$0.40$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Under $u(t)=1$, $\\hat{b}_1 + \\hat{b}_2 = \\frac{1}{N}\\sum_{t=1}^{10} y(t) = b_1^o + b_2^o + \\frac{1}{10}\\sum_{t=1}^{10} e(t)$, which has variance $\\frac{\\lambda_e}{N} = \\frac{2}{10} = 0.20$.",
+        "Used the variance from Data Set 1 ($1/3$).",
+        "Forgot to multiply by $\\lambda_e = 2$ ($1/10 = 0.10$).",
+        "Multiplied by $2$ unnecessarily."
+      ]
+    }
   },
   {
     "id": "mock-2024-4c",
@@ -6178,7 +6883,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact integer or decimal.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "For $\\hat{y}(t) = 0$, the prediction error variance is $\\mathbb{E}[\\varepsilon^2(t)] = \\mathbb{E}[y^2(t)] = \\lambda_y$. Using $y(t) = -a_o y(t-1) + w(t)$:\n$$\\lambda_y = \\mathbb{E}[(-a_o y(t-1) + w(t))^2] = a_o^2 \\lambda_y + \\mathbb{E}[w^2(t)] - 2a_o \\mathbb{E}[y(t-1)w(t)].$$\nFirst, $\\mathbb{E}[w^2(t)] = \\mathbb{E}[(e(t) + c_o e(t-1))^2] = (1 + c_o^2)\\lambda_e$.\nSecond, since $e(t)$ is uncorrelated with $y(t-1)$ and $e(t-1)$ only correlates with the $e(t-1)$ term inside $y(t-1) = -a_o y(t-2) + e(t-1) + c_o e(t-2)$:\n$$\\mathbb{E}[y(t-1)w(t)] = \\mathbb{E}[y(t-1)(e(t) + c_o e(t-1))] = c_o \\mathbb{E}[y(t-1)e(t-1)] = c_o \\lambda_e.$$\nSolving for $\\lambda_y$ with $a_o = \\frac{2}{\\sqrt{5}}$, $c_o = \\frac{1}{\\sqrt{5}}$, and $\\lambda_e = 1$ gives:\n$$\\lambda_y = \\frac{1 + c_o^2 - 2a_o c_o}{1 - a_o^2}\\lambda_e = \\frac{1 + \\frac{1}{5} - \\frac{4}{5}}{1 - \\frac{4}{5}} = \\frac{\\frac{2}{5}}{\\frac{1}{5}} = 2.$$"
+    "explanation": "For $\\hat{y}(t) = 0$, the prediction error variance is $\\mathbb{E}[\\varepsilon^2(t)] = \\mathbb{E}[y^2(t)] = \\lambda_y$. Using $y(t) = -a_o y(t-1) + w(t)$:\n$$\\lambda_y = \\mathbb{E}[(-a_o y(t-1) + w(t))^2] = a_o^2 \\lambda_y + \\mathbb{E}[w^2(t)] - 2a_o \\mathbb{E}[y(t-1)w(t)].$$\nFirst, $\\mathbb{E}[w^2(t)] = \\mathbb{E}[(e(t) + c_o e(t-1))^2] = (1 + c_o^2)\\lambda_e$.\nSecond, since $e(t)$ is uncorrelated with $y(t-1)$ and $e(t-1)$ only correlates with the $e(t-1)$ term inside $y(t-1) = -a_o y(t-2) + e(t-1) + c_o e(t-2)$:\n$$\\mathbb{E}[y(t-1)w(t)] = \\mathbb{E}[y(t-1)(e(t) + c_o e(t-1))] = c_o \\mathbb{E}[y(t-1)e(t-1)] = c_o \\lambda_e.$$\nSolving for $\\lambda_y$ with $a_o = \\frac{2}{\\sqrt{5}}$, $c_o = \\frac{1}{\\sqrt{5}}$, and $\\lambda_e = 1$ gives:\n$$\\lambda_y = \\frac{1 + c_o^2 - 2a_o c_o}{1 - a_o^2}\\lambda_e = \\frac{1 + \\frac{1}{5} - \\frac{4}{5}}{1 - \\frac{4}{5}} = \\frac{\\frac{2}{5}}{\\frac{1}{5}} = 2.$$",
+    "busMcq": {
+      "options": [
+        "$2.0$",
+        "$1.2$",
+        "$1.0$",
+        "$1.6$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! For $\\hat{y}(t) = 0$, the error is $y(t)$ itself, with variance $\\lambda_y = \\frac{1 + c_o^2 - 2a_o c_o}{1 - a_o^2}\\lambda_e = \\frac{1 + 0.2 + 0.4}{1 - 0.2}(1) = \\frac{1.6}{0.8} = 2.0$.",
+        "This is the variance of $w(t) = e(t) + c_o e(t-1)$ in Problem 5(c).",
+        "This is the optimal prediction error variance $\\lambda_e = 1.0$ in Problem 5(a).",
+        "Computed the numerator $1 + c_o^2 - 2a_o c_o = 1.6$ without dividing by $1 - a_o^2 = 0.8$."
+      ]
+    }
   },
   {
     "id": "mock-2024-5c",
@@ -6204,7 +6924,22 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact decimal.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "With $\\hat{y}(t) = -a_o y(t-1)$, the prediction error is simply:\n$$\\varepsilon(t) = y(t) - \\hat{y}(t) = -a_o y(t-1) + w(t) - (-a_o y(t-1)) = w(t).$$\nTherefore, the variance of the prediction error is:\n$$\\mathbb{E}[\\varepsilon^2(t)] = \\mathbb{E}[w^2(t)] = (1 + c_o^2)\\lambda_e = \\left(1 + \\frac{1}{5}\\right) \\cdot 1 = \\frac{6}{5} = 1.2.$$"
+    "explanation": "With $\\hat{y}(t) = -a_o y(t-1)$, the prediction error is simply:\n$$\\varepsilon(t) = y(t) - \\hat{y}(t) = -a_o y(t-1) + w(t) - (-a_o y(t-1)) = w(t).$$\nTherefore, the variance of the prediction error is:\n$$\\mathbb{E}[\\varepsilon^2(t)] = \\mathbb{E}[w^2(t)] = (1 + c_o^2)\\lambda_e = \\left(1 + \\frac{1}{5}\\right) \\cdot 1 = \\frac{6}{5} = 1.2.$$",
+    "busMcq": {
+      "options": [
+        "$1.2$",
+        "$2.0$",
+        "$1.1$",
+        "$1.0$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! For $\\hat{y}(t) = -a_o y(t-1)$, the prediction error is $y(t) + a_o y(t-1) = e(t) + c_o e(t-1)$, which has variance $(1 + c_o^2)\\lambda_e = 1 + 0.2 = 1.2$.",
+        "This is $\\lambda_y = 2.0$ from Problem 5(b).",
+        "This is the LS predictor error variance $1.1$ from Problem 5(d).",
+        "Ignored the $c_o e(t-1)$ term."
+      ]
+    }
   },
   {
     "id": "mock-2024-5d",
@@ -6230,6 +6965,21 @@ window.QUESTION_BANK = [
     "roundingNote": "Give an exact decimal.",
     "correctedStatement": null,
     "distractorExplanations": null,
-    "explanation": "1. **Asymptotic parameter limit:** With $\\varphi(t) = -y(t-1)$ and $\\theta = a$, as $N \\to \\infty$:\n$$\\hat{a} \\to \\big(\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)]\\big)^{-1}\\mathbb{E}[\\varphi(t)y(t)] = \\frac{1}{\\lambda_y}\\mathbb{E}[-y(t)y(t-1)].$$\nSince $\\mathbb{E}[-y(t)y(t-1)] = \\mathbb{E}[a_o y^2(t-1) - w(t)y(t-1)] = a_o \\lambda_y - c_o \\lambda_e$, we obtain:\n$$\\hat{a} \\to a_o - c_o \\frac{\\lambda_e}{\\lambda_y} = \\frac{2}{\\sqrt{5}} - \\frac{1}{2\\sqrt{5}} = \\frac{3}{2\\sqrt{5}}.$$\n2. **Prediction error variance:** Using $\\hat{a} = a_o - c_o \\frac{\\lambda_e}{\\lambda_y}$, the prediction error is:\n$$\\varepsilon(t) = y(t) - \\hat{y}(t) = -a_o y(t-1) + w(t) + \\left(a_o - c_o \\frac{\\lambda_e}{\\lambda_y}\\right)y(t-1) = w(t) - c_o \\frac{\\lambda_e}{\\lambda_y}y(t-1).$$\nTaking the variance yields:\n$$\\mathbb{E}[\\varepsilon^2(t)] = \\mathbb{E}\\left[w^2(t) + \\frac{c_o^2 \\lambda_e^2}{\\lambda_y^2}y^2(t-1) - 2\\frac{c_o \\lambda_e}{\\lambda_y}y(t-1)w(t)\\right] = (1 + c_o^2)\\lambda_e - \\frac{c_o^2 \\lambda_e^2}{\\lambda_y} = \\frac{6}{5} - \\frac{1}{10} = \\frac{11}{10} = 1.1.$$\n**Remark:** Even though $\\hat{a}$ does not converge to $a_o$ due to colored noise $w(t)$, least squares asymptotically finds the best predictor of the form $\\hat{y}(t) = -ay(t-1)$, achieving a strictly lower prediction error variance ($1.1$) than using the true parameter $a_o$ ($1.2$ in part 5c)."
+    "explanation": "1. **Asymptotic parameter limit:** With $\\varphi(t) = -y(t-1)$ and $\\theta = a$, as $N \\to \\infty$:\n$$\\hat{a} \\to \\big(\\mathbb{E}[\\varphi(t)\\varphi^\\top(t)]\\big)^{-1}\\mathbb{E}[\\varphi(t)y(t)] = \\frac{1}{\\lambda_y}\\mathbb{E}[-y(t)y(t-1)].$$\nSince $\\mathbb{E}[-y(t)y(t-1)] = \\mathbb{E}[a_o y^2(t-1) - w(t)y(t-1)] = a_o \\lambda_y - c_o \\lambda_e$, we obtain:\n$$\\hat{a} \\to a_o - c_o \\frac{\\lambda_e}{\\lambda_y} = \\frac{2}{\\sqrt{5}} - \\frac{1}{2\\sqrt{5}} = \\frac{3}{2\\sqrt{5}}.$$\n2. **Prediction error variance:** Using $\\hat{a} = a_o - c_o \\frac{\\lambda_e}{\\lambda_y}$, the prediction error is:\n$$\\varepsilon(t) = y(t) - \\hat{y}(t) = -a_o y(t-1) + w(t) + \\left(a_o - c_o \\frac{\\lambda_e}{\\lambda_y}\\right)y(t-1) = w(t) - c_o \\frac{\\lambda_e}{\\lambda_y}y(t-1).$$\nTaking the variance yields:\n$$\\mathbb{E}[\\varepsilon^2(t)] = \\mathbb{E}\\left[w^2(t) + \\frac{c_o^2 \\lambda_e^2}{\\lambda_y^2}y^2(t-1) - 2\\frac{c_o \\lambda_e}{\\lambda_y}y(t-1)w(t)\\right] = (1 + c_o^2)\\lambda_e - \\frac{c_o^2 \\lambda_e^2}{\\lambda_y} = \\frac{6}{5} - \\frac{1}{10} = \\frac{11}{10} = 1.1.$$\n**Remark:** Even though $\\hat{a}$ does not converge to $a_o$ due to colored noise $w(t)$, least squares asymptotically finds the best predictor of the form $\\hat{y}(t) = -ay(t-1)$, achieving a strictly lower prediction error variance ($1.1$) than using the true parameter $a_o$ ($1.2$ in part 5c).",
+    "busMcq": {
+      "options": [
+        "$1.1$",
+        "$1.2$",
+        "$1.0$",
+        "$1.5$"
+      ],
+      "correctAnswer": 0,
+      "distractorExplanations": [
+        "Correct! Since LS minimizes $\\mathbb{E}[(y(t) + ay(t-1))^2]$, the asymptotic estimate $\\hat{a} = \\frac{3}{2\\sqrt{5}}$ achieves prediction error variance $1.1 < 1.2$.",
+        "Assumed $\\hat{a}$ gives the same variance ($1.2$) as using the true parameter $a_o$ in a suboptimal predictor structure.",
+        "Assumed a first-order AR predictor can achieve the ARMA(1,1) innovation variance $\\lambda_e = 1.0$.",
+        "Arithmetic error."
+      ]
+    }
   }
 ];
